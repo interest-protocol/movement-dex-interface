@@ -26,6 +26,8 @@ const SwapButton = () => {
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
+  const symbolIn = useWatch({ control, name: 'from.symbol' });
+  const symbolOut = useWatch({ control, name: 'to.symbol' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -129,6 +131,8 @@ const SwapButton = () => {
       },
     });
 
+  const disabled = !(symbolIn && symbolOut);
+
   return (
     <Box display="flex" flexDirection="column" gap="l">
       {error && (
@@ -149,7 +153,13 @@ const SwapButton = () => {
           </Typography>
         </Box>
       )}
-      <Button variant="filled" onClick={onSwap} justifyContent="center" py="m">
+      <Button
+        py="m"
+        variant="filled"
+        onClick={onSwap}
+        disabled={disabled}
+        justifyContent="center"
+      >
         <Typography variant="label" size="large">
           {loading ? 'Swapping...' : 'Confirm Swap'}
         </Typography>

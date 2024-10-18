@@ -26,6 +26,8 @@ const SwapManager: FC = () => {
       return;
     }
 
+    if (!getValues('to.symbol')) return;
+
     const to = getValues('to');
     const from = getValues('from');
     const tokenOut = isCoin(to) ? to.type : to.address?.toString();

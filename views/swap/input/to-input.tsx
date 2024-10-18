@@ -39,7 +39,7 @@ const ToInput: FC = () => {
               fontFamily="Satoshi"
               fieldProps={{
                 width: '100%',
-                borderRadius: 'full',
+                borderRadius: 'xs',
               }}
             />
           </Box>
