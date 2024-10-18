@@ -2,8 +2,8 @@ import { Box, Motion } from '@interest-protocol/ui-kit';
 import Link from 'next/link';
 import { FC } from 'react';
 
-import { Routes, RoutesEnum } from '@/constants';
 import { LogoSVG } from '@/components/svg';
+import { Routes, RoutesEnum } from '@/constants';
 
 import { SidebarLogoProps } from './sidebar.types';
 

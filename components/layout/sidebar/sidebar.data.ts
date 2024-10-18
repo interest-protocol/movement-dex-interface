@@ -1,5 +1,5 @@
-import { Routes, RoutesEnum } from '@/constants';
 import { DoubleChevronSVG } from '@/components/svg';
+import { Routes, RoutesEnum } from '@/constants';
 
 import { MenuItemProps } from './sidebar.types';
 

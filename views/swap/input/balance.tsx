@@ -48,7 +48,7 @@ const Balance: FC<InputProps> = ({ label }) => {
 
   const balance = FixedPointMath.toNumber(
     coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[type]?.decimals ?? decimals
+    coinsMap[type]?.metadata.decimals ?? decimals
   );
 
   const handleMax = () => {

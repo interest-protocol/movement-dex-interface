@@ -5,8 +5,8 @@ import { not } from 'ramda';
 import { FC, useState } from 'react';
 import { v4 } from 'uuid';
 
-import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 import { CaretUpSVG } from '@/components/svg';
+import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 import { noop } from '@/utils';
 
 import AccordionItem from '../layout/sidebar/menu-item/accordion-item';

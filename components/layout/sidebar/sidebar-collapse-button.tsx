@@ -1,8 +1,8 @@
 import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { ChevronLeftSVG } from '@/components/svg';
+import { LOCAL_STORAGE_VERSION } from '@/constants';
 
 import { SidebarCollapseButtonProps } from './sidebar.types';
 

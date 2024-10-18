@@ -37,11 +37,14 @@ const SwapFormFieldSlider: FC = () => {
   const initial =
     fromValue && balance && Number(fromValue) && !balance.isZero?.()
       ? balance.gt(
-          FixedPointMath.toBigNumber(fromValue, coinsMap[type].decimals)
+          FixedPointMath.toBigNumber(
+            fromValue,
+            coinsMap[type].metadata.decimals
+          )
         )
         ? +FixedPointMath.toBigNumber(
             Number(fromValue) * 100,
-            coinsMap[type].decimals
+            coinsMap[type].metadata.decimals
           )
             .div(balance)
             .toFixed(0)
@@ -59,7 +62,10 @@ const SwapFormFieldSlider: FC = () => {
           setValue(
             'from.value',
             String(
-              FixedPointMath.toNumber(balance, coinsMap[type].decimals) *
+              FixedPointMath.toNumber(
+                balance,
+                coinsMap[type].metadata.decimals
+              ) *
                 (value / 100)
             )
           );

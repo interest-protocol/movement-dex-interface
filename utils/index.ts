@@ -5,7 +5,6 @@ export * from './coin';
 export * from './date';
 export * from './parse';
 export * from './promise';
-export * from './router';
 export * from './string';
 export * from './toast';
 export * from './url';

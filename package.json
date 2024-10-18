@@ -19,9 +19,12 @@
     "@nightlylabs/aptos-wallet-adapter-plugin": "^0.2.12",
     "@stylin.js/elements": "^1.0.2",
     "@types/ramda": "^0.30.2",
+    "@vercel/analytics": "^1.3.1",
     "bignumber.js": "^9.1.2",
+    "decimal.js-light": "^2.5.1",
     "framer-motion": "^11.11.9",
     "next": "14.0.3",
+    "next-progress": "^2.3.1",
     "prettier": "^3.1.0",
     "ramda": "^0.30.1",
     "react": "^18.2.0",
@@ -33,7 +36,8 @@
     "tiny-invariant": "^1.3.3",
     "use-debounce": "^10.0.4",
     "usehooks-ts": "^3.1.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.11.0",

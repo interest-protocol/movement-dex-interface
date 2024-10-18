@@ -8,8 +8,8 @@ import {
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { CoinMetadata } from '@/interface';
 import { SearchSVG, TimesSVG } from '@/components/svg';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 import {
   SearchTokenForm,
@@ -32,7 +32,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
     },
   });
 
-  const handleSelectToken = (metadata: CoinMetadata) => {
+  const handleSelectToken = (metadata: AssetMetadata) => {
     onSelect(metadata);
     closeModal();
   };
