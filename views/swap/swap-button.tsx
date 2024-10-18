@@ -109,7 +109,7 @@ const SwapButton = () => {
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
       success: () => ({
-        title: 'Swap Successfully',
+        title: 'Swap Successful',
         message: (
           <SuccessModal transactionTime={`${0}`}>
             <SuccessModalTokenCard
