@@ -32,6 +32,7 @@ const SidebarLogo: FC<SidebarLogoProps> = ({ isCollapsed }) => (
         justifyContent="center"
       >
         <LogoSVG width="100%" maxWidth="12.5rem" maxHeight="2.5rem" />
+        asdsd
       </Box>
     </Motion>
   </Link>
