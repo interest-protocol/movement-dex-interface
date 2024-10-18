@@ -31,8 +31,8 @@ const SwapManager: FC = () => {
 
     const to = getValues('to');
     const from = getValues('from');
-    const tokenOut = isCoin(to) ? to.type : to.address.toString();
-    const tokenIn = isCoin(from) ? from.type : from.address.toString();
+    const tokenOut = isCoin(to) ? to.type : to.address?.toString();
+    const tokenIn = isCoin(from) ? from.type : from.address?.toString();
     const pool = STRICT_POOLS[Network.Porto][1].address.toString();
     const amountIn = BigInt(
       FixedPointMath.toBigNumber(fromValue, from.decimals).toFixed(0)
@@ -63,9 +63,7 @@ const SwapManager: FC = () => {
           )
         )
       )
-      .catch((error) => {
-        console.warn({ error });
-
+      .catch(() => {
         setValue('error', 'Failed to quote! Low slippage');
       });
   }, [fromValue]);

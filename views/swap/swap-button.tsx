@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { EXPLORER_URL } from '@/constants';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
@@ -19,6 +20,7 @@ const SwapButton = () => {
   const client = useAptosClient();
   const account = useCurrentAccount();
   const { signTransaction } = useWallet();
+
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
   const { getValues, setValue } = useFormContext<SwapForm>();
@@ -35,7 +37,9 @@ const SwapButton = () => {
 
       const { from, to } = getValues();
 
-      const tokenOut = isCoin(to) ? to.type : to.address.toString();
+      const tokenOut = isCoin(to)
+        ? COIN_TYPE_TO_FA[to.type].toString()
+        : to.address.toString();
       const tokenIn = isCoin(from) ? from.type : from.address.toString();
       const pool = STRICT_POOLS[Network.Porto][1].address.toString();
       const amountIn = BigInt(
@@ -83,7 +87,7 @@ const SwapButton = () => {
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`/txn/${txResult.sequence_number}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } finally {
       setLoading(false);
