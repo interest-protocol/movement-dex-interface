@@ -1,6 +1,6 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network, STRICT_POOLS } from '@interest-protocol/aptos-move-dex';
-import { Button, Typography } from '@interest-protocol/ui-kit';
+import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -124,11 +124,13 @@ const SwapButton = () => {
     });
 
   return (
-    <Button variant="filled" onClick={onSwap} justifyContent="center">
-      <Typography variant="label" size="large">
-        {loading ? 'Swapping...' : 'Confirm Swap'}
-      </Typography>
-    </Button>
+    <Box display="flex" flexDirection="column">
+      <Button variant="filled" onClick={onSwap} justifyContent="center" py="m">
+        <Typography variant="label" size="large">
+          {loading ? 'Swapping...' : 'Confirm Swap'}
+        </Typography>
+      </Button>
+    </Box>
   );
 };
 
