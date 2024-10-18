@@ -16,6 +16,10 @@ export const FAUCET_URL = {
   [Network.Porto]: 'https://mizu.testnet.porto.movementnetwork.xyz/',
 };
 
+export const EXTERNAL_FAUCET_URL = {
+  [Network.Porto]: 'https://mizu.testnet.porto.movementnetwork.xyz/',
+};
+
 export const EXPLORER_URL = {
   [Network.Porto]: (path: string) =>
     `https://explorer.testnet.porto.movementnetwork.xyz/${path}`,

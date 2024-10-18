@@ -1,11 +1,9 @@
 import { Network, STRICT_POOLS } from '@interest-protocol/aptos-move-dex';
-import { Box, Typography } from '@interest-protocol/ui-kit';
 import BigNumber from 'bignumber.js';
 import { FC, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useDebounce } from 'use-debounce';
 
-import { DotErrorSVG } from '@/components/svg';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
@@ -15,7 +13,6 @@ import { SwapForm } from '../swap.types';
 const SwapManager: FC = () => {
   const dex = useInterestDex();
   const { control, setValue, getValues } = useFormContext<SwapForm>();
-  const error = useWatch({ control, name: 'error' });
   const [fromValue] = useDebounce(
     useWatch({ control, name: 'from.value' }),
     800
@@ -64,30 +61,11 @@ const SwapManager: FC = () => {
         )
       )
       .catch(() => {
-        setValue('error', 'Failed to quote! Low slippage');
+        setValue('error', 'Failed to quote. Reduce the Swapping amount.');
       });
   }, [fromValue]);
 
-  if (!error) return null;
-
-  return (
-    <Box
-      p="s"
-      mx="xl"
-      gap="s"
-      display="flex"
-      borderRadius="xs"
-      border="1px solid"
-      bg="errorContainer"
-      color="onErrorContainer"
-      borderColor="onErrorContainer"
-    >
-      <DotErrorSVG width="100%" maxWidth="1rem" maxHeight="1rem" />
-      <Typography variant="label" size="medium">
-        {error}
-      </Typography>
-    </Box>
-  );
+  return null;
 };
 
 export default SwapManager;
