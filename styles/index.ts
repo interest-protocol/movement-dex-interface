@@ -73,7 +73,6 @@ export const GlobalStyles = css`
     box-sizing: border-box;
     font-family: 'Satoshi';
   }
-
   html {
     scroll-behavior: smooth;
   }
