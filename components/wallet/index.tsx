@@ -36,22 +36,7 @@ const Wallet: FC = () => {
       >
         <MovementNetwork />
       </Box>
-      {account ? (
-        <>
-          <a
-            href={EXTERNAL_FAUCET_URL[Network.Porto]}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Button variant="filled" px={['xs', 'xs', 's']}>
-              Mint MOVE
-            </Button>
-          </a>
-          <Profile />
-        </>
-      ) : (
-        <ConnectWalletButton />
-      )}
+      {account ? <Profile /> : <ConnectWalletButton />}
     </Box>
   );
 };
