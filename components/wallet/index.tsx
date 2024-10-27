@@ -39,7 +39,7 @@ const Wallet: FC = () => {
       {account ? (
         <>
           <a
-            href="https://faucet.devnet.imola.movementlabs.xyz"
+            href={EXTERNAL_FAUCET_URL[Network.Porto]}
             target="_blank"
             rel="noreferrer"
           >
