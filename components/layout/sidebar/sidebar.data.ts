@@ -1,4 +1,4 @@
-import { DoubleChevronSVG } from '@/components/svg';
+import { DoubleChevronSVG, PoolSVG } from '@/components/svg';
 import { Routes, RoutesEnum } from '@/constants';
 
 import { MenuItemProps } from './sidebar.types';
@@ -13,6 +13,12 @@ export const SIDEBAR_ITEMS: ReadonlyArray<
     Icon: DoubleChevronSVG,
     name: 'swap',
     path: Routes[RoutesEnum.Swap],
+    disabled: false,
+  },
+  {
+    Icon: PoolSVG,
+    name: 'Pool',
+    path: Routes[RoutesEnum.Pools],
     disabled: false,
   },
 ];

@@ -3,6 +3,12 @@ import BigNumber from 'bignumber.js';
 
 export type BigNumberish = BigNumber | bigint | string | number;
 
+export interface CoinData {
+  type: `0x${string}`;
+  decimals: number;
+  symbol: string;
+}
+
 export interface FAMetadata {
   name: string;
   symbol: string;
@@ -17,4 +23,8 @@ export interface CoinMetadata {
   symbol: string;
   iconUri?: string;
   decimals: number;
+}
+
+export interface CoinMetadataWithType extends CoinMetadata {
+  type: `0x${string}`;
 }
