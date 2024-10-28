@@ -62,7 +62,6 @@ const Sidebar: FC = () => {
       </Box>
       <Box position="absolute" bottom="0" width="100%">
         <SidebarCollapseButton
-          isOpen={isOpen}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
         />

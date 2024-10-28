@@ -30,6 +30,6 @@ export const POOL_DATA: ReadonlyArray<AmmPool> = [
       lpCoin: '0x0000000000f',
     },
     poolType: PoolTypeEnum.CLAMM,
-    isVolatile: false,
+    isVolatile: true,
   },
 ];

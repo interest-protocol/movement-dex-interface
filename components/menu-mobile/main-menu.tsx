@@ -1,11 +1,9 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-import Checkpoint from '../layout/checkpoint';
 import MenuButton from '../wallet/menu-button';
 import { MainMenuMobileProps } from './menu.types';
 import MobileMenuList from './menu-list';
-import MenuSettingsList from './menu-settings';
 
 const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
   <Box
@@ -30,10 +28,6 @@ const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
         Menu
       </Typography>
       <MobileMenuList />
-      <MenuSettingsList />
-    </Box>
-    <Box my="l">
-      <Checkpoint />
     </Box>
   </Box>
 );

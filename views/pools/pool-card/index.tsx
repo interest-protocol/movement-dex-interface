@@ -4,7 +4,6 @@ import { FC } from 'react';
 import { v4 } from 'uuid';
 
 import { Routes, RoutesEnum } from '@/constants';
-import { PoolTypeEnum } from '@/interface';
 
 import { LINES } from './pool-card.data';
 import { FormFilterValue, PoolCardProps } from './pool-card.types';
@@ -38,7 +37,7 @@ const PoolCard: FC<PoolCardProps> = ({ pool }) => (
     >
       <PoolCardHeader
         tags={[
-          PoolTypeEnum.AMM,
+          pool.poolType,
           FormFilterValue[pool.isVolatile ? 'volatile' : 'stable'],
         ]}
       />

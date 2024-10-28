@@ -2,7 +2,6 @@ export * from './array';
 export * from './big-number';
 export * from './clipboard';
 export * from './coin';
-export * from './coin-metadata';
 export * from './date';
 export * from './parse';
 export * from './promise';
