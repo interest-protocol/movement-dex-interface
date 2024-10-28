@@ -18,3 +18,8 @@ export interface CoinMetadata {
   iconUri?: string;
   decimals: number;
 }
+
+export enum PoolTypeEnum {
+  CLAMM = 'CLAMM',
+  AMM = 'AMM',
+}

@@ -86,6 +86,10 @@ export const GlobalStyles = css`
     color: inherit;
     text-decoration: none;
   }
+
+  .loading-balance div {
+    display: flex;
+  }
   /* width */
   ::-webkit-scrollbar {
     width: 10px;
