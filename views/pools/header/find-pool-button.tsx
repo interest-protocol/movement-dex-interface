@@ -22,8 +22,22 @@ const FindPoolButton: FC = () => {
 
   const openModal = () => {
     form.setValue('tokenList', [
-      { symbol: '', type: '', decimals: 0, value: '', locked: false },
-      { symbol: '', type: '', decimals: 0, value: '', locked: false },
+      {
+        name: '',
+        type: '',
+        symbol: '',
+        decimals: 0,
+        value: '0',
+        locked: false,
+      },
+      {
+        name: '',
+        type: '',
+        symbol: '',
+        decimals: 0,
+        value: '0',
+        locked: false,
+      },
     ]);
 
     setModal(

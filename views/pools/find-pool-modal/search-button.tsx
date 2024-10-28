@@ -12,7 +12,7 @@ const SearchButton: FC<FindPoolModalProps> = ({ closeModal }) => {
   const tokenListData = getValues('tokenList');
 
   const hasEmptyKeys = (token: ReadonlyArray<PoolToken>) =>
-    token.some((obj) => !obj.type);
+    token.some((obj) => !obj.symbol);
 
   const handleFindPool = () => {
     if (hasEmptyKeys(tokenListData)) return setError(true);

@@ -1,11 +1,13 @@
+import { Network } from '@interest-protocol/aptos-move-dex';
 import { Box, Modal, Motion, Typography } from '@interest-protocol/ui-kit';
 import { FC, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ChevronDownSVG, ChevronRightSVG, MinusSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
-import { useNetwork } from '@/context/network';
-import { CoinData } from '@/interface';
+import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
+import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { PoolForm } from '../../pools.types';
@@ -16,7 +18,8 @@ const SelectToken: FC<SelectTokenProps> = ({
   canRemove,
   handleRemoveSelectToken,
 }) => {
-  const network = useNetwork();
+  const network = useNetwork<Network>();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const { setValue, control, getValues } = useFormContext<PoolForm>();
@@ -26,18 +29,14 @@ const SelectToken: FC<SelectTokenProps> = ({
     name: `tokenList.${index}.symbol`,
   });
 
-  const currentType = useWatch({
-    control,
-    name: `tokenList.${index}.type`,
-  });
-
-  const onSelect = async ({ type, decimals, symbol }: CoinData) => {
-    if (getValues('tokenList')?.some((token) => token.type === type)) return;
+  const onSelect = async (metadata: AssetMetadata) => {
+    if (
+      getValues('tokenList')?.some((token) => token.symbol === metadata.symbol)
+    )
+      return;
 
     setValue(`tokenList.${index}`, {
-      type,
-      symbol,
-      decimals,
+      ...metadata,
       value: '',
       locked: false,
     });
@@ -69,9 +68,10 @@ const SelectToken: FC<SelectTokenProps> = ({
           {currentSymbol ? (
             <Box display="flex" alignItems="center" gap="m" p="xs">
               <TokenIcon
+                withBg
                 network={network}
-                type={currentType}
                 symbol={currentSymbol}
+                rounded={!isCoin(getValues(`tokenList.${index}`))}
               />
               <Typography variant="body" size="medium">
                 {currentSymbol}

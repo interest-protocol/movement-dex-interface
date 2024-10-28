@@ -5,17 +5,14 @@ import { v4 } from 'uuid';
 
 import { Routes, RoutesEnum } from '@/constants';
 import { PoolTypeEnum } from '@/interface';
-import { FixedPointMath } from '@/lib';
-import { formatDollars } from '@/utils';
 
 import { LINES } from './pool-card.data';
 import { FormFilterValue, PoolCardProps } from './pool-card.types';
-import { getLiquidity } from './pool-card.utils';
 import PoolCardHeader from './pool-card-header';
 import PoolCardInfo from './pool-card-info';
 import PoolCardTrade from './pool-card-trade';
 
-const PoolCard: FC<PoolCardProps> = ({ pool, prices, coinMetadata }) => (
+const PoolCard: FC<PoolCardProps> = ({ pool }) => (
   <Link
     href={`${Routes[RoutesEnum.PoolDetails]}?objectId=${pool.poolObjectId}`}
   >
@@ -45,30 +42,10 @@ const PoolCard: FC<PoolCardProps> = ({ pool, prices, coinMetadata }) => (
           FormFilterValue[pool.isVolatile ? 'volatile' : 'stable'],
         ]}
       />
-      <PoolCardInfo
-        coinTypes={[pool.coinX, pool.coinY]}
-        coinMetadata={coinMetadata}
-      />
+      <PoolCardInfo coins={[pool.coins.coinX, pool.coins.coinY]} />
       <Box px="m" py="xs" bg="surface" borderRadius="1rem">
         {LINES.map((line, index) => (
-          <PoolCardTrade
-            {...line}
-            index={index}
-            key={v4()}
-            amount={
-              !pool
-                ? '0'
-                : index
-                  ? !prices
-                    ? '0'
-                    : pool.metadata
-                      ? `${formatDollars(getLiquidity(pool.metadata, coinMetadata, prices))}`
-                      : 0
-                  : pool.metadata
-                    ? `${FixedPointMath.toNumber(pool.metadata.fees.feeIn, 16)}% / ${FixedPointMath.toNumber(pool.metadata.fees.feeOut, 16)}%`
-                    : '0% /0%'
-            }
-          />
+          <PoolCardTrade {...line} index={index} key={v4()} amount="0" />
         ))}
       </Box>
     </Box>

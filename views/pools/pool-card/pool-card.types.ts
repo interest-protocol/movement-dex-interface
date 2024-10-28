@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 
-import { CoinMetadataWithType } from '@/interface';
-
-import { AMMPoolWithMetadata } from '../pools.types';
+import { AmmPool } from '@/interface';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 export enum FormFilterValue {
   'official' = 'official',
@@ -18,8 +17,7 @@ export interface PoolCardHeaderProps {
 }
 
 export interface PoolCardTokenInfoProps {
-  coinTypes: ReadonlyArray<string>;
-  coinMetadata: Record<string, CoinMetadataWithType>;
+  coins: ReadonlyArray<AssetMetadata>;
 }
 
 export interface PoolCardTradeProps {
@@ -31,7 +29,5 @@ export interface PoolCardTradeProps {
 }
 
 export interface PoolCardProps {
-  pool: AMMPoolWithMetadata;
-  prices: Record<string, number>;
-  coinMetadata: Record<string, CoinMetadataWithType>;
+  pool: AmmPool;
 }

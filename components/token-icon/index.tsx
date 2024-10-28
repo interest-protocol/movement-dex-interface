@@ -3,34 +3,19 @@ import { FC, useState } from 'react';
 import useSWR from 'swr';
 
 import { DefaultTokenSVG } from '@/components/svg';
-import { useWeb3 } from '@/hooks';
-import { fetchCoinMetadata } from '@/utils';
 
 import { TOKEN_ICONS } from './token-icon.data';
-import { TokenIconProps, TypeBasedIcon } from './token-icon.types';
-import { isTypeBased } from './token-icons.utils';
+import { TokenIconProps } from './token-icon.types';
 
-const TokenIcon: FC<TokenIconProps> = (props) => {
-  const {
-    type,
-    symbol,
-    withBg,
-    network,
-    rounded,
-    size = '1.5rem',
-    loaderSize = 16,
-  } = {
-    type: '',
-    withBg: '',
-    network: '',
-    rounded: '',
-    loaderSize: 16,
-    size: '1.5rem',
-    ...props,
-  } as TypeBasedIcon;
-
-  const { coinsMap } = useWeb3();
-
+const TokenIcon: FC<TokenIconProps> = ({
+  url,
+  symbol,
+  withBg,
+  network,
+  rounded,
+  size = '1.5rem',
+  loaderSize = 16,
+}) => {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
@@ -40,15 +25,13 @@ const TokenIcon: FC<TokenIconProps> = (props) => {
   const TokenIcon = TOKEN_ICONS[network]?.[symbol] ?? null;
 
   const { data: iconSrc, isLoading } = useSWR(
-    `${network}-${type}`,
+    `${network}-${symbol}`,
     async () => {
-      if (TokenIcon || !isTypeBased(props)) return null;
+      if (TokenIcon) return null;
 
-      const data =
-        coinsMap[type]?.metadata ??
-        (await fetchCoinMetadata({ type, network }));
+      if (url) return url;
 
-      return data.iconUrl;
+      return null;
     }
   );
 
@@ -137,7 +120,7 @@ const TokenIcon: FC<TokenIconProps> = (props) => {
       </Box>
     );
 
-  if (!isTypeBased(props))
+  if (url)
     return (
       <Box
         display="flex"
@@ -160,9 +143,9 @@ const TokenIcon: FC<TokenIconProps> = (props) => {
             </Box>
           )}
           <img
+            src={url}
             width="100%"
             alt={symbol}
-            src={props.url}
             onLoad={stopLoad}
             onError={errorOnLoad}
           />

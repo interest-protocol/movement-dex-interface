@@ -45,6 +45,7 @@ const SelectCoins: FC = () => {
             borderColor="outlineVariant"
             onClick={() =>
               append({
+                name: '',
                 type: '',
                 symbol: '',
                 decimals: 0,

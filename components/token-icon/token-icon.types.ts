@@ -1,20 +1,11 @@
-import { Network } from '@/constants';
+import { Network } from '@interest-protocol/aptos-move-dex';
 
-interface BaseTokenIconProps {
+export interface TokenIconProps {
+  url?: string;
   size?: string;
   symbol: string;
   withBg?: boolean;
+  network: Network;
   rounded?: boolean;
   loaderSize?: number;
 }
-
-export interface TypeBasedIcon extends BaseTokenIconProps {
-  type: string;
-  network: Network;
-}
-
-export interface UrlBasedIcon extends BaseTokenIconProps {
-  url: string;
-}
-
-export type TokenIconProps = TypeBasedIcon | UrlBasedIcon;

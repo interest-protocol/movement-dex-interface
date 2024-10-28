@@ -1,21 +1,17 @@
+import { Network } from '@interest-protocol/aptos-move-dex';
 import { Box, Typography } from '@interest-protocol/ui-kit';
-import { pathOr } from 'ramda';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { v4 } from 'uuid';
 
 import { TokenIcon } from '@/components';
-import { COINS } from '@/constants';
-import { useNetwork } from '@/context/network';
-import { getSymbolByType, isSui } from '@/utils';
+import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
+import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 
 import { PoolCardTokenInfoProps } from './pool-card.types';
 
-const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({
-  coinTypes,
-  coinMetadata,
-}) => {
-  const network = useNetwork();
+const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ coins }) => {
+  const network = useNetwork<Network>();
 
   return (
     <Box
@@ -34,19 +30,13 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({
         alignItems="center"
         alignSelf="stretch"
       >
-        {coinTypes.map((type) => (
+        {coins.map((coin) => (
           <TokenIcon
             withBg
             key={v4()}
             network={network}
-            symbol={
-              isSui(type)
-                ? 'MOVE'
-                : (coinMetadata[type]?.symbol ?? getSymbolByType(type))
-            }
-            {...(COINS[network].some((coin) => coin.type === type)
-              ? { type }
-              : { url: coinMetadata[type]?.iconUrl ?? '' })}
+            symbol={'USDT'}
+            rounded={!isCoin(coin)}
           />
         ))}
       </Box>
@@ -62,12 +52,9 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({
           textAlign="center"
           lineHeight="1.7rem"
         >
-          {coinTypes.flatMap((type, index) => [
+          {coins.flatMap((coin, index) => [
             index ? <>{' • '}</> : '',
-            pathOr('', [type, 'symbol'], coinMetadata).replace(
-              'SUI',
-              'MOVE'
-            ) || <Skeleton key={v4()} width="4rem" />,
+            coin.symbol || <Skeleton key={v4()} width="4rem" />,
           ])}
         </Typography>
       </Box>
