@@ -9,17 +9,16 @@ export const LOCAL_STORAGE_VERSION = 'v5';
 export const PAGE_SIZE = 50;
 
 export const RPC_URL = {
-  [Network.Porto]: '#',
-  [Network.Suzuka]: '#',
-  [Network.AptosMainnet]: '#',
-  [Network.AptosTestnet]: '#',
+  [Network.Porto]: 'https://aptos.testnet.porto.movementlabs.xyz/v1',
+};
+
+export const FAUCET_URL = {
+  [Network.Porto]: 'https://mizu.testnet.porto.movementnetwork.xyz/',
 };
 
 export const EXPLORER_URL = {
-  [Network.Porto]: (path) => path,
-  [Network.Suzuka]: (path) => path,
-  [Network.AptosMainnet]: (path) => path,
-  [Network.AptosTestnet]: (path) => path,
+  [Network.Porto]: (path: string) =>
+    `https://explorer.testnet.porto.movementnetwork.xyz/${path}`,
 } as Record<Network, (path: string) => string>;
 
 export const TOAST_DURATION = 10000;
