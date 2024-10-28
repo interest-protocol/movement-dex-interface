@@ -10,7 +10,7 @@ import { SidebarLogoProps } from './sidebar.types';
 const SidebarLogo: FC<SidebarLogoProps> = ({ isCollapsed }) => (
   <Link href={Routes[RoutesEnum.Swap]}>
     <Motion
-      // mb="3.75rem"
+      mb="3.75rem"
       display="flex"
       overflow="hidden"
       textAlign="center"

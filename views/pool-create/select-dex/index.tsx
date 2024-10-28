@@ -4,8 +4,8 @@ import { FC, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { v4 } from 'uuid';
 
+import { ChevronDownSVG } from '@/components/svg';
 import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
-import { ChevronDownSVG } from '@/svg';
 
 import { CreatePoolForm } from '../pool-create.types';
 import PoolCreateButton from '../pool-next-button';
