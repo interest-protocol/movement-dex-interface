@@ -3,7 +3,7 @@ import { Box, Button } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
 import MovementNetwork from '../account-info/movement-network';
-import ConnectWalletButton from './connect-wallet-button';
+import ConnectWalletButton from './connect-wallet';
 import Profile from './profile';
 
 const Wallet: FC = () => {
