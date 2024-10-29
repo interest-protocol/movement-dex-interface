@@ -111,7 +111,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
             withBg
             size="1.1rem"
             symbol={currentSymbol}
-            network={network as Network}
+            network={network}
             rounded={!isCoin(currentToken)}
           />
         ),
