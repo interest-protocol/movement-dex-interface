@@ -9,6 +9,26 @@ const PoolCreatePage: NextPage = () => {
   const form = useForm<CreatePoolForm>({
     defaultValues: {
       step: 0,
+      type: 'AMM',
+      isStable: false,
+      tokens: [
+        {
+          type: '' as `0x${string}`,
+          name: '',
+          symbol: '',
+          decimals: 0,
+          value: '',
+          usdPrice: null,
+        },
+        {
+          type: '' as `0x${string}`,
+          name: '',
+          symbol: '',
+          decimals: 0,
+          value: '',
+          usdPrice: null,
+        },
+      ],
     },
   });
 

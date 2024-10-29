@@ -35,12 +35,12 @@ const CreatePoolHeader: FC<CreatePoolProps> = ({ name, onBack }) => (
     </Button>
     <Typography
       size="large"
+      width="100%"
       color="onSurface"
       variant="headline"
       textAlign="center"
-      fontSize={['xl', 'xl', '3xl', '5xl']}
-      width="100%"
       whiteSpace="pre-line"
+      fontSize={['xl', 'xl', '3xl', '5xl']}
     >
       {name}
     </Typography>
