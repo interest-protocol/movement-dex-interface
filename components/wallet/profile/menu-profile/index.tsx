@@ -1,44 +1,43 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Network } from '@interest-protocol/aptos-move-dex';
-import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
+//import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { Box, Motion } from '@interest-protocol/ui-kit';
 import { FC, useState } from 'react';
-import { v4 } from 'uuid';
 
-import { EXPLORER_URL } from '@/constants';
 import { wrapperVariants } from '@/constants/wrapper-variants';
 import { useIsFirstRender } from '@/hooks';
-import useEventListener from '@/hooks/use-event-listener';
-import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 
 import MenuButton from '../../menu-button';
+import MenuContent from '../menu-content';
 import { MenuProfileProps } from '../profile.types';
-import { MENU_PROFILE_DATA } from './menu.data';
-import MenuProfileItem from './profile-item';
+import SettingMenu from '../setting-menu';
 import UserInfo from './user-info';
 
 const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
-  const network = useNetwork<Network>();
+  //const network = useNetwork<Network>();
   const firstRender = useIsFirstRender();
-  const { breakpoints } = useTheme() as Theme;
-  const [isDesktop, setIsDesktop] = useState(false);
-  const { account: currentAccount, disconnect } = useWallet();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // const { breakpoints } = useTheme() as Theme;
+  //const { account: currentAccount } = useWallet();
 
-  const account = currentAccount?.address || '';
+  //const account = currentAccount?.address || '';
 
-  const handleAction: Record<string, () => void | Promise<void>> = {
-    disconnect: () => {
-      handleCloseProfile();
-      disconnect();
-    },
-    viewInExplorer: () => {
-      window.open(`${EXPLORER_URL[network](`account/${account}`)}`, '_blank');
-    },
+  // const handleAction: Record<string, () => void | Promise<void>> = {
+  //   disconnect: () => {
+  //     handleCloseProfile();
+  //     disconnect();
+  //   },
+  //   viewInExplorer: () => {
+  //     window.open(`${EXPLORER_URL[network](`account/${account}`)}`, '_blank');
+  //   },
+  // };
+
+  // const handleSetDesktopView = () =>
+  //   setIsDesktop(window.matchMedia(`(min-width: ${breakpoints[2]})`).matches);
+
+  // useEventListener('resize', handleSetDesktopView, true);
+
+  const handleSettings = () => {
+    setIsSettingsOpen(true);
   };
-
-  const handleSetDesktopView = () =>
-    setIsDesktop(window.matchMedia(`(min-width: ${breakpoints[2]})`).matches);
-
-  useEventListener('resize', handleSetDesktopView, true);
 
   return (
     <Motion
@@ -46,7 +45,10 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
       zIndex={1}
       bg="container"
       display="flex"
-      borderRadius="s"
+      borderRadius="2xs"
+      border="1px"
+      borderStyle="solid"
+      borderColor="outline"
       overflow="hidden"
       flexDirection="column"
       variants={wrapperVariants}
@@ -57,8 +59,8 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
       animate={isOpen ? 'open' : 'closed'}
       pb={['7rem', '7rem', '7rem', 'unset']}
       pointerEvents={isOpen ? 'auto' : 'none'}
-      height={['100vh', '100vh', '100vh', 'unset']}
-      width={['100vw', '100vw', '100vw', '14.5rem']}
+      height={['100vh', '100vh', '100vh', '85vh']}
+      width={['100vw', '100vw', '100vw', '26.875rem']}
       position={['fixed', 'fixed', 'fixed', 'absolute']}
       initial={isOpen || firstRender ? 'closed' : 'open'}
       color="onSurface"
@@ -71,25 +73,9 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
         >
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
-        <UserInfo />
-        {MENU_PROFILE_DATA.slice(0, !isDesktop ? -1 : undefined).map(
-          (profileItem) => (
-            <MenuProfileItem
-              {...profileItem}
-              handleAction={handleAction}
-              key={v4()}
-            />
-          )
-        )}
+        <UserInfo handleSettings={handleSettings} />
+        {isSettingsOpen ? <SettingMenu /> : <MenuContent />}
       </Box>
-      {!isDesktop &&
-        MENU_PROFILE_DATA.slice(-1).map((profileItem) => (
-          <MenuProfileItem
-            {...profileItem}
-            handleAction={handleAction}
-            key={v4()}
-          />
-        ))}
     </Motion>
   );
 };
