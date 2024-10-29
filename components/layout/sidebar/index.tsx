@@ -26,8 +26,6 @@ const Sidebar: FC = () => {
   const [isOpen, setTemporarilyOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isLocalCollapsed ?? false);
 
-  return null;
-
   return (
     <Motion
       p="xl"
