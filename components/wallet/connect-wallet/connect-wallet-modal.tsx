@@ -38,7 +38,7 @@ const ConnectWalletModal: FC<ConnectWalletModalProps> = ({ handleClose }) => {
         </Box>
         <Button
           isIcon
-          p="none"
+          m="-0.5rem"
           variant="text"
           color="outline"
           onClick={handleClose}
