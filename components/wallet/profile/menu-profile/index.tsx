@@ -1,39 +1,25 @@
 //import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Box, Motion } from '@interest-protocol/ui-kit';
+import { not } from 'ramda';
 import { FC, useState } from 'react';
 
 import { wrapperVariants } from '@/constants/wrapper-variants';
 import { useIsFirstRender } from '@/hooks';
 
 import MenuButton from '../../menu-button';
-import MenuContent from '../menu-content';
 import { MenuProfileProps } from '../profile.types';
-import SettingMenu from '../setting-menu';
+import MenuContent from './home-profile';
+import SettingProfile from './setting-profile';
 import UserInfo from './user-info';
 
 const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
   //const network = useNetwork<Network>();
   const firstRender = useIsFirstRender();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  // const { breakpoints } = useTheme() as Theme;
-  //const { account: currentAccount } = useWallet();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  //const account = currentAccount?.address || '';
-
-  // const handleAction: Record<string, () => void | Promise<void>> = {
-  //   disconnect: () => {
-  //     handleCloseProfile();
-  //     disconnect();
-  //   },
-  //   viewInExplorer: () => {
-  //     window.open(`${EXPLORER_URL[network](`account/${account}`)}`, '_blank');
-  //   },
-  // };
-
-  // const handleSetDesktopView = () =>
-  //   setIsDesktop(window.matchMedia(`(min-width: ${breakpoints[2]})`).matches);
-
-  // useEventListener('resize', handleSetDesktopView, true);
+  const handleToggleProfile = () => setIsSettingsOpen(not);
 
   const handleSettings = () => {
     setIsSettingsOpen(true);
@@ -74,7 +60,14 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
         <UserInfo handleSettings={handleSettings} />
-        {isSettingsOpen ? <SettingMenu /> : <MenuContent />}
+        {isSettingsOpen ? (
+          <SettingProfile
+            isProfileOpen={isProfileOpen}
+            handleToggleProfile={handleToggleProfile}
+          />
+        ) : (
+          <MenuContent />
+        )}
       </Box>
     </Motion>
   );

@@ -1,7 +1,7 @@
 import { Box, ToggleButton, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-import { SettingOptionProps } from '../profile.types';
+import { SettingOptionProps } from '../../profile.types';
 
 const SettingOption: FC<SettingOptionProps> = ({
   label,
@@ -22,11 +22,18 @@ const SettingOption: FC<SettingOptionProps> = ({
         alignItems="flex-start"
         flexDirection="column"
         justifyItems="flex-start"
+        color="onSecondary"
       >
         <Typography size="medium" variant="label">
           {label}
         </Typography>
-        <Typography size="small" variant="label" opacity="0.7" width="80%">
+        <Typography
+          size="small"
+          variant="label"
+          opacity="0.7"
+          mt="0.5rem"
+          width="80%"
+        >
           {description}
         </Typography>
       </Box>
@@ -34,6 +41,7 @@ const SettingOption: FC<SettingOptionProps> = ({
         name="toggle"
         onChange={() => {}}
         defaultValue={isToggleEnable}
+        disabled
       />
     </Box>
   );

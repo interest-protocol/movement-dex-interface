@@ -1,24 +1,28 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
-import { useRouter } from 'next/router';
+import { FC } from 'react';
 
-import Dropdown from '@/components/dropdown';
-import { ArrowLeftSVG } from '@/components/svg';
+import { ArrowLeftSVG, ChevronRightSVG } from '@/components/svg';
 
+import { SettingMenuProps } from '../user-info.types';
 import SettingOption from './setting-option';
 
-const SettingMenu = () => {
-  const { push } = useRouter();
+const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
+  const handleBackProfile = () => {
+    const url = new URL(window.location.href);
 
-  const coins = ['USD', 'USDC', 'USDT'];
+    window.history.pushState('', '', url.toString());
+    handleToggleProfile();
+  };
+
   return (
-    <Box width="100%" p="s">
+    <Box width="100%" p="s" color="secondary">
       <Box
         width="60%"
         display="flex"
         alignItems="center"
         justifyContent="space-between"
       >
-        <Button isIcon variant="text" onClick={() => push('/')}>
+        <Button isIcon variant="text" onClick={handleBackProfile}>
           <ArrowLeftSVG
             width="1.5rem"
             height="1.5rem"
@@ -54,14 +58,26 @@ const SettingMenu = () => {
         <Typography size="medium" variant="label">
           Currency
         </Typography>
-        <Dropdown
-          defaultValue={coins[0]}
-          menuItems={coins}
-          onSelect={() => {}}
-        />
+        <Box
+          m={0}
+          p={0}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <Typography size="medium" variant="body" opacity="0.7">
+            USD
+          </Typography>
+          <ChevronRightSVG
+            height="1.5rem"
+            width="1.5rem"
+            maxHeight="100%"
+            maxWidth="100%"
+          />
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default SettingMenu;
+export default SettingProfile;

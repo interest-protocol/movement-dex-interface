@@ -1,19 +1,15 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-import { CoinSVG, FireSVG, MergeSVG } from '@/components/svg';
+import { CoinSVG } from '@/components/svg';
 
-import AssetInfo from '../asset-info';
 import BalanceCard from '../balance-card';
 
-const MenuContent: FC = () => {
+const HomeProfile: FC = () => {
   return (
     <>
       <BalanceCard balance={0} dollarAmount={0} />
-      <Box display="flex" gap="xs" p="xl">
-        <AssetInfo Icon={FireSVG} label="Burn scams" />
-        <AssetInfo Icon={MergeSVG} label="Merge coin" />
-      </Box>
+      <Box display="flex" gap="xs" p="xl"></Box>
       <Box
         my="m"
         px="xl"
@@ -24,7 +20,7 @@ const MenuContent: FC = () => {
         alignItems="flex-start"
       >
         <Typography size="small" variant="label">
-          Token
+          Coins
         </Typography>
         <Typography
           size="small"
@@ -32,7 +28,7 @@ const MenuContent: FC = () => {
           variant="label"
           color="onSurface"
         >
-          NFT
+          NFA
         </Typography>
       </Box>
       <Box
@@ -66,4 +62,4 @@ const MenuContent: FC = () => {
   );
 };
 
-export default MenuContent;
+export default HomeProfile;

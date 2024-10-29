@@ -6,7 +6,6 @@ import Avatar from '@/components/account-info/avatar';
 import { CopySVG, LogoutSVG, SettingSVG } from '@/components/svg';
 import { copyToClipboard } from '@/utils';
 
-import ItemWrapper from '../../../menu-mobile/menu-settings/item-wrapper';
 import { UserInfoProps } from './user-info.types';
 
 const UserInfo: FC<UserInfoProps> = ({ handleSettings }) => {
@@ -19,7 +18,15 @@ const UserInfo: FC<UserInfoProps> = ({ handleSettings }) => {
   return (
     <>
       <Box>
-        <ItemWrapper>
+        <Box
+          py="m"
+          gap="l"
+          px="l"
+          display="flex"
+          minWidth="14rem"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Box
             width="100%"
             display="flex"
@@ -68,7 +75,7 @@ const UserInfo: FC<UserInfoProps> = ({ handleSettings }) => {
               </Button>
             </Box>
           </Box>
-        </ItemWrapper>
+        </Box>
       </Box>
     </>
   );
