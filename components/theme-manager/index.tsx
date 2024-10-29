@@ -1,3 +1,5 @@
+import 'react-loading-skeleton/dist/skeleton.css';
+
 import { Global, ThemeProviderProps } from '@emotion/react';
 import {
   darkTheme,

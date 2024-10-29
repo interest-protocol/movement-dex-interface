@@ -42,7 +42,7 @@ const FromInput: FC = () => {
               fontFamily="Satoshi"
               fieldProps={{
                 width: '100%',
-                borderRadius: 'full',
+                borderRadius: 'xs',
               }}
               {...register(`from.value`, {
                 onChange: (v: ChangeEvent<HTMLInputElement>) => {
