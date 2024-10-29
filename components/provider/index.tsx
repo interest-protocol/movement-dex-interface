@@ -1,5 +1,3 @@
-import '@razorlabs/wallet-kit/style.css';
-
 import { Wallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-move-dex';
 import { NightlyWallet } from '@nightlylabs/aptos-wallet-adapter-plugin';
