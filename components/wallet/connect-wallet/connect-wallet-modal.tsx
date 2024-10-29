@@ -36,7 +36,13 @@ const ConnectWalletModal: FC<ConnectWalletModalProps> = ({ handleClose }) => {
             Please select a wallet to connect to this dapp:
           </Typography>
         </Box>
-        <Button variant="text" isIcon color="outline" p="none">
+        <Button
+          isIcon
+          p="none"
+          variant="text"
+          color="outline"
+          onClick={handleClose}
+        >
           <TimesSVG maxWidth="1rem" maxHeight="1rem" width="100%" />
         </Button>
       </Box>
