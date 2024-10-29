@@ -2,8 +2,9 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network, STRICT_POOLS } from '@interest-protocol/aptos-move-dex';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
+import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useDialog } from '@/hooks';
@@ -20,10 +21,13 @@ const SwapButton = () => {
   const client = useAptosClient();
   const account = useCurrentAccount();
   const { signTransaction } = useWallet();
-
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { getValues, setValue } = useFormContext<SwapForm>();
+  const { getValues, setValue, control } = useFormContext<SwapForm>();
+
+  const error = useWatch({ control, name: 'error' });
+  const symbolIn = useWatch({ control, name: 'from.symbol' });
+  const symbolOut = useWatch({ control, name: 'to.symbol' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -127,9 +131,35 @@ const SwapButton = () => {
       },
     });
 
+  const disabled = !(symbolIn && symbolOut);
+
   return (
-    <Box display="flex" flexDirection="column">
-      <Button variant="filled" onClick={onSwap} justifyContent="center" py="m">
+    <Box display="flex" flexDirection="column" gap="l">
+      {error && (
+        <Box
+          p="s"
+          mx="xl"
+          gap="s"
+          display="flex"
+          borderRadius="xs"
+          border="1px solid"
+          bg="errorContainer"
+          color="onErrorContainer"
+          borderColor="onErrorContainer"
+        >
+          <DotErrorSVG width="100%" maxWidth="1rem" maxHeight="1rem" />
+          <Typography variant="label" size="medium">
+            {error}
+          </Typography>
+        </Box>
+      )}
+      <Button
+        py="m"
+        variant="filled"
+        onClick={onSwap}
+        disabled={disabled}
+        justifyContent="center"
+      >
         <Typography variant="label" size="large">
           {loading ? 'Swapping...' : 'Confirm Swap'}
         </Typography>

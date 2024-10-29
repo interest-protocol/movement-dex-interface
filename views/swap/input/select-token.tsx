@@ -97,8 +97,8 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       fontSize="s"
       variant="tonal"
       color="onSurface"
+      borderRadius="xs"
       border="1px solid"
-      borderRadius="full"
       disabled={swapping}
       onClick={openModal}
       bg="highestContainer"

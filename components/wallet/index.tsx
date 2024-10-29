@@ -1,6 +1,9 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { Network } from '@interest-protocol/aptos-move-dex';
 import { Box, Button } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
+
+import { EXTERNAL_FAUCET_URL } from '@/constants';
 
 import MovementNetwork from '../account-info/movement-network';
 import ConnectWalletButton from './connect-wallet';
@@ -12,7 +15,7 @@ const Wallet: FC = () => {
   return (
     <Box gap="s" display="flex" alignItems="center" justifyContent="flex-end">
       <a
-        href="https://exultant-lycra-b2b.notion.site/Interest-Protocol-a3ed3682872f4b72ae881bf17b5d0be3"
+        href={EXTERNAL_FAUCET_URL[Network.Porto]}
         target="_blank"
         rel="noreferrer"
       >
@@ -23,7 +26,7 @@ const Wallet: FC = () => {
           px={['xs', 'xs', 's']}
           nHover={{ bg: 'warning' }}
         >
-          Guide
+          Mint
         </Button>
       </a>
       <Box
@@ -33,22 +36,7 @@ const Wallet: FC = () => {
       >
         <MovementNetwork />
       </Box>
-      {account ? (
-        <>
-          <a
-            href="https://faucet.devnet.imola.movementlabs.xyz"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Button variant="filled" px={['xs', 'xs', 's']}>
-              Mint MOVE
-            </Button>
-          </a>
-          <Profile />
-        </>
-      ) : (
-        <ConnectWalletButton />
-      )}
+      {account ? <Profile /> : <ConnectWalletButton />}
     </Box>
   );
 };

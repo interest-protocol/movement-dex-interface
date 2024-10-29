@@ -88,7 +88,19 @@ const Balance: FC<InputProps> = ({ label }) => {
       <Typography size="small" variant="body" fontSize="s">
         {symbol ? `${balance} ${symbol}` : '0'}
       </Typography>
-      {loading && <ProgressIndicator variant="loading" size={12} />}
+      {loading && (
+        <Box
+          mx="xs"
+          mt="-1.2rem"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Box position="absolute" justifySelf="flex-end">
+            <ProgressIndicator variant="loading" size={12} />
+          </Box>
+        </Box>
+      )}
     </Button>
   );
 };
