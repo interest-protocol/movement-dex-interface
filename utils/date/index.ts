@@ -11,6 +11,8 @@ export const getExactDayTimestamp = () => {
 };
 
 export const getFirstWeekDayTimestamp = (timestamp?: number) => {
+  if (timestamp === 0) return 0;
+
   const date = timestamp ? new Date(timestamp) : new Date();
 
   const exactDay = new Date(
