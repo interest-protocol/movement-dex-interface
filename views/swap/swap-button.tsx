@@ -11,15 +11,18 @@ import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
+import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
 import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 
 import { SwapForm } from './swap.types';
+import { logSwap } from './swap.utils';
 
 const SwapButton = () => {
   const dex = useInterestDex();
   const client = useAptosClient();
   const account = useCurrentAccount();
+  const network = useNetwork<Network>();
   const { signTransaction } = useWallet();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
@@ -88,6 +91,8 @@ const SwapButton = () => {
         transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
+
+      logSwap(account!.address, from, to, network, txResult.hash);
 
       setValue(
         'explorerLink',
