@@ -8,7 +8,7 @@ import { useIsFirstRender } from '@/hooks';
 
 import MenuButton from '../../menu-button';
 import { MenuProfileProps } from '../profile.types';
-import MenuContent from './home-profile';
+import HomeProfile from './home-profile';
 import SettingProfile from './setting-profile';
 import UserInfo from './user-info';
 
@@ -66,7 +66,7 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
             handleToggleProfile={handleToggleProfile}
           />
         ) : (
-          <MenuContent />
+          <HomeProfile />
         )}
       </Box>
     </Motion>

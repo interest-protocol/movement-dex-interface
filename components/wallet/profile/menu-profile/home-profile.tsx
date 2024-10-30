@@ -8,7 +8,7 @@ import BalanceCard from '../balance-card';
 const HomeProfile: FC = () => {
   return (
     <>
-      <BalanceCard balance={0} dollarAmount={0} />
+      <BalanceCard />
       <Box display="flex" gap="xs" p="xl"></Box>
       <Box
         my="m"
