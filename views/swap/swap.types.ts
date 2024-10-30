@@ -33,6 +33,7 @@ export interface SwapForm {
   error?: string | null;
   updateSlider: object;
   explorerLink: string;
+  executionTime: string;
   loading: boolean;
   focus: boolean;
   swapping: boolean;

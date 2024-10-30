@@ -7,7 +7,7 @@ import { CreatePoolForm, CreatePoolStep } from './pool-create.types';
 const PoolNextButton: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { control, setValue, getValues } = useFormContext<CreatePoolForm>();
-  const { step, type, isStable, tokens } = useWatch({ control });
+  const { step, tokens } = useWatch({ control });
 
   const error = getValues('error');
 
@@ -18,8 +18,6 @@ const PoolNextButton: FC = () => {
 
   const isDisabled = useMemo(() => {
     if (error || loading) return true;
-    if (step === CreatePoolStep.PoolType) return type === undefined;
-    if (step === CreatePoolStep.PoolAlgorithm) return isStable === undefined;
     if (step === CreatePoolStep.PoolCoins)
       return !tokens?.every(
         ({ value, symbol, decimals }) =>
@@ -27,30 +25,7 @@ const PoolNextButton: FC = () => {
       );
 
     return false;
-  }, [step, type, isStable, tokens, loading]);
-
-  const handleClick = [
-    null,
-    () =>
-      setValue('tokens', [
-        {
-          type: '' as `0x${string}`,
-          name: '',
-          symbol: '',
-          decimals: 0,
-          value: '',
-          usdPrice: null,
-        },
-        {
-          type: '' as `0x${string}`,
-          name: '',
-          symbol: '',
-          decimals: 0,
-          value: '',
-          usdPrice: null,
-        },
-      ]),
-  ];
+  }, [step, tokens, loading]);
 
   return (
     <>
@@ -71,7 +46,6 @@ const PoolNextButton: FC = () => {
             }
           }
 
-          handleClick[step!]?.();
           setValue('step', step! + 1);
         }}
       >
