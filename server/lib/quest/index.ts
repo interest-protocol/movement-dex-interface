@@ -71,6 +71,26 @@ export const findQuestProfile = async (address: string) => {
   );
 };
 
+export const findSwapBySymbols = async (
+  address: string,
+  symbolIn: string,
+  symbolOut: string
+) => {
+  await dbConnect();
+
+  const swapQuests = await QuestModel.find({
+    address,
+    kind: 'swap',
+  })
+    .lean()
+    .exec();
+
+  return swapQuests.find(
+    ({ data }) =>
+      data.coinIn.symbol === symbolIn && data.coinOut.symbol === symbolOut
+  );
+};
+
 export const findMetrics = async (network: Network) => {
   await dbConnect();
 
