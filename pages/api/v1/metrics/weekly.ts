@@ -1,8 +1,8 @@
+import { Network } from '@interest-protocol/aptos-move-dex';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextCors from 'nextjs-cors';
 import { pathOr } from 'ramda';
 
-import { Network } from '@/constants';
 import dbConnect from '@/server';
 import metrics from '@/server/model/metrics';
 
@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await dbConnect();
 
-    const network = pathOr(Network.TESTNET, ['query', 'network'], req);
+    const network = pathOr(Network.Porto, ['query', 'network'], req);
 
     const data = await metrics.findOne({ network });
 
