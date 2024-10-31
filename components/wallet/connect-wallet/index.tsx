@@ -1,18 +1,26 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Button, Typography } from '@interest-protocol/ui-kit';
-import { NightlyWalletName } from '@nightlylabs/aptos-wallet-adapter-plugin';
 import { FC } from 'react';
 
+import { useModal } from '@/hooks/use-modal';
+
+import ConnectWalletModal from './connect-wallet-modal';
+
 const ConnectWalletButton: FC = () => {
-  const { connect, account } = useWallet();
+  const { setModal, handleClose } = useModal();
+
+  const handleOpenModal = () =>
+    setModal(<ConnectWalletModal handleClose={handleClose} />, {
+      isOpen: true,
+      custom: true,
+      onClose: handleClose,
+    });
 
   return (
     <Button
       px={['s', 'l']}
       variant="filled"
       borderRadius="xs"
-      disabled={!!account}
-      onClick={() => connect(NightlyWalletName)}
+      onClick={handleOpenModal}
     >
       Connect
       <Typography
@@ -22,7 +30,7 @@ const ConnectWalletButton: FC = () => {
         display={['none', 'none', 'inline']}
       >
         {' '}
-        with Nightly
+        Wallet
       </Typography>
     </Button>
   );

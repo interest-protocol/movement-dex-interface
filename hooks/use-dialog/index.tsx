@@ -1,6 +1,6 @@
-import { Dialog } from '@interest-protocol/ui-kit';
+import { Dialog } from '@/components';
+import { useModal } from '@/hooks/use-modal';
 
-import { useModal } from '../use-modal';
 import { IDialogData } from './use-dialog.types';
 
 export const useDialog = () => {
@@ -15,22 +15,22 @@ export const useDialog = () => {
           loading,
           success,
           error,
-        }: Record<'error' | 'loading' | 'success', IDialogData>
+        }: Record<'error' | 'loading' | 'success', () => IDialogData>
       ): Promise<void> => {
         try {
-          setModal(<Dialog status="loading" {...loading} />, {
+          setModal(<Dialog status="loading" {...loading()} />, {
             isOpen: true,
             custom: true,
             onClose: handleClose,
           });
           await promise;
-          setModal(<Dialog status="success" {...success} />, {
+          setModal(<Dialog status="success" {...success()} />, {
             isOpen: true,
             custom: true,
             onClose: handleClose,
           });
         } catch {
-          setModal(<Dialog status="error" {...error} />, {
+          setModal(<Dialog status="error" {...error()} />, {
             isOpen: true,
             custom: true,
             onClose: handleClose,

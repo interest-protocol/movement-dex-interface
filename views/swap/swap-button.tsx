@@ -11,15 +11,20 @@ import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
+import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
 import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 
+import SuccessModal from '../components/success-modal';
+import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
 import { SwapForm } from './swap.types';
+import { logSwap } from './swap.utils';
 
 const SwapButton = () => {
   const dex = useInterestDex();
   const client = useAptosClient();
   const account = useCurrentAccount();
+  const network = useNetwork<Network>();
   const { signTransaction } = useWallet();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
@@ -89,6 +94,8 @@ const SwapButton = () => {
         options: { checkSuccess: true },
       });
 
+      logSwap(account!.address, from, to, network, txResult.hash);
+
       setValue(
         'explorerLink',
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
@@ -100,20 +107,26 @@ const SwapButton = () => {
 
   const onSwap = () =>
     dialog.promise(handleSwap(), {
-      loading: {
+      loading: () => ({
         title: 'Swapping...',
         message: 'We are swapping, and you will let you know when it is done',
-      },
-      error: {
+      }),
+      error: () => ({
         title: 'Swap Failure',
         message:
           'Your swap failed, please try to increment your slippage and try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
-      },
-      success: {
-        title: 'Swap Successfully',
-        message:
-          'Your swap was successfully, and you can check it on the Explorer',
+      }),
+      success: () => ({
+        title: 'Swap Successful',
+        message: (
+          <SuccessModal transactionTime={`${0}`}>
+            <SuccessModalTokenCard
+              from={getValues('from')}
+              to={getValues('to')}
+            />
+          </SuccessModal>
+        ),
         primaryButton: {
           label: 'See on Explorer',
           onClick: gotoExplorer,
@@ -128,7 +141,7 @@ const SwapButton = () => {
             got it
           </Button>
         ),
-      },
+      }),
     });
 
   const disabled = !(symbolIn && symbolOut);

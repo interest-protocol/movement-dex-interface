@@ -6,7 +6,7 @@ import { FC } from 'react';
 import { EXTERNAL_FAUCET_URL } from '@/constants';
 
 import MovementNetwork from '../account-info/movement-network';
-import ConnectWalletButton from './connect-wallet-button';
+import ConnectWalletButton from './connect-wallet';
 import Profile from './profile';
 
 const Wallet: FC = () => {
@@ -36,22 +36,7 @@ const Wallet: FC = () => {
       >
         <MovementNetwork />
       </Box>
-      {account ? (
-        <>
-          <a
-            href="https://faucet.devnet.imola.movementlabs.xyz"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Button variant="filled" px={['xs', 'xs', 's']}>
-              Mint MOVE
-            </Button>
-          </a>
-          <Profile />
-        </>
-      ) : (
-        <ConnectWalletButton />
-      )}
+      {account ? <Profile /> : <ConnectWalletButton />}
     </Box>
   );
 };

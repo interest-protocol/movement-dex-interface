@@ -1,8 +1,5 @@
-import 'react-loading-skeleton/dist/skeleton.css';
-
 import { Wallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-move-dex';
-import { MartianWallet } from '@martianwallet/aptos-wallet-adapter';
 import { NightlyWallet } from '@nightlylabs/aptos-wallet-adapter-plugin';
 import { FC, PropsWithChildren } from 'react';
 
@@ -17,10 +14,7 @@ const Provider: FC<PropsWithChildren> = ({ children }) => (
   <ThemeManager>
     <AptosProvider
       defaultNetwork={Network.Porto}
-      wallets={[
-        MartianWallet as unknown as Wallet,
-        NightlyWallet as unknown as Wallet,
-      ]}
+      wallets={[NightlyWallet as unknown as Wallet]}
       networks={[
         {
           network: Network.Porto,
