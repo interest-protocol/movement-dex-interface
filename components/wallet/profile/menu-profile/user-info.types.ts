@@ -3,6 +3,15 @@ export interface UserInfoProps {
 }
 
 export interface SettingMenuProps {
-  isProfileOpen?: boolean;
   handleToggleProfile: () => void;
+}
+
+export enum ProfileTabsMenuEnum {
+  coin,
+  nfa,
+}
+
+export interface ProfileTabItemProps {
+  name: string;
+  value: ProfileTabsMenuEnum;
 }
