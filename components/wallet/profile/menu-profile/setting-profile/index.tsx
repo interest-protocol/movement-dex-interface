@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-import { ArrowLeftSVG } from '@/components/svg';
+import { ArrowLeftSVG, ChevronRightSVG } from '@/components/svg';
 
 import { SettingMenuProps } from '../user-info.types';
 import SettingOption from './setting-option';
@@ -60,15 +60,20 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
         </Typography>
         <Box
           m={0}
-          p="0.5rem"
-          borderRadius="xs"
-          nHover={{
-            background: 'lowContainer',
-          }}
+          p={0}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
         >
           <Typography size="medium" variant="body" opacity="0.7">
             USD
           </Typography>
+          <ChevronRightSVG
+            height="1.5rem"
+            width="1.5rem"
+            maxHeight="100%"
+            maxWidth="100%"
+          />
         </Box>
       </Box>
     </Box>
