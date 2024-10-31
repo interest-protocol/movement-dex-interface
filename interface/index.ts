@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AccountAddress } from '@aptos-labs/ts-sdk';
 import BigNumber from 'bignumber.js';
 

@@ -34,6 +34,7 @@ const Profile: FC = () => {
   const handleOpenProfile = () => {
     const url = new URL(window.location.href);
     url.searchParams.set('profile', 'true');
+
     window.history.pushState('', '', url.toString());
     setIsOpenProfile(true);
   };
