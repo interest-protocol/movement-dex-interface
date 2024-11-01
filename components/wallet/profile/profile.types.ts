@@ -28,3 +28,9 @@ export interface MenuSwitchAccountHeaderProps {
   handleCloseProfile: () => void;
   size: number;
 }
+
+export interface SettingOptionProps {
+  label: string;
+  description?: string;
+  isToggleEnable: boolean;
+}

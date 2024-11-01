@@ -1,6 +1,7 @@
 import { ActivitySVG, AssetsSVG, LinkSVG, LogoutSVG } from '@/components/svg';
 
 import { ProfileMenuItemProps } from '../profile.types';
+import { ProfileTabItemProps, ProfileTabsMenuEnum } from './user-info.types';
 
 export const MENU_PROFILE_DATA: ReadonlyArray<ProfileMenuItemProps> = [
   {
@@ -30,5 +31,16 @@ export const MENU_PROFILE_DATA: ReadonlyArray<ProfileMenuItemProps> = [
     Icon: LogoutSVG,
     hasBorder: true,
     disabled: false,
+  },
+];
+
+export const PROFILE_TAB: ReadonlyArray<ProfileTabItemProps> = [
+  {
+    name: 'coin',
+    value: ProfileTabsMenuEnum.coin,
+  },
+  {
+    name: 'nfa',
+    value: ProfileTabsMenuEnum.nfa,
   },
 ];
