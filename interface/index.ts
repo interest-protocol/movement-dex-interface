@@ -11,6 +11,11 @@ export interface CoinData {
   symbol: string;
 }
 
+export interface PoolPageProps {
+  objectId: string;
+  stateId: string;
+}
+
 export interface FAMetadata {
   name: string;
   symbol: string;
@@ -38,6 +43,7 @@ export interface AmmPoolCoinTypes {
   lpCoin: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface AmmPoolRaw<T> {
   poolObjectId: string;
   stateId: string;
