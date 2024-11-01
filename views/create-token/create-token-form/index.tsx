@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { parseInputEventToNumberString } from '@/utils';
 
 import { ICreateTokenForm } from '../create-token.types';
+import CreateTokenFormPool from './create-token-form-pool';
 import CreateTokenFormPreviewImage from './create-token-form-preview-image';
 import CreateTokenFormToggle from './create-token-form-toggle';
 import CreateTokenFormImage from './create-token-form-upload-image';
@@ -16,7 +17,6 @@ const CreateTokenForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const {
     register,
-    control,
     setValue,
     handleSubmit,
     formState: { errors },
@@ -90,12 +90,12 @@ const CreateTokenForm: FC = () => {
           <Box>
             <TextField
               fontFamily="Proto"
-              label="Description"
-              {...register('description')}
+              label="Project URL"
+              {...register('projectUrl')}
               nPlaceholder={{ opacity: 0.7 }}
-              status={errors.description && 'error'}
-              placeholder="Eg. Some description about the coin"
-              supportingText={errors.description?.message}
+              status={errors.projectUrl && 'error'}
+              placeholder="Eg. https://www.memez.gg"
+              supportingText={errors.projectUrl?.message}
               fieldProps={{ borderRadius: '2xs', height: '3rem' }}
             />
           </Box>
@@ -177,17 +177,8 @@ const CreateTokenForm: FC = () => {
         <Typography variant="headline" size="small">
           Coin features
         </Typography>
-        <Box
-          p="m"
-          my="xl"
-          gap="m"
-          bg="surface"
-          display="flex"
-          borderRadius="xs"
-          flexDirection="column"
-        >
-          <CreateTokenFormToggle control={control} setValue={setValue} />
-        </Box>
+        <CreateTokenFormToggle />
+        <CreateTokenFormPool />
         <Box display="flex" justifyContent="center">
           <Button
             py="s"

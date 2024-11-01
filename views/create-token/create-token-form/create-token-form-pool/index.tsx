@@ -3,9 +3,10 @@ import { not } from 'ramda';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { ICreateTokenForm } from '../create-token.types';
+import { ICreateTokenForm } from '../../create-token.types';
+import CreateTokenFormPoolForm from './create-token-form-pool-form';
 
-const FixedSupplyToggle: FC = () => {
+const CreateTokenFormPool: FC = () => {
   const { control, setValue } = useFormContext<ICreateTokenForm>();
   const value = useWatch({ control, name: 'fixedSupply' });
 
@@ -21,7 +22,7 @@ const FixedSupplyToggle: FC = () => {
     >
       <Box display="flex" justifyContent="space-between" color="onSurface">
         <Typography variant="body" size="large">
-          Fixed Supply
+          Deploy Pool Instantly
         </Typography>
         <ToggleButton
           name="Fixed Supply"
@@ -30,10 +31,11 @@ const FixedSupplyToggle: FC = () => {
         />
       </Box>
       <Typography variant="body" size="small" color="onSurface" opacity={0.6}>
-        The Treasury Cap will be sent to {value ? 'the @0x0 address' : 'you'}
+        This feature will deploy the pool automatically
       </Typography>
+      <CreateTokenFormPoolForm />
     </Box>
   );
 };
 
-export default FixedSupplyToggle;
+export default CreateTokenFormPool;

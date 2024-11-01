@@ -6,15 +6,14 @@ export const validationSchema = yup.object({
     .string()
     .required('Symbol is a required field')
     .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field'),
-  description: yup
+  projectUrl: yup
     .string()
-    .required('You must provide a description')
+    .url('You must provide an URL')
     .notOneOf(
       [yup.ref('name'), yup.ref('symbol')],
       'The description must be different than the name and symbol'
     ),
   imageUrl: yup.string(),
-  projectUrl: yup.string(),
   supply: yup
     .number()
     .required('Supply is a required field')
