@@ -6,7 +6,10 @@ import { ArrowLeftSVG, ChevronRightSVG } from '@/components/svg';
 import { SettingMenuProps } from '../user-info.types';
 import SettingOption from './setting-option';
 
-const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
+const SettingProfile: FC<SettingMenuProps> = ({
+  handleToggleProfile,
+  handleCurrency,
+}) => {
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
 
@@ -64,6 +67,7 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
           display="flex"
           alignItems="center"
           justifyContent="flex-end"
+          onClick={handleCurrency}
         >
           <Typography size="medium" variant="body" opacity="0.7">
             USD

@@ -1,4 +1,3 @@
-//import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Box, Motion } from '@interest-protocol/ui-kit';
 import { not } from 'ramda';
 import { FC, useState } from 'react';
@@ -9,13 +8,14 @@ import { useIsFirstRender } from '@/hooks';
 import MenuButton from '../../menu-button';
 import { MenuProfileProps } from '../profile.types';
 import HomeProfile from './home-profile';
+import MenuCurrency from './menu-currency';
 import SettingProfile from './setting-profile';
 import UserInfo from './user-info';
 
 const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
-  //const network = useNetwork<Network>();
   const firstRender = useIsFirstRender();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -23,6 +23,12 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
 
   const handleSettings = () => {
     setIsSettingsOpen(true);
+    setIsCurrencyOpen(false);
+  };
+
+  const handleCurrency = () => {
+    setIsCurrencyOpen(true);
+    setIsSettingsOpen(false);
   };
 
   return (
@@ -64,7 +70,10 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
           <SettingProfile
             isProfileOpen={isProfileOpen}
             handleToggleProfile={handleToggleProfile}
+            handleCurrency={handleCurrency}
           />
+        ) : isCurrencyOpen ? (
+          <MenuCurrency handleBack={handleSettings} />
         ) : (
           <HomeProfile />
         )}

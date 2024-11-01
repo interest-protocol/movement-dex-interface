@@ -39,6 +39,7 @@ export { default as ErrorSVG } from './error';
 export { default as ETHSVG } from './eth';
 export { default as ETHChainSVG } from './eth-chain';
 export { default as EthCircleSVG } from './eth-circle';
+export { default as EURSVG } from './eur';
 export { default as ExclamationCircleSVG } from './exclamation-circle';
 export { default as FaucetSVG } from './faucet';
 export { default as FavoriteSVG } from './favorite';
