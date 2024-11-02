@@ -28,6 +28,7 @@ export type SwapPath = ReadonlyArray<SwapTypeArgs>;
 export interface SwapForm {
   to: SwapToken;
   from: SwapToken;
+  path: Array<string>;
   settings: ISwapSettings;
   lock: boolean;
   error?: string | null;

@@ -1,6 +1,5 @@
 import { Box } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
-import { v4 } from 'uuid';
 
 import Layout from '@/components/layout';
 
@@ -54,7 +53,6 @@ const Swap: FC = () => (
             justifyContent="center"
           >
             <Box
-              key={v4()}
               display="flex"
               width="3.25rem"
               height="3.25rem"

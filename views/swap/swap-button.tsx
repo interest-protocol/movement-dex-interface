@@ -1,12 +1,11 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Network, STRICT_POOLS } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
-import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
@@ -42,38 +41,28 @@ const SwapButton = () => {
 
       if (!account) return;
 
-      const { from, to } = getValues();
+      const { from, to, path } = getValues();
 
-      const tokenOut = isCoin(to)
-        ? COIN_TYPE_TO_FA[to.type].toString()
-        : to.address.toString();
-      const tokenIn = isCoin(from) ? from.type : from.address.toString();
-      const pool = STRICT_POOLS[Network.Porto][1].address.toString();
       const amountIn = BigInt(
         FixedPointMath.toBigNumber(from.value, from.decimals).toFixed(0)
       );
 
-      const swapFn = isCoin(from)
-        ? (coinIn: string, faOut: string) =>
-            dex.swapCoinToFa({
-              pool,
-              coinIn,
-              faOut,
-              amountIn,
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            })
-        : (faIn: string, faOut: string) =>
-            dex.swap({
-              pool,
-              faIn,
-              faOut,
-              amountIn,
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            });
+      console.log({ path: path.slice(1) });
 
-      const data = swapFn(tokenIn, tokenOut);
+      const data = isCoin(from)
+        ? dex.swapPathCoinIn({
+            amountIn,
+            coinIn: from.type,
+            path: path.slice(1),
+            minAmountOut: BigInt(0),
+            recipient: account.address,
+          })
+        : dex.swapPath({
+            path,
+            amountIn,
+            minAmountOut: BigInt(0),
+            recipient: account.address,
+          });
 
       const tx = await client.transaction.build.simple({
         data,
@@ -98,6 +87,9 @@ const SwapButton = () => {
         'explorerLink',
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
+    } catch (e) {
+      console.warn(e);
+      throw e;
     } finally {
       setLoading(false);
     }

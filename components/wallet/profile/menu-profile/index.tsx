@@ -1,5 +1,5 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
 import { FC, useState } from 'react';
 import { v4 } from 'uuid';

@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { FC } from 'react';
 
 import { BTCSVG, ETHSVG, MOVESVG, USDCSVG, USDTSVG } from '@/components/svg';
