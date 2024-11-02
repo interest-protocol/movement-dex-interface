@@ -47,8 +47,6 @@ const SwapButton = () => {
         FixedPointMath.toBigNumber(from.value, from.decimals).toFixed(0)
       );
 
-      console.log({ path: path.slice(1) });
-
       const data = isCoin(from)
         ? dex.swapPathCoinIn({
             amountIn,

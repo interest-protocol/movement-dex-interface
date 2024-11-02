@@ -38,8 +38,6 @@ const SwapManager: FC = () => {
       address.toString()
     );
 
-    console.log({ path });
-
     const amountIn = BigInt(
       FixedPointMath.toBigNumber(fromValue, from.decimals).toFixed(0)
     );
