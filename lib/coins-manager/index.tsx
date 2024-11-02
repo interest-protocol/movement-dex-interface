@@ -45,7 +45,7 @@ const CoinsManager: FC = () => {
 
         const fas = fasRaw.reduce(
           (acc, fa) => {
-            if (fa.balance <= BigInt(0)) acc;
+            if (BigNumber(String(fa.balance)).isZero()) return acc;
 
             return {
               ...acc,
