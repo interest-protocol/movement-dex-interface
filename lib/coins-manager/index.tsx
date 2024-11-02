@@ -2,29 +2,28 @@ import {
   COIN_TYPES,
   COINS,
   FA_ADDRESSES,
-  getAddressCoinBalances,
   Network,
-} from '@interest-protocol/aptos-move-dex';
+} from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
-import { type FC, useId } from 'react';
+import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
-import { useInterestDex } from '@/hooks/use-interest-dex';
-import { isAptos } from '@/utils';
+import { getAddressCoinBalances, getFaPrimaryStore, isAptos } from '@/utils';
 
+import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
 import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
 import { useCoins } from './coins-manager.hooks';
 import { Asset } from './coins-manager.types';
 
 const CoinsManager: FC = () => {
   const id = useId();
-  const dex = useInterestDex();
-
+  const client = useAptosClient();
   const currentAccount = useCurrentAccount();
-  const { setError, setLoading, setCoins } = useCoins();
 
-  useSWR(
+  const { setError, setLoading, setCoins, setMutate } = useCoins();
+
+  const { mutate } = useSWR(
     [id, currentAccount?.address, CoinsManager.name],
     async () => {
       try {
@@ -36,16 +35,17 @@ const CoinsManager: FC = () => {
 
         const fasRaw = await Promise.all(
           values(FA_ADDRESSES[Network.Porto]).map((address) =>
-            dex.getFaPrimaryStore({
-              owner: currentAccount.address,
-              fa: address.toString(),
-            })
+            getFaPrimaryStore(
+              currentAccount.address,
+              address.toString(),
+              client
+            )
           )
         );
 
         const fas = fasRaw.reduce(
           (acc, fa) => {
-            if (fa.balance <= BigInt(0)) acc;
+            if (BigNumber(String(fa.balance)).isZero()) return acc;
 
             return {
               ...acc,
@@ -63,7 +63,10 @@ const CoinsManager: FC = () => {
           {} as Record<string, Asset>
         );
 
-        const coinsRaw = await getAddressCoinBalances(currentAccount.address);
+        const coinsRaw = await getAddressCoinBalances(
+          currentAccount.address,
+          client
+        );
 
         const coins = coinsRaw.reduce(
           (acc, { type, balance }) => {
@@ -112,6 +115,10 @@ const CoinsManager: FC = () => {
       refreshWhenHidden: false,
     }
   );
+
+  useEffect(() => {
+    setMutate(mutate);
+  }, []);
 
   return null;
 };

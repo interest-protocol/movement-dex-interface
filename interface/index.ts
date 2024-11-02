@@ -18,3 +18,8 @@ export interface CoinMetadata {
   iconUri?: string;
   decimals: number;
 }
+
+export interface CoinBalance {
+  type: string;
+  balance: bigint;
+}

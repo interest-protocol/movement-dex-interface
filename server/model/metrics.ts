@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 const modelName = 'MovementMetricsPorto';

@@ -2,7 +2,7 @@ import {
   COINS,
   FUNGIBLE_ASSETS,
   Network,
-} from '@interest-protocol/aptos-move-dex';
+} from '@interest-protocol/aptos-sr-amm';
 import { values } from 'ramda';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
