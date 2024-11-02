@@ -14,20 +14,19 @@ import { getPath } from '../swap.utils';
 const SwapManager: FC = () => {
   const dex = useInterestDex();
   const { control, setValue, getValues } = useFormContext<SwapForm>();
-  const [fromValue] = useDebounce(
-    useWatch({ control, name: 'from.value' }),
-    800
-  );
+
+  const origin = useWatch({ control, name: 'origin' });
+  const [value] = useDebounce(useWatch({ control, name: 'from.value' }), 800);
 
   useEffect(() => {
     setValue('error', null);
 
-    if (!Number(fromValue)) {
-      setValue('to.value', '0');
+    if (!Number(value)) {
+      setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
       return;
     }
 
-    if (!getValues('to.symbol')) return;
+    if (!getValues(`${origin === 'from' ? 'to' : 'from'}.symbol`)) return;
 
     const to = getValues('to');
     const from = getValues('from');
@@ -38,12 +37,14 @@ const SwapManager: FC = () => {
       address.toString()
     );
 
-    const amountIn = BigInt(
-      FixedPointMath.toBigNumber(fromValue, from.decimals).toFixed(0)
+    const amount = BigInt(
+      FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
     );
 
-    dex
-      .quotePathAmountOut({ path, amount: amountIn })
+    dex[origin === 'from' ? 'quotePathAmountOut' : 'quotePathAmountIn']({
+      path,
+      amount,
+    })
       .then(({ amountOut }) => {
         setValue('path', path);
         setValue(
@@ -60,7 +61,7 @@ const SwapManager: FC = () => {
         console.warn(e);
         setValue('error', 'Failed to quote. Reduce the Swapping amount.');
       });
-  }, [fromValue]);
+  }, [value]);
 
   return null;
 };

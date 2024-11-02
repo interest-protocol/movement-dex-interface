@@ -6,7 +6,7 @@ import {
 } from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
-import { type FC, useId } from 'react';
+import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
 import { getAddressCoinBalances, getFaPrimaryStore, isAptos } from '@/utils';
@@ -21,9 +21,9 @@ const CoinsManager: FC = () => {
   const client = useAptosClient();
   const currentAccount = useCurrentAccount();
 
-  const { setError, setLoading, setCoins } = useCoins();
+  const { setError, setLoading, setCoins, setMutate } = useCoins();
 
-  useSWR(
+  const { mutate } = useSWR(
     [id, currentAccount?.address, CoinsManager.name],
     async () => {
       try {
@@ -115,6 +115,10 @@ const CoinsManager: FC = () => {
       refreshWhenHidden: false,
     }
   );
+
+  useEffect(() => {
+    setMutate(mutate);
+  }, []);
 
   return null;
 };

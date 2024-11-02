@@ -26,6 +26,7 @@ export enum Aggregator {
 export type SwapPath = ReadonlyArray<SwapTypeArgs>;
 
 export interface SwapForm {
+  origin: 'from' | 'to';
   to: SwapToken;
   from: SwapToken;
   path: Array<string>;

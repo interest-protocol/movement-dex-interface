@@ -27,14 +27,12 @@ const Swap: FC = () => (
       <Box bg="container" borderRadius="s" p="xl">
         <SwapHeader />
         <Box display="flex" flexDirection="column" gap="5xl">
-          <Input
-            label="from"
-            slider={
-              <Box px="s">
-                <SwapFormFieldSlider />
-              </Box>
-            }
-          />
+          <Box py="5xl">
+            <Input label="from" />
+            <Box px="s">
+              <SwapFormFieldSlider />
+            </Box>
+          </Box>
         </Box>
         <Box
           display="flex"

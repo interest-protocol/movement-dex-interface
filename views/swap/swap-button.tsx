@@ -12,6 +12,7 @@ import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
+import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 
 import { SwapForm } from './swap.types';
@@ -19,6 +20,7 @@ import { logSwap } from './swap.utils';
 
 const SwapButton = () => {
   const dex = useInterestDex();
+  const { mutate } = useCoins();
   const client = useAptosClient();
   const account = useCurrentAccount();
   const network = useNetwork<Network>();
@@ -89,6 +91,7 @@ const SwapButton = () => {
       console.warn(e);
       throw e;
     } finally {
+      mutate();
       setLoading(false);
     }
   };
