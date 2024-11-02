@@ -24,11 +24,11 @@ const PoolSummaryButton: FC = () => {
 
   const createPool = () =>
     dialog.promise(onCreatePool(), {
-      loading: {
+      loading: () => ({
         title: 'Create the pool...',
         message: 'We are creating the pool, and you will know when it is done',
-      },
-      success: {
+      }),
+      success: () => ({
         title: 'Pool created successfully',
         message:
           'Your pool was create successfully, and you can check it on the Explorer',
@@ -39,13 +39,13 @@ const PoolSummaryButton: FC = () => {
             handleClose();
           },
         },
-      },
-      error: {
+      }),
+      error: () => ({
         title: 'Pool creation failed',
         message:
           'Your pool was not created, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
-      },
+      }),
     });
 
   return (

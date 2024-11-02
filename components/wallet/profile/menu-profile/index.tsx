@@ -16,10 +16,6 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
   const firstRender = useIsFirstRender();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const handleToggleProfile = () => setIsSettingsOpen(not);
 
   const handleSettings = () => {
     setIsSettingsOpen(true);
@@ -31,21 +27,24 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
     setIsSettingsOpen(false);
   };
 
+  const handleToggleProfile = () => setIsSettingsOpen(not);
+
   return (
     <Motion
       right="0"
       zIndex={1}
-      bg="container"
-      display="flex"
-      borderRadius="2xs"
       border="1px"
+      display="flex"
+      bg="container"
+      overflowY="auto"
+      color="onSurface"
+      borderRadius="2xs"
       borderStyle="solid"
       borderColor="outline"
-      overflow="hidden"
       flexDirection="column"
       variants={wrapperVariants}
       textTransform="capitalize"
-      top={['0', '0', '0', '3rem']}
+      top={['0', '0', '0', '3.5rem']}
       justifyContent="space-between"
       p={['xl', 'xl', 'xl', 'unset']}
       animate={isOpen ? 'open' : 'closed'}
@@ -55,20 +54,19 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
       width={['100vw', '100vw', '100vw', '26.875rem']}
       position={['fixed', 'fixed', 'fixed', 'absolute']}
       initial={isOpen || firstRender ? 'closed' : 'open'}
-      color="onSurface"
     >
-      <Box display="flex" flexDirection="column" justifyContent="space-between">
+      <Box display="flex" flexDirection="column">
         <Box
           pb="l"
           flexDirection="row-reverse"
           display={['flex', 'flex', 'flex', 'none']}
+          bg="red"
         >
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
-        <UserInfo handleSettings={handleSettings} />
+        <UserInfo handleSettings={handleToggleProfile} />
         {isSettingsOpen ? (
           <SettingProfile
-            isProfileOpen={isProfileOpen}
             handleToggleProfile={handleToggleProfile}
             handleCurrency={handleCurrency}
           />

@@ -7,44 +7,42 @@ const SettingOption: FC<SettingOptionProps> = ({
   label,
   description,
   isToggleEnable,
-}) => {
-  return (
+}) => (
+  <Box
+    m="xs"
+    p="xs"
+    width="100%"
+    display="flex"
+    alignItems="center"
+    justifyContent="space-between"
+  >
     <Box
-      m="xs"
-      p="xs"
-      width="100%"
       display="flex"
-      alignItems="center"
-      justifyContent="space-between"
+      alignItems="flex-start"
+      flexDirection="column"
+      justifyItems="flex-start"
+      color="onSecondary"
     >
-      <Box
-        display="flex"
-        alignItems="flex-start"
-        flexDirection="column"
-        justifyItems="flex-start"
-        color="onSecondary"
+      <Typography size="medium" variant="label">
+        {label}
+      </Typography>
+      <Typography
+        size="small"
+        variant="label"
+        opacity="0.7"
+        mt="0.5rem"
+        width="80%"
       >
-        <Typography size="medium" variant="label">
-          {label}
-        </Typography>
-        <Typography
-          size="small"
-          variant="label"
-          opacity="0.7"
-          mt="0.5rem"
-          width="80%"
-        >
-          {description}
-        </Typography>
-      </Box>
-      <ToggleButton
-        name="toggle"
-        onChange={() => {}}
-        defaultValue={isToggleEnable}
-        disabled
-      />
+        {description}
+      </Typography>
     </Box>
-  );
-};
+    <ToggleButton
+      name="toggle"
+      onChange={() => {}}
+      defaultValue={isToggleEnable}
+      disabled
+    />
+  </Box>
+);
 
 export default SettingOption;
