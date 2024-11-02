@@ -23,15 +23,18 @@ const CoinsManager: FC = () => {
 
   const { setError, setLoading, setCoins, setMutate } = useCoins();
 
+  useEffect(() => {
+    setCoins({});
+  }, [currentAccount]);
+
   const { mutate } = useSWR(
     [id, currentAccount?.address, CoinsManager.name],
     async () => {
       try {
         setError(null);
         setLoading(true);
-        setCoins({});
 
-        if (!currentAccount?.address) return;
+        if (!currentAccount?.address) return setCoins({});
 
         const fasRaw = await Promise.all(
           values(FA_ADDRESSES[Network.Porto]).map((address) =>
