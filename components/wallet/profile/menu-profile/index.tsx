@@ -7,8 +7,8 @@ import { useIsFirstRender } from '@/hooks';
 
 import MenuButton from '../../menu-button';
 import { MenuProfileProps } from '../profile.types';
+import CurrencyProfile from './currency-profile';
 import HomeProfile from './home-profile';
-import MenuCurrency from './menu-currency';
 import SettingProfile from './setting-profile';
 import UserInfo from './user-info';
 
@@ -60,7 +60,6 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
           pb="l"
           flexDirection="row-reverse"
           display={['flex', 'flex', 'flex', 'none']}
-          bg="red"
         >
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
@@ -71,7 +70,7 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
             handleCurrency={handleCurrency}
           />
         ) : isCurrencyOpen ? (
-          <MenuCurrency handleBack={handleSettings} />
+          <CurrencyProfile handleBack={handleSettings} />
         ) : (
           <HomeProfile />
         )}

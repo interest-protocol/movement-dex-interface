@@ -17,6 +17,12 @@ export interface ProfileMenuItemProps {
   handleAction?: Record<string, () => void | Promise<void>>;
 }
 
+export interface CurrenciesMenuItemProps {
+  name?: string;
+  symbol: string;
+  Icon: FC<SVGProps>;
+}
+
 export interface MenuSwitchAccountProps {
   isOpen: boolean;
   onBack: () => void;
