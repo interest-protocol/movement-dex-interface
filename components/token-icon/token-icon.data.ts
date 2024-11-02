@@ -15,5 +15,6 @@ export const TOKEN_ICONS = {
     MOVE: MOVESVG,
     USDT: USDTSVG,
     RUCO: '/images/ruco.webp',
+    nETH: '/images/nETH.webp',
   },
 } as unknown as Record<Network, Record<string, string | FC<SVGProps>>>;
