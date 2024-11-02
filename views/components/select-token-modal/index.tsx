@@ -28,7 +28,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
   const { control, register, setValue } = useForm<SearchTokenForm>({
     defaultValues: {
       search: '',
-      filter: simple ? TokenOrigin.Wallet : TokenOrigin.Coin,
+      filter: simple ? TokenOrigin.Wallet : TokenOrigin.FA,
     },
   });
 
