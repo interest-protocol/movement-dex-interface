@@ -55,9 +55,7 @@ const Balance: FC<InputProps> = ({ label }) => {
   );
 
   const handleMax = () => {
-    if (label === 'to') return;
-
-    if (isAptos(id) && balance < 1) {
+    if (isAptos(id) && balance < 1 && label === 'from') {
       setValue('from.value', '0');
       return;
     }
@@ -66,7 +64,8 @@ const Balance: FC<InputProps> = ({ label }) => {
 
     setValue('updateSlider', {});
 
-    setValue('from.value', String(balance - (isAptos(id) ? 1 : 0)));
+    setValue(`${label}.value`, String(balance - (isAptos(id) ? 1 : 0)));
+    setValue('origin', label);
   };
 
   return (
