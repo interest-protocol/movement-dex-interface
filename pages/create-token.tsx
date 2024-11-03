@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FA_ADDRESSES, Network } from '@interest-protocol/aptos-move-dex';
+import { FA_ADDRESSES, Network } from '@interest-protocol/aptos-sr-amm';
 import { NextPage } from 'next';
 import { FormProvider, useForm } from 'react-hook-form';
 
