@@ -5,6 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ChevronRightSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
+import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
@@ -59,8 +60,18 @@ const SelectToken: FC<InputProps> = ({ label, isMobile }) => {
       </Box>
     );
 
-  const onSelect = (metadata: AssetMetadata) =>
-    setValue('pool.quote', metadata);
+  const onSelect = async (metadata: AssetMetadata) => {
+    setValue('pool.quote', { ...metadata, usdPrice: 0 });
+
+    await fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
+      method: 'POST',
+      body: JSON.stringify({ coins: [PRICE_TYPE[metadata.symbol]] }),
+      headers: { 'Content-Type': 'application/json', accept: '*/*' },
+    })
+      .then((response) => response.json())
+      .then((data) => setValue('pool.quote.usdPrice', data[0].price))
+      .catch(() => null);
+  };
 
   const openModal = () =>
     setModal(

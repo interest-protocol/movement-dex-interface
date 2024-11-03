@@ -6,7 +6,7 @@ export interface ICreateTokenPool {
   active: boolean;
   quoteValue?: string;
   tokenValue?: string;
-  quote?: AssetMetadata;
+  quote?: AssetMetadata & { usdPrice: number };
 }
 
 export interface ICreateTokenForm {

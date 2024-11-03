@@ -7,13 +7,13 @@ import { parseInputEventToNumberString } from '@/utils';
 import { ICreateTokenForm } from '@/views/create-token/create-token.types';
 import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
 
-import FormInputDollar from './form-input-dollar';
 import { InputProps } from './input.types';
 import InputQuoteMaxButton from './input-quote-max-button';
 import InputTokenMaxButton from './input-token-max-button';
 import QuoteBalance from './quote-balance';
 import SelectToken from './select-token';
 import TokenBalance from './token-balance';
+import QuoteInputDollar from './token-input-dollar';
 
 const Input: FC<InputProps> = ({ label }) => {
   const { register, setValue } = useFormContext<ICreateTokenForm>();
@@ -41,7 +41,7 @@ const Input: FC<InputProps> = ({ label }) => {
         variant="outline"
         textAlign="right"
         status="none"
-        Bottom={<FormInputDollar label={label} />}
+        Bottom={<QuoteInputDollar />}
         TokenIcon={<SelectToken label={label} isMobile={isMobile} />}
         Balance={label === 'token' ? <TokenBalance /> : <QuoteBalance />}
         ButtonMax={
