@@ -7,22 +7,22 @@ import {
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { CoinMetadata, FAMetadata } from '@/interface';
 import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { isAptos, ZERO_BIG_NUMBER } from '@/utils';
+import { ICreateTokenForm } from '@/views/create-token/create-token.types';
 
-import { CreatePoolForm } from '../../pool-create.types';
-import { InputProps } from './input.types';
-
-const Balance: FC<InputProps> = ({ index }) => {
+const QuoteBalance: FC = () => {
   const { coinsMap, loading } = useCoins();
-  const { control, setValue } = useFormContext<CreatePoolForm>();
+  const { control, setValue } = useFormContext<ICreateTokenForm>();
 
-  const type = useWatch({ control, name: `tokens.${index}.type` });
-  const decimals = useWatch({ control, name: `tokens.${index}.decimals` });
-  const symbol = useWatch({ control, name: `tokens.${index}.symbol` });
+  const quote = useWatch({ control, name: 'pool.quote' });
 
-  if (!type)
+  const id =
+    (quote as CoinMetadata)?.type ?? (quote as FAMetadata)?.address.toString();
+
+  if (!quote || !id)
     return (
       <Box
         p="2xs"
@@ -38,20 +38,17 @@ const Balance: FC<InputProps> = ({ index }) => {
     );
 
   const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[type]?.metadata.decimals ?? decimals
+    coinsMap[id]?.balance ?? ZERO_BIG_NUMBER,
+    coinsMap[id]?.metadata.decimals ?? quote.decimals
   );
 
   const handleMax = () => {
-    if (isAptos(type) && balance < 1) {
-      setValue(`tokens.${index}.value`, '0');
+    if (isAptos(id) && balance < 1) {
+      setValue('pool.quoteValue', '0');
       return;
     }
 
-    setValue(
-      `tokens.${index}.value`,
-      String(balance - (isAptos(type) ? 1 : 0))
-    );
+    setValue('pool.quoteValue', String(balance - (isAptos(id) ? 1 : 0)));
   };
 
   return (
@@ -68,11 +65,11 @@ const Balance: FC<InputProps> = ({ index }) => {
       className="loading-balance"
     >
       <Typography size="small" variant="body" fontSize="xs">
-        Balance: {!loading ? (symbol ? `${balance}` : '--') : ''}
+        Balance: {quote.symbol ? `${balance}` : '--'}
       </Typography>
       {loading && <ProgressIndicator variant="loading" size={12} />}
     </Button>
   );
 };
 
-export default Balance;
+export default QuoteBalance;

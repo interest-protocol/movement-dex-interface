@@ -1,5 +1,14 @@
 import { UseFormSetValue } from 'react-hook-form';
 
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
+
+export interface ICreateTokenPool {
+  active: boolean;
+  quoteValue?: string;
+  tokenValue?: string;
+  quote?: AssetMetadata;
+}
+
 export interface ICreateTokenForm {
   name: string;
   symbol: string;
@@ -8,6 +17,8 @@ export interface ICreateTokenForm {
   imageUrl?: string;
   projectUrl?: string;
   fixedSupply: boolean;
+  explorerLink: string;
+  pool: ICreateTokenPool;
 }
 
 export interface CreateTokenFormImageProps {

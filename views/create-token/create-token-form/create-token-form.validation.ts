@@ -25,4 +25,10 @@ export const validationSchema = yup.object({
     .min(0, 'You cannot add numbers less than 0')
     .max(11, 'You cannot add numbers greater than 11'),
   fixedSupply: yup.boolean().required('Fixed Supply is an required field'),
+  pool: yup.object({
+    active: yup.boolean().required(),
+    quoteValue: yup.string(),
+    tokenValue: yup.string(),
+    quote: yup.object(),
+  }),
 });

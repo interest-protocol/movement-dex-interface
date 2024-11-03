@@ -5,48 +5,62 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ChevronRightSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
-import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
+import { ICreateTokenForm } from '@/views/create-token/create-token.types';
 
-import { CreatePoolForm } from '../../pool-create.types';
 import { InputProps } from './input.types';
 
-const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
+const SelectToken: FC<InputProps> = ({ label, isMobile }) => {
   const { setModal, handleClose } = useModal();
   const network = useNetwork<Network>();
 
-  const { control, getValues, setValue } = useFormContext<CreatePoolForm>();
+  const { control, setValue } = useFormContext<ICreateTokenForm>();
 
-  const currentToken = useWatch({
-    control,
-    name: `tokens.${index}`,
-  });
+  const quote = useWatch({ control, name: `pool.quote` });
+  const tokenSymbol = useWatch({ control, name: `symbol` });
+  const tokenImageUrl = useWatch({ control, name: `imageUrl` });
 
-  const { symbol: currentSymbol } = currentToken;
+  if (label === 'token')
+    return (
+      <Box p="xs" position="relative">
+        <Button
+          p="2xs"
+          fontSize="s"
+          width="100%"
+          variant="tonal"
+          disabled={true}
+          color="onSurface"
+          borderRadius="xs"
+          nDisabled={{ bg: 'transparent' }}
+          PrefixIcon={
+            <TokenIcon
+              withBg
+              rounded={true}
+              network={network}
+              url={tokenImageUrl}
+              symbol={tokenSymbol}
+            />
+          }
+        >
+          <Typography
+            p="xs"
+            variant="label"
+            whiteSpace="nowrap"
+            width="100%"
+            size={isMobile ? 'large' : 'small'}
+          >
+            {tokenSymbol}
+          </Typography>
+        </Button>
+      </Box>
+    );
 
-  const onSelect = async (metadata: AssetMetadata) => {
-    if (getValues('tokens')?.some((token) => token.symbol === metadata.symbol))
-      return;
-
-    setValue(`tokens.${index}`, {
-      ...metadata,
-      value: '',
-      usdPrice: null,
-    });
-
-    fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
-      method: 'POST',
-      body: JSON.stringify({ coins: [PRICE_TYPE[metadata.symbol]] }),
-      headers: { 'Content-Type': 'application/json', accept: '*/*' },
-    })
-      .then((response) => response.json())
-      .then((data) => setValue(`tokens.${index}.usdPrice`, data[0].price))
-      .catch(() => null);
-  };
+  const onSelect = (metadata: AssetMetadata) =>
+    setValue('pool.quote', metadata);
 
   const openModal = () =>
     setModal(
@@ -66,27 +80,23 @@ const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
     );
 
   return (
-    <Box
-      p="xs"
-      position="relative"
-      minWidth={['8rem', '8rem', '8rem', '8rem', '10rem']}
-    >
+    <Box p="xs" position="relative">
       <Button
         p="2xs"
         fontSize="s"
         width="100%"
         variant="tonal"
-        bg={currentSymbol ? 'transparent' : 'highestContainer'}
+        bg={quote?.symbol ? 'transparent' : 'highestContainer'}
         color="onSurface"
         borderRadius="xs"
         onClick={openModal}
-        {...(currentSymbol && {
+        {...(quote?.symbol && {
           PrefixIcon: (
             <TokenIcon
               withBg
               network={network}
-              symbol={currentSymbol}
-              rounded={!isCoin(currentToken)}
+              symbol={quote?.symbol}
+              rounded={!isCoin(quote!)}
             />
           ),
         })}
@@ -98,9 +108,9 @@ const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
           width="100%"
           size={isMobile ? 'large' : 'small'}
         >
-          {currentSymbol || 'Select token'}
+          {quote?.symbol || 'Select token'}
         </Typography>
-        {!currentSymbol && (
+        {!quote?.symbol && (
           <ChevronRightSVG maxHeight="1rem" maxWidth="1rem" width="100%" />
         )}
       </Button>

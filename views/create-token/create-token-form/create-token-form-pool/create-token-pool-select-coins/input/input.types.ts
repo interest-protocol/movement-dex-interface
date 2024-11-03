@@ -1,6 +1,6 @@
 export interface InputProps {
-  index: number;
   isMobile?: boolean;
+  label: 'quote' | 'token';
 }
 
 export interface HeaderInfoProps {

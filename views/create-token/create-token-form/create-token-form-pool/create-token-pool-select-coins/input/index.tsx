@@ -2,19 +2,21 @@ import { Box } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import useEventListener from '@/hooks/use-event-listener';
 import { parseInputEventToNumberString } from '@/utils';
+import { ICreateTokenForm } from '@/views/create-token/create-token.types';
 import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
 
-import useEventListener from '../../../../hooks/use-event-listener';
-import { CreatePoolForm } from '../../pool-create.types';
-import Balance from './balance';
 import FormInputDollar from './form-input-dollar';
 import { InputProps } from './input.types';
-import InputMaxButton from './input-max-button';
+import InputQuoteMaxButton from './input-quote-max-button';
+import InputTokenMaxButton from './input-token-max-button';
+import QuoteBalance from './quote-balance';
 import SelectToken from './select-token';
+import TokenBalance from './token-balance';
 
-const Input: FC<InputProps> = ({ index }) => {
-  const { register, setValue } = useFormContext<CreatePoolForm>();
+const Input: FC<InputProps> = ({ label }) => {
+  const { register, setValue } = useFormContext<ICreateTokenForm>();
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const handleSetMobile = useCallback(() => {
@@ -39,18 +41,17 @@ const Input: FC<InputProps> = ({ index }) => {
         variant="outline"
         textAlign="right"
         status="none"
-        Bottom={<FormInputDollar index={index} />}
-        {...register(`tokens.${index}.value`, {
+        Bottom={<FormInputDollar label={label} />}
+        TokenIcon={<SelectToken label={label} isMobile={isMobile} />}
+        Balance={label === 'token' ? <TokenBalance /> : <QuoteBalance />}
+        ButtonMax={
+          label === 'token' ? <InputTokenMaxButton /> : <InputQuoteMaxButton />
+        }
+        {...register(`pool.${label}Value`, {
           onChange: (v: ChangeEvent<HTMLInputElement>) => {
-            setValue?.(
-              `tokens.${index}.value`,
-              parseInputEventToNumberString(v)
-            );
+            setValue?.(`pool.${label}Value`, parseInputEventToNumberString(v));
           },
         })}
-        Balance={<Balance index={index} />}
-        ButtonMax={<InputMaxButton index={index} />}
-        TokenIcon={<SelectToken index={index} isMobile={isMobile} />}
       />
     </Box>
   );

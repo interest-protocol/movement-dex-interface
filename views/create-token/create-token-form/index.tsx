@@ -1,9 +1,6 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
-import { Box, Button, TextField, Typography } from '@interest-protocol/ui-kit';
+import { Box, TextField, Typography } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC } from 'react';
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
 import { parseInputEventToNumberString } from '@/utils';
 
@@ -14,35 +11,11 @@ import CreateTokenFormToggle from './create-token-form-toggle';
 import CreateTokenFormImage from './create-token-form-upload-image';
 
 const CreateTokenForm: FC = () => {
-  const [loading, setLoading] = useState(false);
   const {
     register,
     setValue,
-    handleSubmit,
     formState: { errors },
   } = useFormContext<ICreateTokenForm>();
-
-  const { account } = useWallet();
-
-  const handleCreateToken = async () => {
-    try {
-      setLoading(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onSubmit = async () => {
-    const loading = toast.loading('Generating new coin...');
-    try {
-      await handleCreateToken();
-      toast.success('Coin Generated!');
-    } catch (e) {
-      toast.error((e as Error).message || 'Something went wrong');
-    } finally {
-      toast.dismiss(loading);
-    }
-  };
 
   return (
     <Box display="flex" flexDirection="column" gap="2xl">
@@ -162,7 +135,6 @@ const CreateTokenForm: FC = () => {
         </Box>
       </Box>
       <Box
-        as="form"
         px="l"
         py="2xl"
         mx="auto"
@@ -172,30 +144,12 @@ const CreateTokenForm: FC = () => {
         overflow="hidden"
         borderRadius="xs"
         color="onSurface"
-        onSubmit={handleSubmit(onSubmit)}
       >
         <Typography variant="headline" size="small">
           Coin features
         </Typography>
         <CreateTokenFormToggle />
         <CreateTokenFormPool />
-        <Box display="flex" justifyContent="center">
-          <Button
-            py="s"
-            px="xl"
-            fontSize="s"
-            bg="primary"
-            type="submit"
-            variant="filled"
-            color="onPrimary"
-            borderRadius="xs"
-            fontFamily="Proto"
-            disabled={!account || loading}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            Create coin
-          </Button>
-        </Box>
       </Box>
     </Box>
   );

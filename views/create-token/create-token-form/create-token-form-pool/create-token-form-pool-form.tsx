@@ -2,16 +2,18 @@ import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ICreateTokenForm } from '../../create-token.types';
+import CreateTokenPoolSelectCoins from './create-token-pool-select-coins';
 
 const CreateTokenFormPoolForm: FC = () => {
   const { control } = useFormContext<ICreateTokenForm>();
+  const name = useWatch({ control, name: 'name' });
   const symbol = useWatch({ control, name: 'symbol' });
   const supply = useWatch({ control, name: 'supply' });
-  const imageURL = useWatch({ control, name: 'imageUrl' });
+  const active = useWatch({ control, name: 'pool.active' });
 
-  console.log({ symbol, supply, imageURL });
+  if (!active || !symbol || !supply || !name) return null;
 
-  return null;
+  return <CreateTokenPoolSelectCoins />;
 };
 
 export default CreateTokenFormPoolForm;
