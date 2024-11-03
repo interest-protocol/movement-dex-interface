@@ -44,7 +44,6 @@ export interface AmmPoolCoinTypes {
   lpCoin: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface AmmPoolRaw<T> {
   poolObjectId: string;
   stateId: string;

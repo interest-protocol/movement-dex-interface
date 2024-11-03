@@ -1,11 +1,12 @@
+import { COINS, Network } from '@interest-protocol/aptos-move-dex';
 import { NextPage } from 'next';
+import { values } from 'ramda';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { SEO } from '@/components';
 import { PoolPageProps } from '@/interface';
 import PoolDetails from '@/views/pool-details';
-// import { PoolDetailsProvider } from '@/views/pool-details/pool-details.context';
 import { PoolForm, PoolOption } from '@/views/pools/pools.types';
 
 const PoolDetailsPage: NextPage<PoolPageProps> = () => {
@@ -17,7 +18,8 @@ const PoolDetailsPage: NextPage<PoolPageProps> = () => {
 
   const form = useForm<PoolForm>({
     defaultValues: {
-      tokenList: [],
+      lpCoin: values(COINS[Network.Porto])[0],
+      tokenList: values(COINS[Network.Porto]).slice(0, 2),
       settings: {
         slippage: '0.1',
       },
@@ -32,13 +34,11 @@ const PoolDetailsPage: NextPage<PoolPageProps> = () => {
 
   return (
     <FormProvider {...form}>
-      {/* <PoolDetailsProvider objectId={objectId}> */}
       <SEO pageTitle="Pool Details" />
       <PoolDetails
         poolOptionView={poolOptionView}
         handleOptionTab={handleOptionTab}
       />
-      {/* </PoolDetailsProvider> */}
     </FormProvider>
   );
 };

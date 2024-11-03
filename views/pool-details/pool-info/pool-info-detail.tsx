@@ -1,4 +1,4 @@
-import { Box, Typography } from '@interest-protocol/ui-kit';
+import { Box } from '@interest-protocol/ui-kit';
 import { v4 } from 'uuid';
 
 import Accordion from './components/accordion';
@@ -31,7 +31,7 @@ const PoolDetail = () => {
           />
         ))}
       </Accordion>
-      <Accordion title={POOL_STATISTICS.title}>
+      <Accordion title={POOL_STATISTICS.title} noBorder>
         {(
           POOL_STATISTICS.data as Array<PoolDetailAccordionItemStandardProps>
         ).map(({ label, popupInfo, isCopyClipBoard }, index) => (
@@ -44,9 +44,6 @@ const PoolDetail = () => {
             isCopyClipBoard={isCopyClipBoard}
           />
         ))}
-      </Accordion>
-      <Accordion title="Pool Composition" noBorder>
-        <Typography variant="label" size="small" />
       </Accordion>
     </Box>
   );

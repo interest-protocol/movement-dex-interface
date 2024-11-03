@@ -2,7 +2,6 @@ import { Box } from '@interest-protocol/ui-kit';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 
-// import { useFormContext } from 'react-hook-form';
 import Layout from '@/components/layout';
 import { Routes, RoutesEnum } from '@/constants';
 

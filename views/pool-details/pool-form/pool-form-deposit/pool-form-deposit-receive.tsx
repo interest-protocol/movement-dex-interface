@@ -1,7 +1,14 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+import { PoolForm } from '@/views/pools/pools.types';
 
 const PoolFormDepositReceive: FC = () => {
+  const { control } = useFormContext<PoolForm>();
+  const value = useWatch({ control, name: 'lpCoin.value' });
+  const symbol = useWatch({ control, name: 'lpCoin.symbol' });
+
   return (
     <Box>
       <Typography variant="body" size="large" mb="m">
@@ -16,10 +23,10 @@ const PoolFormDepositReceive: FC = () => {
           justifyContent="space-between"
         >
           <Typography variant="body" size="large">
-            ipx-v-MOVE-RUCO
+            {symbol}
           </Typography>
           <Typography variant="body" ml="m" size="large">
-            1.57855
+            {value || 0}
           </Typography>
         </Box>
       </Box>
