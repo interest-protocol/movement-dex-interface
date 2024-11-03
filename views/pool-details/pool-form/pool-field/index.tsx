@@ -1,5 +1,5 @@
 import { Network } from '@interest-protocol/aptos-sr-amm';
-import { Box, TokenField, Typography } from '@interest-protocol/ui-kit';
+import { TokenField } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -74,19 +74,6 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
           setValue(`${fieldName}.value`, parseInputEventToNumberString(v));
         },
       })}
-      Label={
-        <Box display="flex" justifyContent="flex-end">
-          <Typography
-            mb="xs"
-            size="medium"
-            variant="label"
-            color="onSurface"
-            textTransform="uppercase"
-          >
-            Balance:{` ${balance}`}
-          </Typography>
-        </Box>
-      }
     />
   );
 };
