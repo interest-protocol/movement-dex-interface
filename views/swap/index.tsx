@@ -1,6 +1,5 @@
 import { Box } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
-import { v4 } from 'uuid';
 
 import Layout from '@/components/layout';
 
@@ -28,14 +27,12 @@ const Swap: FC = () => (
       <Box bg="container" borderRadius="s" p="xl">
         <SwapHeader />
         <Box display="flex" flexDirection="column" gap="5xl">
-          <Input
-            label="from"
-            slider={
-              <Box px="s">
-                <SwapFormFieldSlider />
-              </Box>
-            }
-          />
+          <Box py="5xl">
+            <Input label="from" />
+            <Box px="s">
+              <SwapFormFieldSlider />
+            </Box>
+          </Box>
         </Box>
         <Box
           display="flex"
@@ -54,7 +51,6 @@ const Swap: FC = () => (
             justifyContent="center"
           >
             <Box
-              key={v4()}
               display="flex"
               width="3.25rem"
               height="3.25rem"

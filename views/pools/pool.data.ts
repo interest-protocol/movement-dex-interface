@@ -2,7 +2,7 @@ import {
   COINS,
   FUNGIBLE_ASSETS,
   Network,
-} from '@interest-protocol/aptos-move-dex';
+} from '@interest-protocol/aptos-sr-amm';
 import { values } from 'ramda';
 
 import { AmmPool, PoolTypeEnum } from '@/interface';

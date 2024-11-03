@@ -21,15 +21,18 @@ const SwapFormFieldSlider: FC = () => {
   useWatch({ control, name: 'updateSlider' });
 
   const type = useWatch({ control, name: 'from.type' });
+  const address = useWatch({ control, name: 'from.address' });
   const swapping = useWatch({ control, name: 'swapping' });
 
+  const id = type ?? address?.toString();
+
   const safeRemoval =
-    type && isAptos(type)
+    id && isAptos(id)
       ? FixedPointMath.toBigNumber(1, getValues('from.decimals'))
       : ZERO_BIG_NUMBER;
 
-  const balance = coinsMap[type]
-    ? coinsMap[type].balance.minus(safeRemoval)
+  const balance = coinsMap[id]
+    ? coinsMap[id].balance.minus(safeRemoval)
     : ZERO_BIG_NUMBER;
 
   const fromValue = getValues('from.value') ?? ZERO_BIG_NUMBER;
@@ -37,14 +40,11 @@ const SwapFormFieldSlider: FC = () => {
   const initial =
     fromValue && balance && Number(fromValue) && !balance.isZero?.()
       ? balance.gt(
-          FixedPointMath.toBigNumber(
-            fromValue,
-            coinsMap[type].metadata.decimals
-          )
+          FixedPointMath.toBigNumber(fromValue, coinsMap[id].metadata.decimals)
         )
         ? +FixedPointMath.toBigNumber(
             Number(fromValue) * 100,
-            coinsMap[type].metadata.decimals
+            coinsMap[id].metadata.decimals
           )
             .div(balance)
             .toFixed(0)
@@ -62,13 +62,12 @@ const SwapFormFieldSlider: FC = () => {
           setValue(
             'from.value',
             String(
-              FixedPointMath.toNumber(
-                balance,
-                coinsMap[type].metadata.decimals
-              ) *
+              FixedPointMath.toNumber(balance, coinsMap[id].metadata.decimals) *
                 (value / 100)
             )
           );
+          setValue('origin', 'from');
+
           if (getValues('lock')) setValue('lock', false);
           if (getValues('focus')) setValue('focus', false);
         }}

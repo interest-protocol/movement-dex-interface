@@ -17,6 +17,12 @@ export interface ProfileMenuItemProps {
   handleAction?: Record<string, () => void | Promise<void>>;
 }
 
+export interface CurrenciesMenuItemProps {
+  name?: string;
+  symbol: string;
+  Icon: FC<SVGProps>;
+}
+
 export interface MenuSwitchAccountProps {
   isOpen: boolean;
   onBack: () => void;
@@ -27,4 +33,10 @@ export interface MenuSwitchAccountHeaderProps {
   onBack: () => void;
   handleCloseProfile: () => void;
   size: number;
+}
+
+export interface SettingOptionProps {
+  label: string;
+  description?: string;
+  isToggleEnable: boolean;
 }

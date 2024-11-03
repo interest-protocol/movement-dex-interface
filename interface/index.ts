@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AccountAddress } from '@aptos-labs/ts-sdk';
 import BigNumber from 'bignumber.js';
 
@@ -9,6 +10,11 @@ export interface CoinData {
   type: `0x${string}`;
   decimals: number;
   symbol: string;
+}
+
+export interface PoolPageProps {
+  objectId: string;
+  stateId: string;
 }
 
 export interface FAMetadata {
@@ -38,7 +44,7 @@ export interface AmmPoolCoinTypes {
   lpCoin: string;
 }
 
-interface AmmPoolRaw<T> {
+export interface AmmPool {
   poolObjectId: string;
   stateId: string;
   type: string;
@@ -47,6 +53,7 @@ interface AmmPoolRaw<T> {
   isVolatile: boolean;
 }
 
-export type AmmServerPool = AmmPoolRaw<string>;
-
-export type AmmPool = AmmPoolRaw<BigNumber>;
+export interface CoinBalance {
+  type: string;
+  balance: bigint;
+}

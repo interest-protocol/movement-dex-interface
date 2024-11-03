@@ -1,12 +1,16 @@
-import { COIN_TYPES, FA_ADDRESSES } from '@interest-protocol/aptos-move-dex';
+import {
+  COIN_TYPES,
+  FA_ADDRESSES,
+  Network,
+} from '@interest-protocol/aptos-sr-amm';
 
-const portoCoins = COIN_TYPES.porto;
-const portoFAs = FA_ADDRESSES.porto;
+const PORTO_COINS = COIN_TYPES[Network.Porto];
+const PORTO_FAS = FA_ADDRESSES[Network.Porto];
 
 export const COIN_TYPE_TO_FA = {
-  [portoCoins.APT]: portoFAs.APT,
-  [portoCoins.USDC]: portoFAs.USDC,
-  [portoCoins.USDT]: portoFAs.USDT,
-  [portoCoins.WBTC]: portoFAs.WBTC,
-  [portoCoins.WETH]: portoFAs.WETH,
+  [PORTO_COINS.APT]: PORTO_FAS.APT,
+  [PORTO_COINS.USDC]: PORTO_FAS.USDC,
+  [PORTO_COINS.USDT]: PORTO_FAS.USDT,
+  [PORTO_COINS.WBTC]: PORTO_FAS.WBTC,
+  [PORTO_COINS.WETH]: PORTO_FAS.WETH,
 };

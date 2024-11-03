@@ -62,7 +62,7 @@ const SuccessModal: FC<PropsWithChildren<SuccessModalProps>> = ({
         </Box>
       </Box>
       <a
-        href="https://www.movement-dex.com"
+        href="https://www.interest.xyz"
         target="_blank"
         rel="noopener, noreferrer"
       >
@@ -79,7 +79,7 @@ const SuccessModal: FC<PropsWithChildren<SuccessModalProps>> = ({
           color="primary"
           mt="0.5rem"
         >
-          www.movement-dex.com
+          www.interest.xyz
         </Typography>
       </a>
     </Box>
