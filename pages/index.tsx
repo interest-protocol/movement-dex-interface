@@ -1,4 +1,4 @@
-import { FUNGIBLE_ASSETS, Network } from '@interest-protocol/aptos-move-dex';
+import { FUNGIBLE_ASSETS, Network } from '@interest-protocol/aptos-sr-amm';
 import { NextPage } from 'next';
 import { FormProvider, useForm } from 'react-hook-form';
 

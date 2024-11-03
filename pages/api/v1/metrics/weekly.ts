@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextCors from 'nextjs-cors';
 import { pathOr } from 'ramda';

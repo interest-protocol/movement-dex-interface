@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 
 export const DAY_IN_MS = 1000 * 60 * 60 * 24;
 

@@ -22,8 +22,8 @@ export interface SelectTokenFilterProps {
 }
 
 export enum TokenOrigin {
-  Coin,
   FA,
+  Coin,
   Wallet,
 }
 

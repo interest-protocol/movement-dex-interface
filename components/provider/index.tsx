@@ -1,5 +1,5 @@
 import { Wallet } from '@aptos-labs/wallet-adapter-react';
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { NightlyWallet } from '@nightlylabs/aptos-wallet-adapter-plugin';
 import { FC, PropsWithChildren } from 'react';
 

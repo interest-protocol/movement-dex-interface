@@ -15,10 +15,10 @@ const Footer: FC = () => (
     zIndex={0}
     as="footer"
     width="100%"
-    display="flex"
+    display="grid"
     alignItems="center"
     justifyContent="space-between"
-    flexDirection={['column', 'column', 'column', 'row']}
+    gridTemplateColumns={['1fr', '1fr', '1fr', '1fr auto 1fr']}
   >
     <Link
       target="_blank"
@@ -50,6 +50,7 @@ const Footer: FC = () => (
     <Box
       gap="xs"
       display="flex"
+      justifySelf="end"
       alignItems="center"
       flexDirection="column"
       justifyContent="center"
