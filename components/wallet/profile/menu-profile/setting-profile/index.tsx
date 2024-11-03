@@ -6,7 +6,10 @@ import { ArrowLeftSVG } from '@/components/svg';
 import { SettingMenuProps } from '../user-info.types';
 import SettingOption from './setting-option';
 
-const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
+const SettingProfile: FC<SettingMenuProps> = ({
+  handleToggleProfile,
+  handleCurrency,
+}) => {
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
 
@@ -61,6 +64,10 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
         <Box
           m={0}
           p="0.5rem"
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+          onClick={handleCurrency}
           borderRadius="xs"
           nHover={{
             background: 'lowContainer',

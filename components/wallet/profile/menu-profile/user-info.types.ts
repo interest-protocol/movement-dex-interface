@@ -4,6 +4,11 @@ export interface UserInfoProps {
 
 export interface SettingMenuProps {
   handleToggleProfile: () => void;
+  handleCurrency: () => void;
+}
+
+export interface MenuCurrencyProps {
+  handleBack: () => void;
 }
 
 export enum ProfileTabsMenuEnum {
