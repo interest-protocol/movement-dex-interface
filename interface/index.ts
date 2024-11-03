@@ -12,6 +12,11 @@ export interface CoinData {
   symbol: string;
 }
 
+export interface PoolPageProps {
+  objectId: string;
+  stateId: string;
+}
+
 export interface FAMetadata {
   name: string;
   symbol: string;

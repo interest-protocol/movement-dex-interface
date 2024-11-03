@@ -7,6 +7,7 @@ import { useIsFirstRender } from '@/hooks';
 
 import MenuButton from '../../menu-button';
 import { MenuProfileProps } from '../profile.types';
+import CurrencyProfile from './currency-profile';
 import HomeProfile from './home-profile';
 import SettingProfile from './setting-profile';
 import UserInfo from './user-info';
@@ -14,6 +15,17 @@ import UserInfo from './user-info';
 const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
   const firstRender = useIsFirstRender();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+
+  const handleSettings = () => {
+    setIsSettingsOpen(true);
+    setIsCurrencyOpen(false);
+  };
+
+  const handleCurrency = () => {
+    setIsCurrencyOpen(true);
+    setIsSettingsOpen(false);
+  };
 
   const handleToggleProfile = () => setIsSettingsOpen(not);
 
@@ -48,13 +60,17 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
           pb="l"
           flexDirection="row-reverse"
           display={['flex', 'flex', 'flex', 'none']}
-          bg="red"
         >
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
         <UserInfo handleSettings={handleToggleProfile} />
         {isSettingsOpen ? (
-          <SettingProfile handleToggleProfile={handleToggleProfile} />
+          <SettingProfile
+            handleToggleProfile={handleToggleProfile}
+            handleCurrency={handleCurrency}
+          />
+        ) : isCurrencyOpen ? (
+          <CurrencyProfile handleBack={handleSettings} />
         ) : (
           <HomeProfile />
         )}
