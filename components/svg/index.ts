@@ -78,6 +78,8 @@ export { default as PercentageSVG } from './percentage';
 export { default as PlusSVG } from './plus';
 export { default as PoolSVG } from './pool';
 export { default as QuestionCircleSVG } from './question-circle';
+export { default as RateDownSVG } from './rate-down';
+export { default as RateUpSVG } from './rate-up';
 export { default as SearchSVG } from './search';
 export { default as SettingSVG } from './setting';
 export { default as SignOutSVG } from './sign-out';
