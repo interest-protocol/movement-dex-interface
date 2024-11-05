@@ -31,6 +31,7 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
 
   return (
     <Motion
+      p="xl"
       right="0"
       zIndex={1}
       border="1px"
@@ -46,9 +47,7 @@ const MenuProfile: FC<MenuProfileProps> = ({ isOpen, handleCloseProfile }) => {
       textTransform="capitalize"
       top={['0', '0', '0', '3.5rem']}
       justifyContent="space-between"
-      p={['xl', 'xl', 'xl', 'unset']}
       animate={isOpen ? 'open' : 'closed'}
-      pb={['7rem', '7rem', '7rem', 'unset']}
       pointerEvents={isOpen ? 'auto' : 'none'}
       height={['100vh', '100vh', '100vh', '85vh']}
       width={['100vw', '100vw', '100vw', '26.875rem']}

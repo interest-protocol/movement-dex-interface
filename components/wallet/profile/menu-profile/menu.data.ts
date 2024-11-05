@@ -2,11 +2,11 @@ import {
   ActivitySVG,
   AssetsSVG,
   AUDSVG,
-  BGLSVG,
   BRLSVG,
   CADSVG,
   CNYSVG,
   EURSVG,
+  GBLSVG,
   INRSVG,
   JPYSVG,
   LinkSVG,
@@ -88,7 +88,7 @@ export const ALL_CURRENCIES_DATA: ReadonlyArray<CurrenciesMenuItemProps> = [
   {
     name: 'libra',
     symbol: 'GBP',
-    Icon: BGLSVG,
+    Icon: GBLSVG,
   },
   {
     name: 'indian Rupee',

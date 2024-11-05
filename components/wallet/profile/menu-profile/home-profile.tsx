@@ -21,8 +21,7 @@ const HomeProfile: FC = () => {
       <BalanceCard />
       <Box display="flex" gap="xs" p="xl"></Box>
       <Box
-        px="xl"
-        gap="xs"
+        gap="m"
         width="100%"
         display="flex"
         alignItems="flex-start"
@@ -31,7 +30,7 @@ const HomeProfile: FC = () => {
         {PROFILE_TAB.map((tab) => (
           <Box
             key={v4()}
-            p="0.5rem"
+            py="0.5rem"
             mr="0.1rem"
             cursor="pointer"
             onClick={() => selectTabs(tab.value)}

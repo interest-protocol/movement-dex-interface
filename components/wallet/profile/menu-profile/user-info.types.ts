@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { ReactNode } from 'react';
 
-import { SVGProps } from '@/components/svg/svg.types';
+import { CoinMetadata, FAMetadata } from '@/interface';
 
 export interface UserInfoProps {
   handleSettings: () => void;
@@ -25,10 +25,16 @@ export interface ProfileTabItemProps {
   value: ProfileTabsMenuEnum;
 }
 
-export interface CoinCardProps {
-  Icon: FC<SVGProps>;
-  coin: string;
-  balance: string;
-  usdPrice: number;
-  percentage: number;
+export interface VerifiedCoinCardProps extends UnverifiedCoinCardProps {
+  apy: number;
+}
+
+export interface UnverifiedCoinCardProps {
+  token: CoinMetadata | FAMetadata;
+}
+
+export interface CardWrapperProps {
+  symbol: string;
+  TokenIcon: ReactNode;
+  supportingText: string;
 }
