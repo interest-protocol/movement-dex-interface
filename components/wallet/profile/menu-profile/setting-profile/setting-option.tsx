@@ -9,12 +9,11 @@ const SettingOption: FC<SettingOptionProps> = ({
   isToggleEnable,
 }) => (
   <Box
-    m="xs"
-    p="xs"
+    my="xs"
+    py="xs"
     width="100%"
-    display="flex"
-    alignItems="center"
-    justifyContent="space-between"
+    display="grid"
+    gridTemplateColumns="3fr 1fr"
   >
     <Box
       display="flex"
@@ -36,12 +35,14 @@ const SettingOption: FC<SettingOptionProps> = ({
         {description}
       </Typography>
     </Box>
-    <ToggleButton
-      name="toggle"
-      onChange={() => {}}
-      defaultValue={isToggleEnable}
-      disabled
-    />
+    <Box display="flex" justifyContent="flex-end" alignItems="center">
+      <ToggleButton
+        name="toggle"
+        onChange={() => {}}
+        defaultValue={isToggleEnable}
+        disabled
+      />
+    </Box>
   </Box>
 );
 
