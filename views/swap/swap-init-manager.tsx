@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { useRouter } from 'next/router';
 import { mergeAll } from 'ramda';
 import { FC, useEffect } from 'react';
