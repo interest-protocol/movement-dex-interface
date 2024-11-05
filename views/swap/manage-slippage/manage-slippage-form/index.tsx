@@ -28,7 +28,7 @@ const ManageSlippageForm: FC<ManageSlippageFormProps> = ({
     setValue('settings.slippage', formTmpSettings.getValues('slippage'));
 
     localStorage.setItem(
-      `${LOCAL_STORAGE_VERSION}-movement-settings`,
+      `${LOCAL_STORAGE_VERSION}-movement-dex-settings`,
       JSON.stringify({ slippage: formTmpSettings.getValues('slippage') })
     );
 
