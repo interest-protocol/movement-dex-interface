@@ -10,7 +10,7 @@ import invariant from 'tiny-invariant';
 import { CoinBalance } from '@/interface';
 
 export const isAptos = (id: string) =>
-  id === '0x1::aptos_coin::AptosCoin' || id === '0xa';
+  id === '0x1::aptos_coin::AptosCoin' || Number(id) === 0xa;
 
 export const getCoinTypeFromCoinStoreType = (coinStoreType: string) =>
   coinStoreType.split('<')[1].split('>')[0];

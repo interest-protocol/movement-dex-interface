@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { SEO } from '@/components';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 import Swap from '@/views/swap';
 import { SwapForm } from '@/views/swap/swap.types';
 
@@ -12,9 +13,11 @@ const SwapPage: NextPage = () => {
       from: {
         value: '0',
         ...FUNGIBLE_ASSETS[Network.Porto].USDT,
+        standard: TokenStandard.FA,
       },
       to: {
         ...FUNGIBLE_ASSETS[Network.Porto].USDC,
+        standard: TokenStandard.FA,
         value: '0',
       },
       settings: {

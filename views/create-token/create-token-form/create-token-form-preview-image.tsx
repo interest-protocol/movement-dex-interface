@@ -34,6 +34,7 @@ const CreateTokenFormPreviewImage: FC = () => {
       width="7rem"
       height="7rem"
       display="flex"
+      overflow="hidden"
       border="1px solid"
       borderRadius="full"
       alignItems="center"
@@ -41,7 +42,11 @@ const CreateTokenFormPreviewImage: FC = () => {
       bg="highestContainer"
       justifyContent="center"
     >
-      <img src={imageUrl} alt={name} width="100%" />
+      <img
+        alt={name}
+        src={imageUrl}
+        style={{ width: '7rem', height: '7rem', objectFit: 'cover' }}
+      />
     </Box>
   );
 };

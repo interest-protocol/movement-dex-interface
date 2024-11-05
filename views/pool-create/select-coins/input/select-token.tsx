@@ -8,8 +8,10 @@ import TokenIcon from '@/components/token-icon';
 import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import {
+  AssetMetadata,
+  TokenStandard,
+} from '@/lib/coins-manager/coins-manager.types';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { CreatePoolForm } from '../../pool-create.types';
@@ -86,7 +88,7 @@ const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
               withBg
               network={network}
               symbol={currentSymbol}
-              rounded={!isCoin(currentToken)}
+              rounded={currentToken.standard === TokenStandard.FA}
             />
           ),
         })}

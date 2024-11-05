@@ -11,7 +11,7 @@ const TokenInputDollar: FC = () => {
 
   const value = useWatch({ control, name: 'pool.tokenValue' });
   const quoteValue = useWatch({ control, name: 'pool.quoteValue' });
-  const quoteUsdPrice = useWatch({ control, name: 'pool.quote.usdPrice' });
+  const quoteUsdPrice = useWatch({ control, name: 'pool.quoteUsdPrice' });
 
   const usdPrice = (Number(quoteValue) * Number(quoteUsdPrice)) / Number(value);
 

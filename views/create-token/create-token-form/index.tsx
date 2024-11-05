@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { parseInputEventToNumberString } from '@/utils';
 
 import { ICreateTokenForm } from '../create-token.types';
+import CreateTokenFormButton from './create-token-form-button';
 import CreateTokenFormPool from './create-token-form-pool';
 import CreateTokenFormPreviewImage from './create-token-form-preview-image';
 import CreateTokenFormToggle from './create-token-form-toggle';
@@ -150,6 +151,7 @@ const CreateTokenForm: FC = () => {
         </Typography>
         <CreateTokenFormToggle />
         <CreateTokenFormPool />
+        <CreateTokenFormButton />
       </Box>
     </Box>
   );

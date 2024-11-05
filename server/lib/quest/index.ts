@@ -2,22 +2,32 @@ import { Network } from '@interest-protocol/aptos-sr-amm';
 
 import dbConnect from '@/server';
 import metrics from '@/server/model/metrics';
-import QuestModel, { Quest } from '@/server/model/quest';
+import QuestModel, { Quest, SwapData } from '@/server/model/quest';
 import QuestProfileModel from '@/server/model/quest-profile';
 import { getExactDayTimestamp, getFirstWeekDayTimestamp } from '@/utils';
 
-type ProfileField = 'swap';
+type ProfileField = 'swap' | 'createToken' | 'createAndDeployToken';
 
-type MetricField = 'weeklySwaps';
+type MetricField =
+  | 'weeklySwaps'
+  | 'weeklyCreateTokens'
+  | 'weeklyCreateAndDeployTokens';
 
-type LastField = 'lastSwapAt';
+type LastField =
+  | 'lastSwapAt'
+  | 'lastCreateTokenAt'
+  | 'lastCreateAndDeployTokenAt';
 
 const lastFieldMap: Record<ProfileField, LastField> = {
   swap: 'lastSwapAt',
+  createToken: 'lastCreateTokenAt',
+  createAndDeployToken: 'lastCreateAndDeployTokenAt',
 };
 
 const metricsFieldMap: Record<ProfileField, MetricField> = {
   swap: 'weeklySwaps',
+  createToken: 'weeklyCreateTokens',
+  createAndDeployToken: 'weeklyCreateAndDeployTokens',
 };
 
 export const addQuest = async (
@@ -87,7 +97,8 @@ export const findSwapBySymbols = async (
 
   return swapQuests.find(
     ({ data }) =>
-      data.coinIn.symbol === symbolIn && data.coinOut.symbol === symbolOut
+      (data as SwapData).coinIn.symbol === symbolIn &&
+      (data as SwapData).coinOut.symbol === symbolOut
   );
 };
 

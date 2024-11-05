@@ -13,14 +13,28 @@ export interface SwapData {
   coinOut: Coin;
 }
 
+export interface CreateTokenData {
+  symbol: string;
+}
+
 export type Quest = {
   address: string;
   txDigest: string;
   timestamp: number;
-} & {
-  kind: 'swap';
-  data: SwapData;
-};
+} & (
+  | {
+      kind: 'swap';
+      data: SwapData;
+    }
+  | {
+      kind: 'createToken';
+      data: CreateTokenData;
+    }
+  | {
+      kind: 'createAndDeployToken';
+      data: CreateTokenData;
+    }
+);
 
 export type QuestDocument = Document & Quest;
 

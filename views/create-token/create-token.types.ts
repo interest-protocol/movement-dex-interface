@@ -1,12 +1,10 @@
 import { UseFormSetValue } from 'react-hook-form';
 
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-
 export interface ICreateTokenPool {
   active: boolean;
-  quoteValue?: string;
-  tokenValue?: string;
-  quote?: AssetMetadata & { usdPrice: number };
+  quoteValue: string;
+  tokenValue: string;
+  quoteUsdPrice: number;
 }
 
 export interface ICreateTokenForm {

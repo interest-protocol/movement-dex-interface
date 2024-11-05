@@ -10,6 +10,7 @@ import { FormProvider, useFormContext } from 'react-hook-form';
 
 import { SearchSVG } from '@/components/svg';
 import { useModal } from '@/hooks/use-modal';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import FindPoolModal from '../find-pool-modal';
 import { PoolForm } from '../pools.types';
@@ -29,6 +30,7 @@ const FindPoolButton: FC = () => {
         decimals: 0,
         value: '0',
         locked: false,
+        standard: TokenStandard.FA,
       },
       {
         name: '',
@@ -37,6 +39,7 @@ const FindPoolButton: FC = () => {
         decimals: 0,
         value: '0',
         locked: false,
+        standard: TokenStandard.FA,
       },
     ]);
 

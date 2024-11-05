@@ -1,18 +1,27 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button } from '@interest-protocol/ui-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import invariant from 'tiny-invariant';
 
+import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
+import { useInterestDex } from '@/hooks/use-interest-dex';
+import { FixedPointMath } from '@/lib';
+import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import SuccessModal from '@/views/components/success-modal';
 
 import { ICreateTokenForm } from '../create-token.types';
+import { logCreateToken } from '../create-token.utils';
 
 const CreateTokenFormButton = () => {
-  const { account } = useWallet();
+  const dex = useInterestDex();
+  const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { control } = useFormContext<ICreateTokenForm>();
+  const { account, signTransaction } = useWallet();
+  const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
 
@@ -20,8 +29,8 @@ const CreateTokenFormButton = () => {
     window.open(values.explorerLink, '_blank', 'noopener,noreferrer');
 
   const ableToMerge = !!(
-    !account &&
-    loading &&
+    account &&
+    !loading &&
     values.name &&
     values.symbol &&
     String(values.decimals) &&
@@ -33,9 +42,89 @@ const CreateTokenFormButton = () => {
 
   const handleCreateToken = async () => {
     try {
+      invariant(ableToMerge, 'Button must be enabled');
+
       setLoading(true);
-      console.log(values);
+
+      const {
+        name,
+        pool,
+        symbol,
+        supply,
+        decimals,
+        imageUrl: iconURI,
+        projectUrl: projectURI,
+      } = values;
+
+      invariant(
+        name && symbol && decimals && supply,
+        'You must fill the required fields'
+      );
+
+      const data = values.pool?.active
+        ? dex.deployMemeFA({
+            name,
+            symbol,
+            iconURI,
+            decimals,
+            projectURI,
+            recipient: account!.address,
+            totalSupply: BigInt(
+              FixedPointMath.toBigNumber(supply!, decimals).toString()
+            ),
+            liquidityMemeAmount: BigInt(
+              FixedPointMath.toBigNumber(pool!.tokenValue!, decimals).toString()
+            ),
+            liquidityAptosAmount: BigInt(
+              FixedPointMath.toBigNumber(pool!.quoteValue!).toString()
+            ),
+          })
+        : dex.createFA({
+            name,
+            symbol,
+            iconURI,
+            decimals,
+            projectURI,
+            recipient: account!.address,
+            totalSupply: BigInt(
+              FixedPointMath.toBigNumber(supply!, decimals).toString()
+            ),
+          });
+
+      const tx = await client.transaction.build.simple({
+        data,
+        sender: account!.address,
+      });
+
+      const senderAuthenticator = await signTransaction(tx);
+
+      const txResult = await client.transaction.submit.simple({
+        transaction: tx,
+        senderAuthenticator,
+      });
+
+      await client.waitForTransaction({
+        transactionHash: txResult.hash,
+        options: { checkSuccess: true },
+      });
+
+      logCreateToken(
+        account!.address,
+        symbol,
+        !!pool?.active,
+        Network.Porto,
+        txResult.hash
+      );
+
+      setValue(
+        'explorerLink',
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+      );
+    } catch (e) {
+      console.warn({ e });
+      throw e;
     } finally {
+      reset();
       setLoading(false);
     }
   };
@@ -74,19 +163,14 @@ const CreateTokenFormButton = () => {
     });
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box display="flex">
       <Button
-        py="s"
-        px="xl"
-        fontSize="s"
-        bg="primary"
-        type="submit"
+        py="m"
+        flex="1"
         variant="filled"
-        color="onPrimary"
-        borderRadius="xs"
-        fontFamily="Proto"
-        onSubmit={onSubmit}
-        disabled={ableToMerge}
+        onClick={onSubmit}
+        justifyContent="center"
+        disabled={!ableToMerge}
       >
         Create coin
       </Button>

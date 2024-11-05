@@ -6,7 +6,7 @@ import { useDebounce } from 'use-debounce';
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { SwapForm } from '../swap.types';
 import { getPath } from '../swap.utils';
@@ -30,8 +30,14 @@ const SwapManager: FC = () => {
 
     const to = getValues('to');
     const from = getValues('from');
-    const tokenOut = isCoin(to) ? COIN_TYPE_TO_FA[to.type] : to.address;
-    const tokenIn = isCoin(from) ? COIN_TYPE_TO_FA[from.type] : from.address;
+    const tokenOut =
+      to.standard === TokenStandard.COIN
+        ? COIN_TYPE_TO_FA[to.type].toString()
+        : to.type;
+    const tokenIn =
+      to.standard === TokenStandard.COIN
+        ? COIN_TYPE_TO_FA[from.type].toString()
+        : from.type;
 
     const path = getPath(tokenIn, tokenOut).map((address) =>
       address.toString()

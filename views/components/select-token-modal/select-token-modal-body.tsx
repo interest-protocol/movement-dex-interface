@@ -8,6 +8,7 @@ import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import FetchingToken from './fetching-token';
 import ModalTokenBody from './modal-token-body';
@@ -30,7 +31,10 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
       <ModalTokenBody
         loading={false}
         handleSelectToken={handleSelectToken}
-        tokens={values(COINS[Network.Porto])}
+        tokens={values(COINS[Network.Porto]).map((token) => ({
+          ...token,
+          standard: TokenStandard.COIN,
+        }))}
       />
     );
 
@@ -39,7 +43,13 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
       <ModalTokenBody
         loading={false}
         handleSelectToken={handleSelectToken}
-        tokens={values(FUNGIBLE_ASSETS[Network.Porto])}
+        tokens={values(FUNGIBLE_ASSETS[Network.Porto]).map(
+          ({ address, ...token }) => ({
+            ...token,
+            type: address.toString(),
+            standard: TokenStandard.FA,
+          })
+        )}
       />
     );
 
@@ -50,9 +60,9 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   if (filterSelected === TokenOrigin.Wallet && !noWalletToShow)
     return (
       <ModalTokenBody
+        tokens={coins}
         loading={loading}
         handleSelectToken={handleSelectToken}
-        tokens={coins.map(({ metadata }) => metadata)}
       />
     );
 

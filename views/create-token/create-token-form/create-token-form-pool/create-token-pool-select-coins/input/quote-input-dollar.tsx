@@ -10,7 +10,7 @@ const QuoteInputDollar: FC = () => {
   const { control } = useFormContext<ICreateTokenForm>();
 
   const value = useWatch({ control, name: 'pool.quoteValue' });
-  const usdPrice = useWatch({ control, name: 'pool.quote.usdPrice' });
+  const usdPrice = useWatch({ control, name: 'pool.quoteUsdPrice' });
 
   const usdValue =
     usdPrice && value
