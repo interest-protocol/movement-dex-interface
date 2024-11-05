@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.json(data);
   } catch (e) {
-    console.log(e);
+    console.warn(e);
 
     res.status(500).send(e);
   }

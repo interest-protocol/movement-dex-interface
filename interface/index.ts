@@ -44,7 +44,7 @@ export interface AmmPoolCoinTypes {
   lpCoin: string;
 }
 
-interface AmmPoolRaw<T> {
+export interface AmmPool {
   poolObjectId: string;
   stateId: string;
   type: string;
@@ -53,6 +53,7 @@ interface AmmPoolRaw<T> {
   isVolatile: boolean;
 }
 
-export type AmmServerPool = AmmPoolRaw<string>;
-
-export type AmmPool = AmmPoolRaw<BigNumber>;
+export interface CoinBalance {
+  type: string;
+  balance: bigint;
+}

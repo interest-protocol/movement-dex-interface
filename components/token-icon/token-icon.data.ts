@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { FC } from 'react';
 
 import { BTCSVG, ETHSVG, MOVESVG, USDCSVG, USDTSVG } from '@/components/svg';
@@ -15,5 +15,6 @@ export const TOKEN_ICONS = {
     MOVE: MOVESVG,
     USDT: USDTSVG,
     RUCO: '/images/ruco.webp',
+    nETH: '/images/nETH.webp',
   },
 } as unknown as Record<Network, Record<string, string | FC<SVGProps>>>;

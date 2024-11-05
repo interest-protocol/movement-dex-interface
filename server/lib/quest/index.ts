@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 
 import dbConnect from '@/server';
 import metrics from '@/server/model/metrics';

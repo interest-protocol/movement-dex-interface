@@ -1,4 +1,4 @@
-import { COINS, Network } from '@interest-protocol/aptos-move-dex';
+import { COINS, Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import BigNumber from 'bignumber.js';
 import { FC } from 'react';

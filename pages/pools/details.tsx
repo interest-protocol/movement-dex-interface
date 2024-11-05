@@ -1,4 +1,4 @@
-import { COINS, Network } from '@interest-protocol/aptos-move-dex';
+import { COINS, Network } from '@interest-protocol/aptos-sr-amm';
 import { NextPage } from 'next';
 import { values } from 'ramda';
 import { useEffect, useState } from 'react';

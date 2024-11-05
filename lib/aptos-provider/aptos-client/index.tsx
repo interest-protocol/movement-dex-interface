@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { createContext, type FC, type PropsWithChildren, useMemo } from 'react';
 
 import { useNetwork } from '../network/network.hooks';

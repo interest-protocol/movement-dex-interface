@@ -1,4 +1,4 @@
-import { Network } from '@interest-protocol/aptos-move-dex';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Tag, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 

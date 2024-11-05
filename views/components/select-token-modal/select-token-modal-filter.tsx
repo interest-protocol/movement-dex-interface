@@ -19,7 +19,7 @@ const SelectTokenFilter: FC<SelectTokenFilterProps> = ({
       flexWrap="wrap"
       gridTemplateColumns="1fr 1fr 1fr"
     >
-      {['Coin', 'FA', 'Wallet'].map((item, index) => (
+      {['FA', 'Coin', 'Wallet'].map((item, index) => (
         <Box
           key={v4()}
           cursor="pointer"
