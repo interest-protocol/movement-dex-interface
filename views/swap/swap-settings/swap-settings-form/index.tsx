@@ -28,7 +28,7 @@ const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
     setValue('settings', settings);
 
     localStorage.setItem(
-      `${LOCAL_STORAGE_VERSION}-movement-settings`,
+      `${LOCAL_STORAGE_VERSION}-movement-dex-settings`,
       JSON.stringify(settings)
     );
 
