@@ -4,9 +4,9 @@ import { useIsMounted, useReadLocalStorage } from 'usehooks-ts';
 
 import { LOCAL_STORAGE_VERSION } from '@/constants';
 
+import SidebarHeader from '../header/logo-wrapper';
 import SidebarMenuList from './menu-list';
 import SidebarCollapseButton from './sidebar-collapse-button';
-import SidebarHeader from './sidebar-logo';
 
 const itemVariants = {
   open: {
