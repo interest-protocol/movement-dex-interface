@@ -8,8 +8,10 @@ import TokenIcon from '@/components/token-icon';
 import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import {
+  AssetMetadata,
+  TokenStandard,
+} from '@/lib/coins-manager/coins-manager.types';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { SwapForm } from '../swap.types';
@@ -43,7 +45,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
 
   const onSelect = async (metadata: AssetMetadata) => {
     if (
-      isCoin(metadata) === isCoin(opposite) &&
+      metadata.standard === opposite.standard &&
       metadata.symbol === opposite.symbol
     ) {
       setValue(label === 'to' ? 'from' : 'to', {
@@ -110,9 +112,9 @@ const SelectToken: FC<InputProps> = ({ label }) => {
           <TokenIcon
             withBg
             size="1.1rem"
-            symbol={currentSymbol}
             network={network}
-            rounded={!isCoin(currentToken)}
+            symbol={currentSymbol}
+            rounded={currentToken.standard === TokenStandard.FA}
           />
         ),
       })}

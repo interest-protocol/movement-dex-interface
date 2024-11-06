@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 
 import { TokenIcon } from '@/components';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { PoolCardTokenInfoProps } from './pool-card.types';
 
@@ -36,7 +36,7 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ coins }) => {
             key={v4()}
             network={network}
             symbol={'USDT'}
-            rounded={!isCoin(coin)}
+            rounded={coin.standard === TokenStandard.FA}
           />
         ))}
       </Box>

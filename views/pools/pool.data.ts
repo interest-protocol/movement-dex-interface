@@ -1,11 +1,8 @@
-import {
-  COINS,
-  FUNGIBLE_ASSETS,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
+import { COINS, Network } from '@interest-protocol/aptos-sr-amm';
 import { values } from 'ramda';
 
 import { AmmPool, PoolTypeEnum } from '@/interface';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 export const POOL_DATA: ReadonlyArray<AmmPool> = [
   {
@@ -13,8 +10,14 @@ export const POOL_DATA: ReadonlyArray<AmmPool> = [
     stateId: '123',
     type: '0x00000',
     coins: {
-      coinX: values(COINS[Network.Porto])[0],
-      coinY: values(FUNGIBLE_ASSETS[Network.Porto])[1],
+      coinX: {
+        ...values(COINS[Network.Porto])[0],
+        standard: TokenStandard.COIN,
+      },
+      coinY: {
+        ...values(COINS[Network.Porto])[1],
+        standard: TokenStandard.COIN,
+      },
       lpCoin: '0x0000000000f',
     },
     poolType: PoolTypeEnum.AMM,
@@ -25,8 +28,14 @@ export const POOL_DATA: ReadonlyArray<AmmPool> = [
     stateId: '123',
     type: '0x00000',
     coins: {
-      coinX: values(FUNGIBLE_ASSETS[Network.Porto])[0],
-      coinY: values(COINS[Network.Porto])[1],
+      coinX: {
+        ...values(COINS[Network.Porto])[0],
+        standard: TokenStandard.COIN,
+      },
+      coinY: {
+        ...values(COINS[Network.Porto])[1],
+        standard: TokenStandard.COIN,
+      },
       lpCoin: '0x0000000000f',
     },
     poolType: PoolTypeEnum.CLAMM,

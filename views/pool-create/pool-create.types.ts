@@ -1,11 +1,6 @@
-import { CoinMetadata, FAMetadata } from '@/interface';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
-export interface TokenCoin extends CoinMetadata {
-  value: string;
-  usdPrice: number | null;
-}
-
-export interface TokenFA extends FAMetadata {
+export interface Token extends AssetMetadata {
   value: string;
   usdPrice: number | null;
 }
@@ -24,7 +19,7 @@ export interface CreatePoolForm {
   error?: string;
   explorerLink: string;
   type: 'CLAMM' | 'AMM';
-  tokens: ReadonlyArray<TokenCoin | TokenFA>;
+  tokens: ReadonlyArray<Token>;
 }
 
 export enum CreatePoolMessageEnum {

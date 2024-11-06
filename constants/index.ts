@@ -16,6 +16,11 @@ export const FAUCET_URL = {
   [Network.Porto]: 'https://mizu.testnet.porto.movementnetwork.xyz/',
 };
 
+export const INDEXER_URL = {
+  [Network.Porto]:
+    'https://indexer.testnet.porto.movementnetwork.xyz/v1/graphql',
+};
+
 export const EXTERNAL_FAUCET_URL = {
   [Network.Porto]: 'https://mizu.testnet.porto.movementnetwork.xyz/',
 };

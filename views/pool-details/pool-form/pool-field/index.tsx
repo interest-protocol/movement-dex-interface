@@ -8,11 +8,7 @@ import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
-import {
-  PoolForm,
-  PoolOption,
-  PoolTokenWithCoinMetadata,
-} from '@/views/pools/pools.types';
+import { PoolForm, PoolOption } from '@/views/pools/pools.types';
 
 import { PoolFieldsProps } from './pool-field.types';
 
@@ -29,14 +25,14 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
 
   const token = getValues(fieldName);
 
-  const type = (token as PoolTokenWithCoinMetadata).type || '';
+  const type = token.type || '';
   const decimals = token.decimals;
   const symbol = token.symbol;
 
   const balance = type
     ? FixedPointMath.toNumber(
         coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-        coinsMap[type]?.metadata.decimals ?? decimals
+        coinsMap[type]?.decimals ?? decimals
       )
     : 1;
 

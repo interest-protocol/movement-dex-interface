@@ -19,7 +19,7 @@ const InputMaxButton: FC<InputProps> = ({ index }) => {
 
   const balance = FixedPointMath.toNumber(
     coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[type]?.metadata.decimals ?? decimals
+    coinsMap[type]?.decimals ?? decimals
   );
 
   const handleMax = () => {

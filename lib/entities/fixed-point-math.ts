@@ -44,7 +44,7 @@ export class FixedPointMath {
 
   public static toBigNumber(
     value: number | string,
-    decimals = 9,
+    decimals = 8,
     significant = 6
   ): BigNumber {
     if (value == null || isNaN(+value)) return ZERO_BIG_NUMBER;

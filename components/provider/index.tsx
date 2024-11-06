@@ -3,7 +3,7 @@ import { Network } from '@interest-protocol/aptos-sr-amm';
 import { NightlyWallet } from '@nightlylabs/aptos-wallet-adapter-plugin';
 import { FC, PropsWithChildren } from 'react';
 
-import { RPC_URL } from '@/constants';
+import { FAUCET_URL, INDEXER_URL, RPC_URL } from '@/constants';
 import { ModalProvider } from '@/context/modal';
 import { AptosProvider } from '@/lib/aptos-provider';
 import CoinsManager from '@/lib/coins-manager';
@@ -19,6 +19,8 @@ const Provider: FC<PropsWithChildren> = ({ children }) => (
         {
           network: Network.Porto,
           rpc: RPC_URL[Network.Porto],
+          faucet: FAUCET_URL[Network.Porto],
+          indexer: INDEXER_URL[Network.Porto],
         },
       ]}
     >

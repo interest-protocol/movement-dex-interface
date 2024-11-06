@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { TokenIcon } from '@/components';
 import { ChevronDoubleLeftSVG } from '@/components/svg';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { SuccessModalTokenCardProps } from './success-modal.types';
 
@@ -29,9 +29,9 @@ const SuccessModalTokenCard: FC<SuccessModalTokenCardProps> = ({
         <TokenIcon
           withBg
           size="1rem"
-          symbol={from.symbol}
-          rounded={!isCoin(from)}
           network={network}
+          symbol={from.symbol}
+          rounded={from.standard === TokenStandard.FA}
         />
         <Typography
           alignItems="center"
@@ -56,9 +56,9 @@ const SuccessModalTokenCard: FC<SuccessModalTokenCardProps> = ({
         <TokenIcon
           withBg
           size="1.1rem"
-          rounded={!isCoin(to)}
           symbol={to.symbol}
           network={network as Network}
+          rounded={to.standard === TokenStandard.FA}
         />
         <Typography
           alignItems="center"

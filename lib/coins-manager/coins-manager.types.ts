@@ -1,13 +1,23 @@
 import BigNumber from 'bignumber.js';
 import { KeyedMutator } from 'swr';
 
-import { CoinMetadata, FAMetadata } from '@/interface';
+export enum TokenStandard {
+  COIN = 'v1',
+  FA = 'v2',
+}
 
-export type AssetMetadata = CoinMetadata | FAMetadata;
+export type AssetMetadata = {
+  name: string;
+  type: string;
+  symbol: string;
+  iconUri?: string;
+  decimals: number;
+  projectUri?: string;
+  standard: TokenStandard;
+};
 
-export interface Asset {
+export interface Asset extends AssetMetadata {
   balance: BigNumber;
-  metadata: AssetMetadata;
 }
 
 export interface UseCoins {

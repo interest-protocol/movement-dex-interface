@@ -13,7 +13,7 @@ import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.h
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
@@ -51,20 +51,21 @@ const SwapButton = () => {
         FixedPointMath.toBigNumber(from.value, from.decimals).toFixed(0)
       );
 
-      const data = isCoin(from)
-        ? dex.swapPathCoinIn({
-            amountIn,
-            coinIn: from.type,
-            path: path.slice(1),
-            minAmountOut: BigInt(0),
-            recipient: account.address,
-          })
-        : dex.swapPath({
-            path,
-            amountIn,
-            minAmountOut: BigInt(0),
-            recipient: account.address,
-          });
+      const data =
+        from.standard === TokenStandard.COIN
+          ? dex.swapPathCoinIn({
+              amountIn,
+              coinIn: from.type,
+              path: path.slice(1),
+              minAmountOut: BigInt(0),
+              recipient: account.address,
+            })
+          : dex.swapPath({
+              path,
+              amountIn,
+              minAmountOut: BigInt(0),
+              recipient: account.address,
+            });
 
       const tx = await client.transaction.build.simple({
         data,
