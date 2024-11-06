@@ -75,6 +75,7 @@ export { default as MOVESVG } from './move';
 export { default as MovementLogoSVG } from './movement-logo';
 export { default as NoSearchSVG } from './no-search';
 export { default as PercentageSVG } from './percentage';
+export { default as PictureSVG } from './picture';
 export { default as PlusSVG } from './plus';
 export { default as PoolSVG } from './pool';
 export { default as QuestionCircleSVG } from './question-circle';

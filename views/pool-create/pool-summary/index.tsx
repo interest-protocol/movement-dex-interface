@@ -9,7 +9,7 @@ import { TokenIcon } from '@/components';
 import { CircleCheckSVG } from '@/components/svg';
 import { Routes, RoutesEnum } from '@/constants';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 import { formatMoney } from '@/utils';
 
 import { CreatePoolForm } from '../pool-create.types';
@@ -164,9 +164,9 @@ const PoolSummary: FC = () => {
               >
                 <TokenIcon
                   withBg
-                  symbol={token.symbol}
                   network={network}
-                  rounded={!isCoin(token)}
+                  symbol={token.symbol}
+                  rounded={token.standard === TokenStandard.FA}
                 />
               </Box>
               <Typography variant="body" size="medium">

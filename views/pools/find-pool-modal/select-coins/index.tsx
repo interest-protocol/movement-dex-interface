@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { PlusSVG } from '@/components/svg';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { PoolForm } from '../../pools.types';
 import SelectToken from './select-token';
@@ -48,9 +49,10 @@ const SelectCoins: FC = () => {
                 name: '',
                 type: '',
                 symbol: '',
-                decimals: 0,
                 value: '0',
+                decimals: 0,
                 locked: false,
+                standard: TokenStandard.FA,
               })
             }
             PrefixIcon={

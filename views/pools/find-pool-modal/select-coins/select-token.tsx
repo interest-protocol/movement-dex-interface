@@ -6,8 +6,10 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { ChevronDownSVG, ChevronRightSVG, MinusSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import {
+  AssetMetadata,
+  TokenStandard,
+} from '@/lib/coins-manager/coins-manager.types';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { PoolForm } from '../../pools.types';
@@ -27,6 +29,10 @@ const SelectToken: FC<SelectTokenProps> = ({
   const currentSymbol = useWatch({
     control,
     name: `tokenList.${index}.symbol`,
+  });
+  const currentStandard = useWatch({
+    control,
+    name: `tokenList.${index}.standard`,
   });
 
   const onSelect = async (metadata: AssetMetadata) => {
@@ -71,7 +77,7 @@ const SelectToken: FC<SelectTokenProps> = ({
                 withBg
                 network={network}
                 symbol={currentSymbol}
-                rounded={!isCoin(getValues(`tokenList.${index}`))}
+                rounded={currentStandard === TokenStandard.FA}
               />
               <Typography variant="body" size="medium">
                 {currentSymbol}

@@ -2,7 +2,7 @@ import { Box, ProgressIndicator, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import NotFound from './not-found';
 import { ModalTokenBodyProps } from './select-token-modal.types';
@@ -26,9 +26,10 @@ const ModalTokenBody: FC<ModalTokenBodyProps> = ({
           <TokenModalItem
             key={v4()}
             selected={false}
-            isFA={!isCoin(token)}
+            symbol={token.symbol}
+            iconUri={token.iconUri}
             onClick={() => handleSelectToken(token)}
-            symbol={isCoin(token) ? token.symbol : token.symbol}
+            isFA={token.standard === TokenStandard.FA}
           />
         ))
       ) : (

@@ -38,23 +38,30 @@ const TokenIcon: FC<TokenIconProps> = ({
   if (loadError)
     return (
       <Box
-        bg="black"
-        color="white"
         display="flex"
-        overflow="hidden"
         position="relative"
         alignItems="center"
         justifyContent="center"
-        width={`calc(${size} * 1.66)`}
-        height={`calc(${size} * 1.66)`}
-        borderRadius={rounded || !withBg ? 'full' : 'xs'}
-        {...(withBg && { bg: 'onSurface', color: 'surface' })}
       >
-        <DefaultTokenSVG
-          width="100%"
-          maxWidth={size ?? '1.5rem'}
-          maxHeight={size ?? '1.5rem'}
-        />
+        <Box
+          bg="black"
+          color="white"
+          display="flex"
+          overflow="hidden"
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
+          width={`calc(${size} * 1.66)`}
+          height={`calc(${size} * 1.66)`}
+          borderRadius={rounded || !withBg ? 'full' : 'xs'}
+          {...(withBg && { bg: 'onSurface', color: 'surface' })}
+        >
+          <DefaultTokenSVG
+            width="100%"
+            maxWidth={size ?? '1.5rem'}
+            maxHeight={size ?? '1.5rem'}
+          />
+        </Box>
       </Box>
     );
 
@@ -65,29 +72,36 @@ const TokenIcon: FC<TokenIconProps> = ({
         position="relative"
         alignItems="center"
         justifyContent="center"
-        width={`calc(${size} * 1.66)`}
-        height={`calc(${size} * 1.66)`}
-        borderRadius={rounded ? 'full' : 'xs'}
-        {...(withBg && { bg: 'onSurface', color: 'surface' })}
       >
         <Box
-          overflow="hidden"
+          display="flex"
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
           width={`calc(${size} * 1.66)`}
           height={`calc(${size} * 1.66)`}
           borderRadius={rounded ? 'full' : 'xs'}
+          {...(withBg && { bg: 'onSurface', color: 'surface' })}
         >
-          {loading && (
-            <Box position="absolute" top="-0.5rem" left="0.9rem">
-              <ProgressIndicator size={loaderSize} variant="loading" />
-            </Box>
-          )}
-          <img
-            width="100%"
-            alt={symbol}
-            src={TokenIcon}
-            onLoad={stopLoad}
-            onError={errorOnLoad}
-          />
+          <Box
+            overflow="hidden"
+            width={`calc(${size} * 1.66)`}
+            height={`calc(${size} * 1.66)`}
+            borderRadius={rounded ? 'full' : 'xs'}
+          >
+            {loading && (
+              <Box position="absolute" top="-0.5rem" left="0.9rem">
+                <ProgressIndicator size={loaderSize} variant="loading" />
+              </Box>
+            )}
+            <img
+              width="100%"
+              alt={symbol}
+              src={TokenIcon}
+              onLoad={stopLoad}
+              onError={errorOnLoad}
+            />
+          </Box>
         </Box>
       </Box>
     );
@@ -127,28 +141,40 @@ const TokenIcon: FC<TokenIconProps> = ({
         position="relative"
         alignItems="center"
         justifyContent="center"
-        width={`calc(${size} * 1.66)`}
-        height={`calc(${size} * 1.66)`}
-        borderRadius={rounded ? 'full' : 'xs'}
       >
         <Box
-          overflow="hidden"
+          display="flex"
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
           width={`calc(${size} * 1.66)`}
           height={`calc(${size} * 1.66)`}
           borderRadius={rounded ? 'full' : 'xs'}
         >
-          {loading && (
-            <Box position="absolute" top="-0.5rem" left="0.9rem">
-              <ProgressIndicator size={loaderSize} variant="loading" />
-            </Box>
-          )}
-          <img
-            src={url}
-            width="100%"
-            alt={symbol}
-            onLoad={stopLoad}
-            onError={errorOnLoad}
-          />
+          <Box
+            overflow="hidden"
+            width={`calc(${size} * 1.66)`}
+            height={`calc(${size} * 1.66)`}
+            borderRadius={rounded ? 'full' : 'xs'}
+          >
+            {loading && (
+              <Box position="absolute" top="-0.5rem" left="0.9rem">
+                <ProgressIndicator size={loaderSize} variant="loading" />
+              </Box>
+            )}
+            <img
+              src={url}
+              width="100%"
+              alt={symbol}
+              onLoad={stopLoad}
+              onError={errorOnLoad}
+              style={{
+                objectFit: 'cover',
+                width: `calc(${size} * 1.66)`,
+                height: `calc(${size} * 1.66)`,
+              }}
+            />
+          </Box>
         </Box>
       </Box>
     );
@@ -160,54 +186,73 @@ const TokenIcon: FC<TokenIconProps> = ({
         position="relative"
         alignItems="center"
         justifyContent="center"
-        width={`calc(${size} * 1.66)`}
-        height={`calc(${size} * 1.66)`}
-        borderRadius={rounded ? 'full' : 'xs'}
-        {...(withBg && { bg: 'onSurface', color: 'surface' })}
       >
         <Box
-          overflow="hidden"
+          display="flex"
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
           width={`calc(${size} * 1.66)`}
           height={`calc(${size} * 1.66)`}
           borderRadius={rounded ? 'full' : 'xs'}
+          {...(withBg && { bg: 'onSurface', color: 'surface' })}
         >
-          {isLoading && (
-            <Box position="absolute" top="-0.5rem" left="0.9rem">
-              <ProgressIndicator size={loaderSize} variant="loading" />
-            </Box>
-          )}
-          {iconSrc && (
-            <img
-              width="100%"
-              alt={symbol}
-              src={iconSrc}
-              onLoad={stopLoad}
-              onError={errorOnLoad}
-            />
-          )}
+          <Box
+            overflow="hidden"
+            width={`calc(${size} * 1.66)`}
+            height={`calc(${size} * 1.66)`}
+            borderRadius={rounded ? 'full' : 'xs'}
+          >
+            {isLoading && (
+              <Box position="absolute" top="-0.5rem" left="0.9rem">
+                <ProgressIndicator size={loaderSize} variant="loading" />
+              </Box>
+            )}
+            {iconSrc && (
+              <img
+                width="100%"
+                alt={symbol}
+                src={iconSrc}
+                onLoad={stopLoad}
+                onError={errorOnLoad}
+                style={{
+                  objectFit: 'cover',
+                  width: `calc(${size} * 1.66)`,
+                  height: `calc(${size} * 1.66)`,
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </Box>
     );
 
   return (
     <Box
-      bg="black"
-      color="white"
       display="flex"
-      overflow="hidden"
       position="relative"
       alignItems="center"
       justifyContent="center"
-      width={`calc(${size} * 1.66)`}
-      height={`calc(${size} * 1.66)`}
-      borderRadius={rounded || !withBg ? 'full' : 'xs'}
-      {...(withBg && { bg: 'onSurface', color: 'surface' })}
     >
-      <DefaultTokenSVG
-        width="100%"
-        maxWidth={size ?? '1.5rem'}
-        maxHeight={size ?? '1.5rem'}
-      />
+      <Box
+        bg="black"
+        color="white"
+        display="flex"
+        overflow="hidden"
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        width={`calc(${size} * 1.66)`}
+        height={`calc(${size} * 1.66)`}
+        borderRadius={rounded || !withBg ? 'full' : 'xs'}
+        {...(withBg && { bg: 'onSurface', color: 'surface' })}
+      >
+        <DefaultTokenSVG
+          width="100%"
+          maxWidth={size ?? '1.5rem'}
+          maxHeight={size ?? '1.5rem'}
+        />
+      </Box>
     </Box>
   );
 };

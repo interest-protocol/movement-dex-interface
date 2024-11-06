@@ -1,20 +1,12 @@
-import {
-  COIN_TYPES,
-  COINS,
-  FA_ADDRESSES,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
+import { GetFungibleAssetMetadataResponse } from '@aptos-labs/ts-sdk';
 import BigNumber from 'bignumber.js';
-import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
-
-import { getAddressCoinBalances, getFaPrimaryStore, isAptos } from '@/utils';
 
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
 import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
 import { useCoins } from './coins-manager.hooks';
-import { Asset } from './coins-manager.types';
+import { Asset, TokenStandard } from './coins-manager.types';
 
 const CoinsManager: FC = () => {
   const id = useId();
@@ -36,75 +28,57 @@ const CoinsManager: FC = () => {
 
         if (!currentAccount?.address) return setCoins({});
 
-        const fasRaw = await Promise.all(
-          values(FA_ADDRESSES[Network.Porto]).map((address) =>
-            getFaPrimaryStore(
-              currentAccount.address,
-              address.toString(),
-              client
-            )
-          )
-        );
+        const coinsData = await client.getAccountCoinsData({
+          accountAddress: currentAccount.address,
+        });
 
-        const fas = fasRaw.reduce(
-          (acc, fa) => {
-            if (BigNumber(String(fa.balance)).isZero()) return acc;
+        const coinsMetadata: Record<
+          string,
+          GetFungibleAssetMetadataResponse[0]
+        > = {};
+
+        for (const item of coinsData) {
+          const metadata = await client.getFungibleAssetMetadataByAssetType({
+            assetType: item.asset_type!,
+          });
+
+          coinsMetadata[item.asset_type!] = metadata;
+        }
+
+        const coins: Record<string, Asset> = coinsData.reduce(
+          (acc, { asset_type, amount }) => {
+            if (!asset_type || !coinsMetadata[asset_type]) return acc;
+
+            const {
+              name,
+              symbol,
+              decimals,
+              token_standard,
+              icon_uri: iconUri,
+              project_uri: projectUri,
+            } = coinsMetadata[asset_type];
 
             return {
               ...acc,
-              [fa.fa.address.toString()]: {
-                metadata: {
-                  name: fa.fa.name,
-                  symbol: fa.fa.symbol,
-                  address: fa.fa.address,
-                  decimals: Number(fa.fa.decimals),
-                },
-                balance: BigNumber(fa.balance.toString()),
+              [asset_type]: {
+                name,
+                symbol,
+                decimals,
+                type: asset_type,
+                balance: BigNumber(amount.toString()),
+                standard:
+                  token_standard === 'v1'
+                    ? TokenStandard.COIN
+                    : TokenStandard.FA,
+                ...(!!projectUri && { projectUri }),
+                ...(!!iconUri && { iconUri: iconUri }),
               },
             };
           },
           {} as Record<string, Asset>
         );
 
-        const coinsRaw = await getAddressCoinBalances(
-          currentAccount.address,
-          client
-        );
-
-        const coins = coinsRaw.reduce(
-          (acc, { type, balance }) => {
-            if (
-              values(COIN_TYPES[Network.Porto]).some((coinType) =>
-                type.includes(coinType)
-              )
-            ) {
-              const coinType = values(COIN_TYPES[Network.Porto]).find(
-                (coinType) => type.includes(coinType)
-              )!;
-
-              if (isAptos(coinType))
-                return {
-                  ...acc,
-                  [type]: {
-                    metadata: COINS[Network.Porto].APT!,
-                    balance: BigNumber(balance.toString()),
-                  },
-                };
-
-              return {
-                ...acc,
-                [coinType]: {
-                  metadata: COINS[Network.Porto][coinType],
-                  balance: BigNumber(balance.toString()),
-                },
-              };
-            }
-            return acc;
-          },
-          {} as Record<string, Asset>
-        );
-
-        setCoins?.({ ...coins, ...fas } as Record<string, Asset>);
+        setCoins?.(coins);
       } catch (e) {
         setError((e as Error).message);
       } finally {

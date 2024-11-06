@@ -20,13 +20,10 @@ const Balance: FC<InputProps> = ({ label }) => {
   const { control, setValue, getValues } = useFormContext<SwapForm>();
 
   const type = useWatch({ control, name: `${label}.type` });
-  const address = useWatch({ control, name: `${label}.address` });
-  const decimals = useWatch({ control, name: `${label}.decimals` });
   const symbol = useWatch({ control, name: `${label}.symbol` });
+  const decimals = useWatch({ control, name: `${label}.decimals` });
 
-  const id = type ?? address?.toString();
-
-  if (!id)
+  if (!type)
     return (
       <Box
         p="2xs"
@@ -50,12 +47,12 @@ const Balance: FC<InputProps> = ({ label }) => {
     );
 
   const balance = FixedPointMath.toNumber(
-    coinsMap[id]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[id]?.metadata.decimals ?? decimals
+    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
+    coinsMap[type]?.decimals ?? decimals
   );
 
   const handleMax = () => {
-    if (isAptos(id) && balance < 1 && label === 'from') {
+    if (isAptos(type) && balance < 1 && label === 'from') {
       setValue('from.value', '0');
       return;
     }
@@ -64,7 +61,7 @@ const Balance: FC<InputProps> = ({ label }) => {
 
     setValue('updateSlider', {});
 
-    setValue(`${label}.value`, String(balance - (isAptos(id) ? 1 : 0)));
+    setValue(`${label}.value`, String(balance - (isAptos(type) ? 1 : 0)));
     setValue('origin', label);
   };
 

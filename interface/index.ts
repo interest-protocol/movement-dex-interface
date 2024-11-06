@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AccountAddress } from '@aptos-labs/ts-sdk';
 import BigNumber from 'bignumber.js';
 
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
@@ -15,22 +14,6 @@ export interface CoinData {
 export interface PoolPageProps {
   objectId: string;
   stateId: string;
-}
-
-export interface FAMetadata {
-  name: string;
-  symbol: string;
-  iconUri?: string;
-  decimals: number;
-  address: AccountAddress;
-}
-
-export interface CoinMetadata {
-  name: string;
-  type: string;
-  symbol: string;
-  iconUri?: string;
-  decimals: number;
 }
 
 export enum PoolTypeEnum {
