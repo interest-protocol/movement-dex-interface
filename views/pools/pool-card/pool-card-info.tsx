@@ -10,7 +10,7 @@ import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { PoolCardTokenInfoProps } from './pool-card.types';
 
-const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ coins }) => {
+const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ loading, coins }) => {
   const network = useNetwork<Network>();
 
   return (
@@ -30,33 +30,51 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ coins }) => {
         alignItems="center"
         alignSelf="stretch"
       >
-        {coins.map((coin) => (
-          <TokenIcon
-            withBg
-            key={v4()}
-            network={network}
-            symbol={'USDT'}
-            rounded={coin.standard === TokenStandard.FA}
-          />
-        ))}
+        {loading
+          ? Array.from({ length: 2 }, () => (
+              <TokenIcon withBg symbol="" key={v4()} network={network} />
+            ))
+          : coins.map(({ symbol, iconUri, standard }) => (
+              <TokenIcon
+                withBg
+                key={v4()}
+                url={iconUri}
+                symbol={symbol}
+                network={network}
+                rounded={standard === TokenStandard.FA}
+              />
+            ))}
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center">
-        <Typography
-          gap="xs"
-          size="small"
-          variant="body"
-          display="flex"
-          fontSize="1rem"
-          fontWeight="700"
-          color="onSurface"
-          textAlign="center"
-          lineHeight="1.7rem"
-        >
-          {coins.flatMap((coin, index) => [
-            index ? <>{' • '}</> : '',
-            coin.symbol || <Skeleton key={v4()} width="4rem" />,
-          ])}
-        </Typography>
+        {loading ? (
+          <Typography
+            size="small"
+            variant="body"
+            fontSize="1rem"
+            fontWeight="700"
+            lineHeight="1.7rem"
+            color="onSurface"
+          >
+            <Skeleton height="100%" width="7rem" />
+          </Typography>
+        ) : (
+          <Typography
+            gap="xs"
+            size="small"
+            variant="body"
+            display="flex"
+            fontSize="1rem"
+            fontWeight="700"
+            color="onSurface"
+            textAlign="center"
+            lineHeight="1.7rem"
+          >
+            {coins.flatMap((coin, index) => [
+              index ? <>{' • '}</> : '',
+              coin.symbol || <Skeleton key={v4()} width="4rem" />,
+            ])}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

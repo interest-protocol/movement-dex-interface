@@ -2,8 +2,6 @@ import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
-import { AmmPool } from '@/interface';
-
 import { POOL_DATA } from './pool.data';
 import PoolCard from './pool-card';
 import PoolCardSkeleton from './pool-card/pool-card-skeleton';
@@ -16,7 +14,7 @@ import {
 const Pools: FC = () => {
   return (
     <PoolCardListContent
-      pools={POOL_DATA as ReadonlyArray<AmmPool>}
+      pools={POOL_DATA}
       done={false}
       arePoolsLoading={false}
       hasMore={true}
@@ -27,7 +25,7 @@ const Pools: FC = () => {
 const Position: FC = () => {
   return (
     <PoolCardListContent
-      pools={POOL_DATA as ReadonlyArray<AmmPool>}
+      pools={POOL_DATA}
       done={false}
       arePoolsLoading={false}
       hasMore={false}

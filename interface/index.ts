@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BigNumber from 'bignumber.js';
 
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-
 export type BigNumberish = BigNumber | bigint | string | number;
 
 export interface CoinData {
@@ -18,22 +16,19 @@ export interface PoolPageProps {
 
 export enum PoolTypeEnum {
   CLAMM = 'CLAMM',
-  AMM = 'AMM',
+  srAMM = 'SR-AMM',
 }
 
 export interface AmmPoolCoinTypes {
-  coinX: AssetMetadata;
-  coinY: AssetMetadata;
-  lpCoin: string;
+  typeX: string;
+  typeY: string;
 }
 
-export interface AmmPool {
-  poolObjectId: string;
-  stateId: string;
-  type: string;
-  coins: AmmPoolCoinTypes;
-  poolType: PoolTypeEnum;
+export interface SrAmmPool {
   isVolatile: boolean;
+  poolAddress: string;
+  poolType: PoolTypeEnum;
+  coins: AmmPoolCoinTypes;
 }
 
 export interface CoinBalance {

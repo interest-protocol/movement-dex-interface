@@ -1,44 +1,16 @@
-import { COINS, Network } from '@interest-protocol/aptos-sr-amm';
+import { Network, STRICT_POOL } from '@interest-protocol/aptos-sr-amm';
 import { values } from 'ramda';
 
-import { AmmPool, PoolTypeEnum } from '@/interface';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { PoolTypeEnum, SrAmmPool } from '@/interface';
 
-export const POOL_DATA: ReadonlyArray<AmmPool> = [
-  {
-    poolObjectId: '123',
-    stateId: '123',
-    type: '0x00000',
-    coins: {
-      coinX: {
-        ...values(COINS[Network.Porto])[0],
-        standard: TokenStandard.COIN,
-      },
-      coinY: {
-        ...values(COINS[Network.Porto])[1],
-        standard: TokenStandard.COIN,
-      },
-      lpCoin: '0x0000000000f',
-    },
-    poolType: PoolTypeEnum.AMM,
-    isVolatile: false,
+export const POOL_DATA: ReadonlyArray<SrAmmPool> = values(
+  STRICT_POOL[Network.Porto]
+).map(({ address, faX, faY }) => ({
+  isVolatile: true,
+  poolType: PoolTypeEnum.srAMM,
+  poolAddress: address.toString(),
+  coins: {
+    typeX: faX.toString(),
+    typeY: faY.toString(),
   },
-  {
-    poolObjectId: '123',
-    stateId: '123',
-    type: '0x00000',
-    coins: {
-      coinX: {
-        ...values(COINS[Network.Porto])[0],
-        standard: TokenStandard.COIN,
-      },
-      coinY: {
-        ...values(COINS[Network.Porto])[1],
-        standard: TokenStandard.COIN,
-      },
-      lpCoin: '0x0000000000f',
-    },
-    poolType: PoolTypeEnum.CLAMM,
-    isVolatile: true,
-  },
-];
+}));
