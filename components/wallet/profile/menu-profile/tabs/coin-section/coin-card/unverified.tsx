@@ -3,11 +3,10 @@ import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
 import TokenIcon from '@/components/token-icon';
-import { CoinMetadata, FAMetadata } from '@/interface';
 import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { UnverifiedCoinCardProps } from '../../../user-info.types';
@@ -20,12 +19,9 @@ const UnverifiedCoinCard: FC<UnverifiedCoinCardProps> = ({ token }) => {
   const decimals = token.decimals;
   const symbol = token.symbol;
 
-  const id =
-    (token as CoinMetadata).type || (token as FAMetadata).address?.toString();
-
   const balance = FixedPointMath.toNumber(
-    coinsMap[id]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[id]?.metadata.decimals ?? decimals
+    coinsMap[token.type]?.balance ?? ZERO_BIG_NUMBER,
+    coinsMap[token.type]?.decimals ?? decimals
   );
 
   return (
@@ -36,7 +32,7 @@ const UnverifiedCoinCard: FC<UnverifiedCoinCardProps> = ({ token }) => {
           size="1.5rem"
           symbol={symbol}
           network={network}
-          rounded={!isCoin(token)}
+          rounded={token.standard === TokenStandard.FA}
         />
       }
       symbol={symbol}

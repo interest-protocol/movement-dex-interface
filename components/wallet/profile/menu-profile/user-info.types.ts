@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { CoinMetadata, FAMetadata } from '@/interface';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 export interface UserInfoProps {
   handleSettings: () => void;
@@ -30,7 +30,7 @@ export interface VerifiedCoinCardProps extends UnverifiedCoinCardProps {
 }
 
 export interface UnverifiedCoinCardProps {
-  token: CoinMetadata | FAMetadata;
+  token: AssetMetadata;
 }
 
 export interface CardWrapperProps {

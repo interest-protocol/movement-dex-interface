@@ -12,8 +12,8 @@ const VerifiedCoinList: FC = () => {
   return (
     <>
       {coins.length ? (
-        coins.map(({ metadata }) => (
-          <VerifiedCoinCard key={v4()} apy={0.025} token={metadata} />
+        coins.map((coin) => (
+          <VerifiedCoinCard key={v4()} apy={0.025} token={coin} />
         ))
       ) : (
         <NoCoin />

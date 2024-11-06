@@ -6,11 +6,10 @@ import { FC, useEffect, useState } from 'react';
 import { RateDownSVG, RateUpSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
 import { PRICE_TYPE } from '@/constants/prices';
-import { CoinMetadata, FAMetadata } from '@/interface';
 import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 import { formatDollars, ZERO_BIG_NUMBER } from '@/utils';
 
 import { VerifiedCoinCardProps } from '../../../user-info.types';
@@ -24,12 +23,9 @@ const VerifiedCoinCard: FC<VerifiedCoinCardProps> = ({ token, apy }) => {
   const decimals = token.decimals;
   const symbol = token.symbol;
 
-  const id =
-    (token as CoinMetadata).type || (token as FAMetadata).address?.toString();
-
   const balance = FixedPointMath.toNumber(
-    coinsMap[id]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[id]?.metadata.decimals ?? decimals
+    coinsMap[token.type]?.balance ?? ZERO_BIG_NUMBER,
+    coinsMap[token.type]?.decimals ?? decimals
   );
 
   useEffect(() => {
@@ -51,7 +47,7 @@ const VerifiedCoinCard: FC<VerifiedCoinCardProps> = ({ token, apy }) => {
           size="1.5rem"
           symbol={symbol}
           network={network}
-          rounded={!isCoin(token)}
+          rounded={token.standard === TokenStandard.FA}
         />
       }
       symbol={symbol}
