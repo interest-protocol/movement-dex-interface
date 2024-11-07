@@ -1,1 +1,1 @@
-export { default as withObjectIdGuard } from './with-object-id-guard';
+export { default as withAddressGuard } from './with-object-address';

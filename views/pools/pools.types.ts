@@ -38,7 +38,7 @@ export interface PoolTokenWithMetadata extends AssetMetadata {
 
 export type PoolToken = PoolTokenWithMetadata;
 
-export interface PoolForm {
+export interface IPoolForm {
   error: string | null;
   lpCoin: PoolToken;
   tokenSelected?: string;

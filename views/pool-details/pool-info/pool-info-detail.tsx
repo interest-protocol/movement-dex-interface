@@ -1,19 +1,29 @@
 import { Box } from '@interest-protocol/ui-kit';
+import BigNumber from 'bignumber.js';
+import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 
+import { FixedPointMath } from '@/lib';
+
+import { usePoolDetails } from '../pool-details.context';
 import Accordion from './components/accordion';
 import { PoolDetailAccordionItemStandardProps } from './components/accordion/accordion.types';
 import ItemStandard from './components/accordion/item-standard';
 import { POOL_INFORMATION, POOL_STATISTICS } from './pool-info.data';
 
 const PoolDetail = () => {
-  const infoData = [
-    '0x2caf59fa9032c9ed216f1fcb70422fa74e1c3ee45f86c06638b998b18ae01ad9',
-    'AMM',
-    'Volatile',
-  ];
+  const { query } = useRouter();
+  const { pool, config } = usePoolDetails();
 
-  const statsData = [100, 999];
+  const infoData = [(query.address as string) ?? 'N/A', 'SR-AMM', 'Volatile'];
+
+  const statsData = [
+    FixedPointMath.toNumber(
+      BigNumber(String(pool?.srPool.bidLiquidity ?? 0)),
+      pool?.faMetadata.decimals
+    ),
+    `${FixedPointMath.toNumber(BigNumber(String(config?.fee)), 9) * 100}%`,
+  ];
 
   return (
     <Box>
