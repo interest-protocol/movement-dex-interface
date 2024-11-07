@@ -20,7 +20,6 @@ const UserInfo: FC<UserInfoProps> = ({ handleSettings }) => {
       <Box
         py="m"
         gap="l"
-        px="l"
         display="flex"
         minWidth="14rem"
         alignItems="center"

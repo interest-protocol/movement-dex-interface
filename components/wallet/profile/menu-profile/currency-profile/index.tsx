@@ -17,12 +17,13 @@ const CurrencyProfile: FC<MenuCurrencyProps> = ({ handleBack }) => {
     isCurrencySelected;
   };
   return (
-    <Box width="100%" p="s" color="secondary">
+    <Box width="100%" py="s" color="secondary">
       <Box
         width="60%"
         display="flex"
         alignItems="center"
         justifyContent="space-between"
+        ml="-0.65rem"
       >
         <Button isIcon variant="text" onClick={handleBack}>
           <ArrowLeftSVG
@@ -36,7 +37,7 @@ const CurrencyProfile: FC<MenuCurrencyProps> = ({ handleBack }) => {
           Currency
         </Typography>
       </Box>
-      <Box p="s">
+      <Box py="s">
         <Typography size="small" variant="label" opacity="0.7" my="0.5rem">
           suggested currencies
         </Typography>
@@ -81,7 +82,7 @@ const CurrencyProfile: FC<MenuCurrencyProps> = ({ handleBack }) => {
           })}
         </Box>
       </Box>
-      <Box p="s">
+      <Box py="s">
         <Typography size="small" variant="label" opacity="0.7" my={0}>
           All currencies
         </Typography>

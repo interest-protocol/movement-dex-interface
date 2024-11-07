@@ -3,18 +3,17 @@ import { FC } from 'react';
 
 import { CoinSVG } from '@/components/svg';
 
-const CoinSection: FC = () => (
+const NoCoin: FC = () => (
   <Box
-    p="l"
-    gap="s"
+    gap="m"
     display="flex"
     alignItems="center"
     flexDirection="column"
     justifyContent="center"
   >
     <CoinSVG
-      width="6.765rem"
-      height="7.476rem"
+      width="4.765rem"
+      height="5.476rem"
       maxHeight="100%"
       maxWidth="100%"
     />
@@ -33,4 +32,4 @@ const CoinSection: FC = () => (
   </Box>
 );
 
-export default CoinSection;
+export default NoCoin;

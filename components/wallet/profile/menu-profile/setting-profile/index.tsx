@@ -18,12 +18,13 @@ const SettingProfile: FC<SettingMenuProps> = ({
   };
 
   return (
-    <Box width="100%" p="s" color="secondary">
+    <Box width="100%" py="s" color="secondary">
       <Box
         width="60%"
         display="flex"
         alignItems="center"
         justifyContent="space-between"
+        ml="-0.65rem"
       >
         <Button isIcon variant="text" onClick={handleBackProfile}>
           <ArrowLeftSVG
@@ -52,10 +53,10 @@ const SettingProfile: FC<SettingMenuProps> = ({
         isToggleEnable={false}
       />
       <Box
-        p="m"
+        py="m"
         width="100%"
         display="flex"
-        alignItems="flex-start"
+        alignItems="center"
         justifyContent="space-between"
       >
         <Typography size="medium" variant="label">
