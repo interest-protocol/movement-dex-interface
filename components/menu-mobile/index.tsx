@@ -41,7 +41,7 @@ const MenuMobile: FC = () => {
           overflowY="auto"
           position="fixed"
           bg="container"
-          display={['block', 'block', 'block', 'none']}
+          display={['block', 'block', 'block', 'block', 'none']}
         >
           <MainMenu closeMenu={handleCloseMenu} />
         </Box>

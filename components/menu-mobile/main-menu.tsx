@@ -17,7 +17,7 @@ const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
   >
     <Box zIndex="2" gridColumn="1/-1">
       <Box
-        display={['flex', 'flex', 'flex', 'none']}
+        display={['flex', 'flex', 'flex', 'flex', 'none']}
         flexDirection="row-reverse"
         pb="l"
         color="onSurface"
