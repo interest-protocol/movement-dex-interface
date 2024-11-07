@@ -1,4 +1,4 @@
-import { COINS, Network } from '@interest-protocol/aptos-sr-amm';
+import { FUNGIBLE_ASSETS, Network } from '@interest-protocol/aptos-sr-amm';
 import { NextPage } from 'next';
 import { values } from 'ramda';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -14,8 +14,8 @@ import { IPoolForm } from '@/views/pools/pools.types';
 const PoolDetailsPage: NextPage<PoolPageProps> = ({ address }) => {
   const form = useForm<IPoolForm>({
     defaultValues: {
-      lpCoin: values(COINS[Network.Porto])[0],
-      tokenList: values(COINS[Network.Porto]).slice(0, 2),
+      lpCoin: values(FUNGIBLE_ASSETS[Network.Porto])[0],
+      tokenList: values(FUNGIBLE_ASSETS[Network.Porto]).slice(0, 2),
       settings: { slippage: '0.1' },
     },
   });
