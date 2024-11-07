@@ -1,89 +1,39 @@
-import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import { MinusSVG, PlusSVG } from '@/components/svg';
-import { PoolTypeEnum } from '@/interface';
-
-import { CreatePoolForm } from '../pool-create.types';
 import PoolCreateButton from '../pool-next-button';
 import Input from './input';
 import SelectCoinsError from './select-coins-error';
 import SelectCoinsErrorManager from './select-coins-error-manager';
 
-const SelectCoins: FC = () => {
-  const { control } = useFormContext<CreatePoolForm>();
-
-  const type = useWatch({ control, name: 'type' });
-  const isStable = useWatch({ control, name: 'isStable' });
-  const { fields, remove } = useFieldArray({
-    control,
-    name: 'tokens',
-    rules: { maxLength: isStable ? 5 : 3 },
-  });
-
-  return (
-    <>
-      <Box my="xl">
-        <Box
-          p="2xl"
-          mx="auto"
-          gap="2rem"
-          bg="container"
-          maxWidth="33rem"
-          borderRadius="xs"
-        >
-          <Typography variant="body" size="small" color="onSurface">
-            Select Token & Deposit
-          </Typography>
-          <Box>
-            {fields.slice(0, isStable ? 5 : 3).map(({ id }, index) => (
-              <Box key={id} my="s" display="flex" gap="s" alignItems="center">
-                <Input index={index} />
-                {fields.length > 2 && (
-                  <Box
-                    display="flex"
-                    minWidth="2rem"
-                    minHeight="2rem"
-                    bg="lowContainer"
-                    cursor="pointer"
-                    color="onSurface"
-                    alignItems="center"
-                    borderRadius="full"
-                    justifyContent="center"
-                    nHover={{
-                      bg: 'lowestContainer',
-                    }}
-                    onClick={() => remove(index)}
-                  >
-                    <MinusSVG maxHeight="1rem" maxWidth="1rem" width="100%" />
-                  </Box>
-                )}
-              </Box>
-            ))}
+const SelectCoins: FC = () => (
+  <>
+    <Box my="xl">
+      <Box
+        p="2xl"
+        mx="auto"
+        gap="2rem"
+        bg="container"
+        maxWidth="33rem"
+        borderRadius="xs"
+      >
+        <Typography variant="body" size="small" color="onSurface">
+          Select Token & Deposit
+        </Typography>
+        <Box>
+          <Box my="s" display="flex" gap="s" alignItems="center">
+            <Input index={0} />
           </Box>
-          {type === PoolTypeEnum.CLAMM &&
-            fields.length < (isStable ? 5 : 3) && (
-              <Button
-                mt="xl"
-                mx="auto"
-                variant="outline"
-                color="onSurface"
-                borderColor="outlineVariant"
-                PrefixIcon={
-                  <PlusSVG maxWidth="1rem" maxHeight="1rem" width="100%" />
-                }
-              >
-                Add Coin
-              </Button>
-            )}
-          <SelectCoinsErrorManager />
-          <SelectCoinsError />
+          <Box my="s" display="flex" gap="s" alignItems="center">
+            <Input index={1} />
+          </Box>
         </Box>
+        <SelectCoinsErrorManager />
+        <SelectCoinsError />
       </Box>
-      <PoolCreateButton />
-    </>
-  );
-};
+    </Box>
+    <PoolCreateButton />
+  </>
+);
 
 export default SelectCoins;

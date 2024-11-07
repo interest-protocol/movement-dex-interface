@@ -3,6 +3,8 @@ import BigNumber from 'bignumber.js';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
+import { isAptos } from '@/utils';
+
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
 import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
 import { useCoins } from './coins-manager.hooks';
@@ -57,6 +59,31 @@ const CoinsManager: FC = () => {
               icon_uri: iconUri,
               project_uri: projectUri,
             } = coinsMetadata[asset_type];
+
+            if (isAptos(asset_type))
+              return {
+                ...acc,
+                ['0x1::aptos_coin::AptosCoin']: {
+                  name,
+                  symbol,
+                  decimals,
+                  standard: TokenStandard.COIN,
+                  type: '0x1::aptos_coin::AptosCoin',
+                  balance: BigNumber(amount.toString()),
+                  ...(!!projectUri && { projectUri }),
+                  ...(!!iconUri && { iconUri: iconUri }),
+                },
+                ['0xa']: {
+                  name,
+                  symbol,
+                  decimals,
+                  type: '0xa',
+                  standard: TokenStandard.FA,
+                  balance: BigNumber(amount.toString()),
+                  ...(!!projectUri && { projectUri }),
+                  ...(!!iconUri && { iconUri: iconUri }),
+                },
+              };
 
             return {
               ...acc,

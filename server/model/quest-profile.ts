@@ -5,6 +5,7 @@ const modelName = 'MovementQuestProfilePorto';
 export interface QuestProfile {
   address: string;
   lastSwapAt: number;
+  lastCreatePoolAt: number;
   lastCreateTokenAt: number;
   lastCreateAndDeployTokenAt: number;
   weeks: ReadonlyArray<number>;
@@ -15,6 +16,7 @@ export type QuestProfileDocument = Document & QuestProfile;
 export const QuestProfileSchema = new Schema({
   address: { index: true, type: String, required: true, unique: true },
   lastSwapAt: { type: Number },
+  lastCreatePoolAt: { type: Number },
   lastCreateTokenAt: { type: Number },
   lastCreateAndDeployTokenAt: { type: Number },
   weeks: { type: Schema.Types.Array },

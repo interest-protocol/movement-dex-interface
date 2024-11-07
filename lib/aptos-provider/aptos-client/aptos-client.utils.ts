@@ -13,9 +13,9 @@ export const getAptosClient = ({
     faucet,
     indexer,
     fullnode: rpc,
-    network: Object.values(Network).includes(network as Network)
-      ? (network as Network)
-      : Network.TESTNET,
+    ...(Object.values(Network).includes(network as Network) && {
+      network: network as Network,
+    }),
   };
 
   invariant(

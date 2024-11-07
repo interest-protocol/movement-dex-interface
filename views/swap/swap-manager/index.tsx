@@ -30,14 +30,15 @@ const SwapManager: FC = () => {
 
     const to = getValues('to');
     const from = getValues('from');
-    const tokenOut =
-      to.standard === TokenStandard.COIN
-        ? COIN_TYPE_TO_FA[to.type].toString()
-        : to.type;
-    const tokenIn =
-      to.standard === TokenStandard.COIN
-        ? COIN_TYPE_TO_FA[from.type].toString()
-        : from.type;
+
+    const tokenIn = (
+      from.standard === TokenStandard.COIN
+        ? COIN_TYPE_TO_FA[from.type]
+        : from.type
+    ).toString();
+    const tokenOut = (
+      to.standard === TokenStandard.COIN ? COIN_TYPE_TO_FA[to.type] : to.type
+    ).toString();
 
     const path = getPath(tokenIn, tokenOut).map((address) =>
       address.toString()
