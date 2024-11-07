@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { v4 } from 'uuid';
 
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 import ManageSlippage from '@/views/swap/manage-slippage';
 
 import PoolField from '../pool-field';
@@ -13,7 +13,7 @@ import DepositManager from './pool-form-deposit-manager';
 import PoolReceiveSection from './pool-form-deposit-receive';
 
 const PoolDeposit: FC<PoolFormProps> = ({ poolOptionView }) => {
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
 
   const { fields } = useFieldArray({ control, name: 'tokenList' });
 

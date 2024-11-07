@@ -2,11 +2,11 @@ import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { PoolForm, PoolToken } from '../pools.types';
+import { IPoolForm, PoolToken } from '../pools.types';
 import { FindPoolModalProps } from './find-pool-modal.types';
 
 const SearchButton: FC<FindPoolModalProps> = ({ closeModal }) => {
-  const { setValue, getValues } = useFormContext<PoolForm>();
+  const { setValue, getValues } = useFormContext<IPoolForm>();
   const [isError, setError] = useState(false);
 
   const tokenListData = getValues('tokenList');

@@ -8,14 +8,14 @@ import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
-import { PoolForm, PoolOption } from '@/views/pools/pools.types';
+import { IPoolForm, PoolOption } from '@/views/pools/pools.types';
 
 import { PoolFieldsProps } from './pool-field.types';
 
 const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
   const { coinsMap } = useCoins();
   const network = useNetwork<Network>();
-  const { register, setValue, getValues } = useFormContext<PoolForm>();
+  const { register, setValue, getValues } = useFormContext<IPoolForm>();
 
   const isDeposit = poolOptionView === PoolOption.Deposit;
 

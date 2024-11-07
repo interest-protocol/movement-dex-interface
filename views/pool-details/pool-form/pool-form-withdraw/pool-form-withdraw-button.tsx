@@ -4,14 +4,14 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useDialog } from '@/hooks';
 import { useModal } from '@/hooks/use-modal';
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 import PoolPreview from '../pool-form-preview';
 
 const PoolFormWithdrawButton: FC = () => {
   const { dialog, handleClose } = useDialog();
   const { setModal, handleClose: closeModal } = useModal();
-  const { getValues, control, setValue } = useFormContext<PoolForm>();
+  const { getValues, control, setValue } = useFormContext<IPoolForm>();
 
   const error = useWatch({ control, name: 'error' });
 

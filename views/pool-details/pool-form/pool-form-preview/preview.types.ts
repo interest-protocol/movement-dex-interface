@@ -1,10 +1,10 @@
 import { UseFormGetValues } from 'react-hook-form';
 import { SWRResponse } from 'swr';
 
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 export interface FieldProps {
-  getValues: UseFormGetValues<PoolForm>;
+  getValues: UseFormGetValues<IPoolForm>;
 }
 
 export interface PoolPreviewWrapperHeaderProps {
