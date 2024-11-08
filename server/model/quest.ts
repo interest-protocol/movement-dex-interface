@@ -43,6 +43,10 @@ export type Quest = {
       kind: 'createPool';
       data: PoolData;
     }
+  | {
+      kind: 'addLiquidity';
+      data: PoolData;
+    }
 );
 
 export type QuestDocument = Document & Quest;

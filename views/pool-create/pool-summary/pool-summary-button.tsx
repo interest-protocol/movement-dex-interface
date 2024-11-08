@@ -146,14 +146,14 @@ const PoolSummaryButton: FC = () => {
       );
 
       push(
-        `${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress as string}`
+        `${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress?.toString()}`
       ).then(() =>
-        fetch('/api/v1/save-pool', {
+        fetch('https://pool-indexer-production.up.railway.app/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             network,
-            poolId: pool.poolAddress as string,
+            poolId: pool.poolAddress?.toString(),
           }),
         })
       );

@@ -7,6 +7,7 @@ export interface QuestProfile {
   lastSwapAt: number;
   lastCreatePoolAt: number;
   lastCreateTokenAt: number;
+  lastAddLiquidityAt: number;
   lastCreateAndDeployTokenAt: number;
   weeks: ReadonlyArray<number>;
 }
@@ -18,6 +19,7 @@ export const QuestProfileSchema = new Schema({
   lastSwapAt: { type: Number },
   lastCreatePoolAt: { type: Number },
   lastCreateTokenAt: { type: Number },
+  lastAddLiquidityAt: { type: Number },
   lastCreateAndDeployTokenAt: { type: Number },
   weeks: { type: Schema.Types.Array },
 });

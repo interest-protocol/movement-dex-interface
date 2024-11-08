@@ -13,6 +13,7 @@ import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { IPoolForm } from '@/views/pools/pools.types';
 
+import { logDepositPool } from '../pool-form.utils';
 import PoolPreview from '../pool-form-preview';
 
 const PoolFormDepositButton: FC = () => {
@@ -58,13 +59,13 @@ const PoolFormDepositButton: FC = () => {
         options: { checkSuccess: true },
       });
 
-      // logCreateToken(
-      //   account!.address,
-      //   symbol,
-      //   !!pool?.active,
-      //   Network.Porto,
-      //   txResult.hash
-      // );
+      logDepositPool(
+        account.address,
+        getValues('tokenList.0'),
+        getValues('tokenList.1'),
+        Network.Porto,
+        txResult.hash
+      );
 
       setValue(
         'explorerLink',
