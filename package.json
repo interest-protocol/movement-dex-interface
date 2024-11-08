@@ -14,7 +14,7 @@
     "@aptos-labs/wallet-adapter-react": "^3.7.1",
     "@emotion/react": "^11.11.1",
     "@hookform/resolvers": "^3.9.1",
-    "@interest-protocol/aptos-sr-amm": "^1.0.2",
+    "@interest-protocol/aptos-sr-amm": "^1.1.0",
     "@interest-protocol/ui-kit": "0.3.1-beta",
     "@martianwallet/aptos-wallet-adapter": "^0.0.5",
     "@nightlylabs/aptos-wallet-adapter-plugin": "^0.2.12",

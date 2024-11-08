@@ -82,7 +82,9 @@ const PoolCardListContent: FC<PoolCardListContentProps> = ({
           '1fr 1fr 1fr',
         ]}
       >
-        {pools?.map((pool) => <PoolCard key={v4()} pool={pool} />)}
+        {pools?.map((pool) => (
+          <PoolCard key={v4()} address={pool.poolAddress} />
+        ))}
         {arePoolsLoading && <PoolCardSkeleton />}
       </Box>
       {hasMore && (

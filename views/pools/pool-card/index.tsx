@@ -1,16 +1,12 @@
 import { Box } from '@interest-protocol/ui-kit';
 import BigNumber from 'bignumber.js';
 import Link from 'next/link';
-import { values } from 'ramda';
 import { FC, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import { Routes, RoutesEnum } from '@/constants';
-import { useInterestDex } from '@/hooks/use-interest-dex';
+import useSrAmmPool from '@/hooks/use-sr-amm-pool';
 import { FixedPointMath } from '@/lib';
-import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { getCoinMetadata, parseToMetadata } from '@/utils';
 
 import { LINES } from './pool-card.data';
 import { FormFilterValue, PoolCardProps } from './pool-card.types';
@@ -18,45 +14,33 @@ import PoolCardHeader from './pool-card-header';
 import PoolCardInfo from './pool-card-info';
 import PoolCardTrade from './pool-card-trade';
 
-const PoolCard: FC<PoolCardProps> = ({ pool }) => {
-  const dex = useInterestDex();
-  const client = useAptosClient();
-  const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState<ReadonlyArray<AssetMetadata>>([]);
+const PoolCard: FC<PoolCardProps> = ({ address }) => {
+  const { pool, config, loading } = useSrAmmPool(address);
   const [poolData, setPoolData] = useState<ReadonlyArray<string>>([
     'N/A',
     'N/A',
   ]);
 
   useEffect(() => {
-    setLoading(true);
-    Promise.all(values(pool.coins).map((coin) => getCoinMetadata(coin, client)))
-      .then((metadata) => setCoins(metadata.map(parseToMetadata)))
-      .finally(() => setLoading(false));
+    if (!pool) return;
 
-    dex
-      .getPool(pool.poolAddress)
-      .then(({ srPool, faMetadata }) =>
-        setPoolData((data) => [
-          data[0],
-          `${FixedPointMath.toNumber(BigNumber(String(srPool.bidLiquidity)), faMetadata.decimals)}`,
-        ])
-      );
+    setPoolData((data) => [
+      data[0],
+      `${FixedPointMath.toNumber(BigNumber(String(pool.bidLiquidity)), pool.metadata.decimals)}`,
+    ]);
+  }, [pool]);
 
-    dex
-      .getConfig()
-      .then(({ fee }) =>
-        setPoolData((data) => [
-          `${FixedPointMath.toNumber(BigNumber(String(fee)), 9) * 100}%`,
-          data[1],
-        ])
-      );
-  }, []);
+  useEffect(() => {
+    if (!config) return;
+
+    setPoolData((data) => [
+      `${FixedPointMath.toNumber(BigNumber(String(config.fee)), 9) * 100}%`,
+      data[1],
+    ]);
+  }, [config]);
 
   return (
-    <Link
-      href={`${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress}`}
-    >
+    <Link href={`${Routes[RoutesEnum.PoolDetails]}?address=${address}`}>
       <Box
         p="m"
         flex="1"
@@ -77,13 +61,11 @@ const PoolCard: FC<PoolCardProps> = ({ pool }) => {
           '.arrow-wrapper': { opacity: 1 },
         }}
       >
-        <PoolCardHeader
-          tags={[
-            pool.poolType,
-            FormFilterValue[pool.isVolatile ? 'volatile' : 'stable'],
-          ]}
+        <PoolCardHeader tags={['SR-AMM', FormFilterValue['volatile']]} />
+        <PoolCardInfo
+          loading={loading}
+          coins={pool ? [pool.metadataX, pool.metadataY] : []}
         />
-        <PoolCardInfo loading={loading} coins={coins} />
         <Box px="m" py="xs" bg="surface" borderRadius="1rem">
           {LINES.map((line, index) => (
             <PoolCardTrade

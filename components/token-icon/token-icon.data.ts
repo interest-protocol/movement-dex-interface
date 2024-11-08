@@ -1,7 +1,14 @@
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { FC } from 'react';
 
-import { BTCSVG, ETHSVG, MOVESVG, USDCSVG, USDTSVG } from '@/components/svg';
+import {
+  BTCSVG,
+  ETHSVG,
+  MOVESVG,
+  NETHSVG,
+  USDCSVG,
+  USDTSVG,
+} from '@/components/svg';
 
 import { SVGProps } from '../svg/svg.types';
 
@@ -14,7 +21,7 @@ export const TOKEN_ICONS = {
     USDC: USDCSVG,
     MOVE: MOVESVG,
     USDT: USDTSVG,
+    nETH: NETHSVG,
     RUCO: '/images/ruco.webp',
-    nETH: '/images/nETH.webp',
   },
 } as unknown as Record<Network, Record<string, string | FC<SVGProps>>>;

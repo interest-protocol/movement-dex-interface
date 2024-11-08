@@ -36,11 +36,11 @@ const Input: FC<InputProps> = ({ label }) => {
     >
       <TokenField
         active
+        status="none"
         opacity="0.7"
         placeholder="--"
         variant="outline"
         textAlign="right"
-        status="none"
         Bottom={<QuoteInputDollar />}
         TokenIcon={<SelectToken label={label} isMobile={isMobile} />}
         Balance={label === 'token' ? <TokenBalance /> : <QuoteBalance />}

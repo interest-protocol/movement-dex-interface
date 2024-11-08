@@ -73,6 +73,7 @@ export { default as MergeSVG } from './merge';
 export { default as MinusSVG } from './minus';
 export { default as MOVESVG } from './move';
 export { default as MovementLogoSVG } from './movement-logo';
+export { default as NETHSVG } from './neth';
 export { default as NoSearchSVG } from './no-search';
 export { default as PercentageSVG } from './percentage';
 export { default as PictureSVG } from './picture';

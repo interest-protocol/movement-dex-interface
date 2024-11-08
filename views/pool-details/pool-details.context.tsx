@@ -4,14 +4,13 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useState,
 } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import { useInterestDex } from '@/hooks/use-interest-dex';
-import { SdkSrAmmConfig, SdkSrAmmPool } from '@/interface';
-import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { getCoinMetadata, parseToMetadata } from '@/utils';
+import useSrAmmPool from '@/hooks/use-sr-amm-pool';
+import { SdkSrAmmConfig, SrAmmPoolWithMetadata } from '@/interface';
+
+import { IPoolForm } from '../pools/pools.types';
 
 interface PoolDetailsProviderProps {
   address: string;
@@ -20,15 +19,13 @@ interface PoolDetailsProviderProps {
 interface PoolDetailsContext {
   loading: boolean;
   config: SdkSrAmmConfig | undefined;
-  pool: SdkSrAmmPool | null | undefined;
-  metadata: ReadonlyArray<AssetMetadata> | undefined;
+  pool: SrAmmPoolWithMetadata | null | undefined;
 }
 
 const INITIAL: PoolDetailsContext = {
   pool: null,
   loading: true,
   config: undefined,
-  metadata: undefined,
 };
 
 const poolDetailsContext = createContext<PoolDetailsContext>(INITIAL);
@@ -36,48 +33,27 @@ const poolDetailsContext = createContext<PoolDetailsContext>(INITIAL);
 export const PoolDetailsProvider: FC<
   PropsWithChildren<PoolDetailsProviderProps>
 > = ({ address, children }) => {
-  const dex = useInterestDex();
-  const client = useAptosClient();
   const { Provider } = poolDetailsContext;
-  const [pool, setPool] = useState<SdkSrAmmPool>();
-  const [fetchingPool, setFetchingPool] = useState(true);
-  const [config, setConfig] = useState<SdkSrAmmConfig>();
-  const [fetchingMetadata, setFetchingMetadata] = useState(true);
-  const [metadata, setMetadata] = useState<ReadonlyArray<AssetMetadata>>([]);
+  const { setValue, getValues } = useFormContext<IPoolForm>();
+  const { pool, config, loading } = useSrAmmPool(address);
 
   useEffect(() => {
-    if (!fetchingPool) return;
+    if (pool) {
+      setValue(
+        'tokenList',
+        [pool.metadataX, pool.metadataY].map((metadata, index) => ({
+          ...getValues('tokenList')[index],
+          ...metadata,
+        }))
+      );
+      setValue('lpCoin', {
+        ...getValues('lpCoin'),
+        ...pool.metadata,
+      });
+    }
+  }, [pool]);
 
-    dex.getConfig().then(setConfig);
-
-    dex
-      .getPool(address)
-      .then((data) => {
-        setPool(data);
-
-        const types = [data.metadata.x.toString(), data.metadata.y.toString()];
-
-        if (types.some((type) => Number(type) === 0))
-          return setFetchingMetadata(false);
-
-        Promise.all(types.map((type: string) => getCoinMetadata(type, client)))
-          .then((typeMetadata) => {
-            console.log({ typeMetadata });
-
-            setMetadata(typeMetadata.map(parseToMetadata));
-          })
-          .finally(() => setFetchingMetadata(false));
-      })
-      .finally(() => setFetchingPool(false));
-  }, []);
-
-  const loading = fetchingPool || fetchingMetadata;
-
-  return (
-    <Provider value={{ loading, pool: pool, config, metadata }}>
-      {children}
-    </Provider>
-  );
+  return <Provider value={{ loading, pool, config }}>{children}</Provider>;
 };
 
 export const usePoolDetails = () => useContext(poolDetailsContext);

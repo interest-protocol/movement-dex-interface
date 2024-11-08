@@ -15,7 +15,13 @@ const TokenListFields: FC<FieldProps> = ({ getValues }) => {
   return (
     <Box>
       {tokenList.map((token) => (
-        <Box key={v4()} py="xs" display="flex" justifyContent="space-between">
+        <Box
+          key={v4()}
+          py="xs"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Box display="flex" gap="xs" alignItems="center">
             <TokenIcon
               withBg
@@ -26,7 +32,7 @@ const TokenListFields: FC<FieldProps> = ({ getValues }) => {
               {token.symbol}
             </Typography>
           </Box>
-          <Typography variant="body" ml="m" size="large">
+          <Typography variant="body" ml="m" size="medium">
             {token.value}
           </Typography>
         </Box>

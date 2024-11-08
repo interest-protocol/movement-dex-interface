@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AccountAddress } from '@aptos-labs/ts-sdk';
+import { SrPool } from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
+
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 export type BigNumberish = BigNumber | bigint | string | number;
 
@@ -31,36 +34,11 @@ export interface SrAmmPool {
   coins: AmmPoolCoinTypes;
 }
 
-export interface SdkSrAmmPool {
-  balances: {
-    x: bigint;
-    y: bigint;
-  };
-  metadata: {
-    x: AccountAddress;
-    y: AccountAddress;
-  };
-  supply: {
-    type: `${string}::${string}::${string}`;
-    maxSupply: bigint;
-    supply: bigint;
-  };
-  faMetadata: {
-    type: `${string}::${string}::${string}`;
-    name: string;
-    symbol: string;
-    decimals: number;
-    projectUri: string;
-    iconUri: string;
-  };
-  srPool: {
-    type: `${string}::${string}::${string}`;
-    bidLiquidity: bigint;
-    isSrMode: boolean;
-    lastSlotTimestamp: bigint;
-    slotBalanceX: bigint;
-    slotBalanceY: bigint;
-  };
+export interface SrAmmPoolWithMetadata
+  extends Omit<SrPool, 'metadataX' | 'metadataY'> {
+  metadata: AssetMetadata;
+  metadataX: AssetMetadata;
+  metadataY: AssetMetadata;
 }
 
 export interface CoinBalance {

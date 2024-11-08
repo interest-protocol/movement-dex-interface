@@ -48,26 +48,49 @@ const SwapManager: FC = () => {
       FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
     );
 
-    dex[origin === 'from' ? 'quotePathAmountOut' : 'quotePathAmountIn']({
-      path,
-      amount,
-    })
-      .then(({ amountOut }) => {
-        setValue('path', path);
-        setValue(
-          'to.value',
-          String(
-            FixedPointMath.toNumber(
-              BigNumber(amountOut!.toString()),
-              to.decimals
-            )
-          )
-        );
-      })
-      .catch((e) => {
-        console.warn(e);
-        setValue('error', 'Failed to quote. Reduce the Swapping amount.');
-      });
+    origin === 'from'
+      ? dex
+          .quotePathAmountOut({
+            path,
+            amount,
+          })
+          .then(({ amountOut }) => {
+            setValue('path', path);
+            setValue(
+              'to.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountOut!.toString()),
+                  to.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          })
+      : dex
+          .quotePathAmountIn({
+            path,
+            amount,
+          })
+          .then(({ amountIn }) => {
+            setValue('path', path);
+            setValue(
+              'from.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountIn!.toString()),
+                  from.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          });
   }, [value]);
 
   return null;
