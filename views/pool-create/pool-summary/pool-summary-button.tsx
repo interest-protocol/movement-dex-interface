@@ -16,7 +16,6 @@ import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
-import network from '@/lib/aptos-provider/network';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { CreatePoolForm, Token } from '../pool-create.types';
@@ -25,6 +24,7 @@ import { logCreatePool } from '../pool-create.utils';
 const PoolSummaryButton: FC = () => {
   const dex = useInterestDex();
   const { push } = useRouter();
+  const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { account, signTransaction } = useWallet();
