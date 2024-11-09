@@ -6,12 +6,12 @@ import { v4 } from 'uuid';
 
 import { TokenIcon } from '@/components';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 const PoolFormWithdrawReceiveTokens: FC = () => {
   const network = useNetwork<Network>();
 
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
 
   const tokenList = useWatch({ control, name: 'tokenList' });
 

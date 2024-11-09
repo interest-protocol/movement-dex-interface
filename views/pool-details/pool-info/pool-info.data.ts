@@ -20,11 +20,11 @@ export const POOL_STATISTICS: PoolDetailAccordionData = {
   title: 'STATISTICS',
   data: [
     {
-      label: 'Liquidity',
+      label: 'Bid Liquidity',
     },
     {
-      label: 'Virtual Price',
-      popupInfo: 'Total $USD in the pool / total number of Lp Coins',
+      label: 'Fee',
+      popupInfo: 'Total paying fee per trade',
     },
   ],
 };

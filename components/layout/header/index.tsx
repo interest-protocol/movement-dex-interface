@@ -58,38 +58,36 @@ const Header: FC = () => {
       )}
       {!isMobile && (
         <Box gap="m" display="flex" alignItems="center" justifyContent="center">
-          {SIDEBAR_ITEMS.map(({ name, path }) => {
-            return (
-              <Box
-                py="l"
-                px="xs"
-                key={v4()}
-                display="flex"
-                cursor="pointer"
-                height="1.375rem"
-                borderRadius="xs"
-                alignItems="center"
-                alignContent="center"
-                nHover={{ color: 'primary' }}
-                onClick={() => goToPath(path)}
-                transition="all 350ms ease-in-out"
-                color={asPath === path ? 'primary' : 'onSurface'}
-                opacity={asPath === path ? '1' : '.6'}
+          {SIDEBAR_ITEMS.map(({ name, path }) => (
+            <Box
+              py="l"
+              px="xs"
+              key={v4()}
+              display="flex"
+              cursor="pointer"
+              height="1.375rem"
+              borderRadius="xs"
+              alignItems="center"
+              alignContent="center"
+              nHover={{ color: 'primary' }}
+              onClick={() => goToPath(path)}
+              transition="all 350ms ease-in-out"
+              color={asPath === path ? 'primary' : 'onSurface'}
+              opacity={asPath === path ? '1' : '.6'}
+            >
+              <Typography
+                size="large"
+                variant="label"
+                color="onSurface"
+                width="max-content"
+                nHover={{
+                  opacity: 0.7,
+                }}
               >
-                <Typography
-                  size="large"
-                  variant="label"
-                  color="onSurface"
-                  width="max-content"
-                  nHover={{
-                    opacity: 0.7,
-                  }}
-                >
-                  {name}
-                </Typography>
-              </Box>
-            );
-          })}
+                {name}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       )}
       <Box

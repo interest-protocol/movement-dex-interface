@@ -3,10 +3,10 @@ import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { DotErrorSVG } from '@/components/svg';
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 const DepositManager: FC = () => {
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
 
   const error = useWatch({ control, name: 'error' });
 

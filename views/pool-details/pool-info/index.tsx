@@ -6,9 +6,6 @@ import DetailTabs from './components/detail-tabs';
 import PoolInfoDetail from './pool-info-detail';
 
 const PoolInfo: FC = () => {
-  const pool = {
-    poolType: 'amm',
-  };
   const [poolDetailsView, setPoolDetailsView] = useState<PoolDetailsTabOption>(
     PoolDetailsTabOption.Detail
   );
@@ -19,11 +16,9 @@ const PoolInfo: FC = () => {
   return (
     <Box color="onSurface" borderRadius="xs" bg="container">
       <DetailTabs
+        items={['Pool Detail']}
         onChangeTab={handleTabChange}
         defaultTabIndex={poolDetailsView}
-        items={['Pool Detail'].concat(
-          pool?.poolType === 'amm' ? [] : ['Advance Details']
-        )}
       />
       {poolDetailsView === PoolDetailsTabOption.Detail && <PoolInfoDetail />}
     </Box>

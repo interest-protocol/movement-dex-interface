@@ -1,3 +1,4 @@
+import { UserTransactionResponse } from '@aptos-labs/ts-sdk';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button } from '@interest-protocol/ui-kit';
@@ -107,6 +108,30 @@ const CreateTokenFormButton = () => {
         transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
+
+      if (pool?.active) {
+        client
+          .getTransactionByHash({
+            transactionHash: txResult.hash,
+          })
+          .then((txn) => {
+            const poolId = (txn as UserTransactionResponse).events.find(
+              (event) => event.type.endsWith('::events::AddLiquidity')
+            )!.data.pool;
+
+            fetch(
+              'https://pool-indexer-production.up.railway.app/api/pool/sr-amm',
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  poolId,
+                  network: Network.Porto,
+                }),
+              }
+            );
+          });
+      }
 
       logCreateToken(
         account!.address,

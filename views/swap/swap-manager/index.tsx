@@ -30,14 +30,15 @@ const SwapManager: FC = () => {
 
     const to = getValues('to');
     const from = getValues('from');
-    const tokenOut =
-      to.standard === TokenStandard.COIN
-        ? COIN_TYPE_TO_FA[to.type].toString()
-        : to.type;
-    const tokenIn =
-      to.standard === TokenStandard.COIN
-        ? COIN_TYPE_TO_FA[from.type].toString()
-        : from.type;
+
+    const tokenIn = (
+      from.standard === TokenStandard.COIN
+        ? COIN_TYPE_TO_FA[from.type]
+        : from.type
+    ).toString();
+    const tokenOut = (
+      to.standard === TokenStandard.COIN ? COIN_TYPE_TO_FA[to.type] : to.type
+    ).toString();
 
     const path = getPath(tokenIn, tokenOut).map((address) =>
       address.toString()
@@ -47,26 +48,49 @@ const SwapManager: FC = () => {
       FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
     );
 
-    dex[origin === 'from' ? 'quotePathAmountOut' : 'quotePathAmountIn']({
-      path,
-      amount,
-    })
-      .then(({ amountOut }) => {
-        setValue('path', path);
-        setValue(
-          'to.value',
-          String(
-            FixedPointMath.toNumber(
-              BigNumber(amountOut!.toString()),
-              to.decimals
-            )
-          )
-        );
-      })
-      .catch((e) => {
-        console.warn(e);
-        setValue('error', 'Failed to quote. Reduce the Swapping amount.');
-      });
+    origin === 'from'
+      ? dex
+          .quotePathAmountOut({
+            path,
+            amount,
+          })
+          .then(({ amountOut }) => {
+            setValue('path', path);
+            setValue(
+              'to.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountOut!.toString()),
+                  to.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          })
+      : dex
+          .quotePathAmountIn({
+            path,
+            amount,
+          })
+          .then(({ amountIn }) => {
+            setValue('path', path);
+            setValue(
+              'from.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountIn!.toString()),
+                  from.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          });
   }, [value]);
 
   return null;

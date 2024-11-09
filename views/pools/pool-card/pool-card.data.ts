@@ -1,10 +1,10 @@
 export const LINES = [
   {
     description: 'Fee',
-    tooltipInfo: 'Fee per transaction',
+    tooltipInfo: 'Trade fee in percentage',
   },
   {
-    description: 'Liquidity',
+    description: 'Bid Liquidity',
     tooltipInfo: 'Liquidity',
   },
 ];

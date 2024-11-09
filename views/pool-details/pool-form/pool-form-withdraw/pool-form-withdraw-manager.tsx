@@ -4,10 +4,10 @@ import { useWatch } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
 
 import { DotErrorSVG } from '@/components/svg';
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 const WithdrawManager: FC = () => {
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
 
   const error = useWatch({ control, name: 'error' });
 

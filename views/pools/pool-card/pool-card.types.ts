@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-import { AmmPool } from '@/interface';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 export enum FormFilterValue {
@@ -17,6 +16,7 @@ export interface PoolCardHeaderProps {
 }
 
 export interface PoolCardTokenInfoProps {
+  loading: boolean;
   coins: ReadonlyArray<AssetMetadata>;
 }
 
@@ -29,5 +29,5 @@ export interface PoolCardTradeProps {
 }
 
 export interface PoolCardProps {
-  pool: AmmPool;
+  address: string;
 }

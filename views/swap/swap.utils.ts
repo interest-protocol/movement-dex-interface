@@ -26,12 +26,12 @@ export const logSwap = (
       kind: 'swap',
       data: {
         coinIn: {
-          id: from.type,
+          type: from.type,
           amount: from.value,
           symbol: from.symbol,
         },
         coinOut: {
-          id: from.type,
+          type: from.type,
           amount: to.value,
           symbol: to.symbol,
         },

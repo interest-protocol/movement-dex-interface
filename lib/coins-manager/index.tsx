@@ -1,7 +1,14 @@
 import { GetFungibleAssetMetadataResponse } from '@aptos-labs/ts-sdk';
+import {
+  COIN_TYPES,
+  FA_ADDRESSES,
+  Network,
+} from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
+
+import { isAptos } from '@/utils';
 
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
 import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
@@ -57,6 +64,28 @@ const CoinsManager: FC = () => {
               icon_uri: iconUri,
               project_uri: projectUri,
             } = coinsMetadata[asset_type];
+
+            if (isAptos(asset_type)) {
+              const type = (
+                token_standard === TokenStandard.COIN
+                  ? COIN_TYPES[Network.Porto].APT
+                  : FA_ADDRESSES[Network.Porto].APT
+              ).toString();
+
+              return {
+                ...acc,
+                [type]: {
+                  type,
+                  name,
+                  symbol,
+                  decimals,
+                  balance: BigNumber(amount.toString()),
+                  standard: token_standard as TokenStandard,
+                  ...(!!projectUri && { projectUri }),
+                  ...(!!iconUri && { iconUri: iconUri }),
+                },
+              };
+            }
 
             return {
               ...acc,

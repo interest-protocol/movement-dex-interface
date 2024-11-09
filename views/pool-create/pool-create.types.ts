@@ -14,11 +14,11 @@ export enum CreatePoolStep {
 
 export interface CreatePoolForm {
   dex: string;
+  error?: string;
   isStable: boolean;
   step: CreatePoolStep;
-  error?: string;
   explorerLink: string;
-  type: 'CLAMM' | 'AMM';
+  type: 'SR-AMM';
   tokens: ReadonlyArray<Token>;
 }
 

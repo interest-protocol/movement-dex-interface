@@ -7,10 +7,10 @@ import { v4 } from 'uuid';
 import { TimesSVG } from '@/components/svg';
 import { updateURL } from '@/utils';
 
-import { FilterItemProps, PoolForm } from '../../pools.types';
+import { FilterItemProps, IPoolForm } from '../../pools.types';
 
 const FilterSelectedItem: FC = () => {
-  const { control, resetField, setValue } = useFormContext<PoolForm>();
+  const { control, resetField, setValue } = useFormContext<IPoolForm>();
   const isFindingPool = useWatch({ control, name: 'isFindingPool' });
   const tokens = useWatch({ control, name: 'tokenList' });
   const fields = useWatch({ control, name: 'filterList' });
