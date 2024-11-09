@@ -39,7 +39,6 @@ const PoolPreviewWrapper: FC<PropsWithChildren<PoolPreviewWrapperProps>> = ({
         fees={fees}
         onSubmit={onSubmit}
         getValues={getValues}
-        isDeposit={isDeposit}
       />
     </Box>
   </Motion>

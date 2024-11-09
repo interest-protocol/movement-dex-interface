@@ -1,3 +1,7 @@
+import { UseFormReturn } from 'react-hook-form';
+
+import { IPoolForm } from '@/views/pools/pools.types';
+
 export interface RadioFieldProps {
   label: string;
   type: SelectionFieldValues;
@@ -13,4 +17,8 @@ export enum SelectionFieldValues {
   None,
   OneCoin,
   Balance,
+}
+
+export interface PoolFormButtonProps {
+  form: UseFormReturn<IPoolForm, any, undefined>;
 }
