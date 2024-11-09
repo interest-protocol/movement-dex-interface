@@ -19,9 +19,9 @@ import PoolPreview from '../pool-form-preview';
 const PoolFormDepositButton: FC = () => {
   const dex = useInterestDex();
   const client = useAptosClient();
+  const { setModal } = useModal();
   const { dialog, handleClose } = useDialog();
   const { account, signTransaction } = useWallet();
-  const { setModal, handleClose: closeModal } = useModal();
   const { getValues, control, setValue } = useFormContext<IPoolForm>();
 
   const handleDeposit = async () => {
@@ -83,8 +83,7 @@ const PoolFormDepositButton: FC = () => {
     setValue('explorerLink', '');
   };
 
-  const onDeposit = () => {
-    closeModal();
+  const onDeposit = () =>
     dialog.promise(handleDeposit(), {
       loading: () => ({
         title: 'Depositing...',
@@ -106,7 +105,6 @@ const PoolFormDepositButton: FC = () => {
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
     });
-  };
 
   const error = useWatch({ control, name: 'error' });
 
