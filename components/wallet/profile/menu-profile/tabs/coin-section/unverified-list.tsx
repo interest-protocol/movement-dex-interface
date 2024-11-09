@@ -28,7 +28,7 @@ const UnverifiedCoinList: FC<{ isFA: boolean }> = ({ isFA }) => {
   );
 
   return (
-    <Collapse title={`${unverifiedCoins.length} unverified coins`}>
+    <Collapse title={`${unverifiedCoins.length} unverified`}>
       {unverifiedCoins.length ? (
         unverifiedCoins.map((coin) => <CoinCard key={v4()} token={coin} />)
       ) : (
