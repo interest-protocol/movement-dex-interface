@@ -119,14 +119,17 @@ const CreateTokenFormButton = () => {
               (event) => event.type.endsWith('::events::AddLiquidity')
             )!.data.pool;
 
-            fetch('https://pool-indexer-production.up.railway.app/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                poolId,
-                network: Network.Porto,
-              }),
-            });
+            fetch(
+              'https://pool-indexer-production.up.railway.app/api/pool/sr-amm',
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  poolId,
+                  network: Network.Porto,
+                }),
+              }
+            );
           });
       }
 

@@ -17,15 +17,17 @@ const PoolDetail = () => {
 
   const infoData = [(query.address as string) ?? 'N/A', 'SR-AMM', 'Volatile'];
 
-  const statsData = pool
-    ? [
-        FixedPointMath.toNumber(
+  const statsData = [
+    pool
+      ? FixedPointMath.toNumber(
           BigNumber(String(pool?.bidLiquidity ?? 0)),
           pool?.metadata.decimals
-        ),
-        `${FixedPointMath.toNumber(BigNumber(String(config?.fee)), 9) * 100}%`,
-      ]
-    : ['N/A', 'N/A'];
+        )
+      : 'N/A',
+    config
+      ? `${FixedPointMath.toNumber(BigNumber(String(config?.fee)), 9) * 100}%`
+      : 'N/A',
+  ];
 
   return (
     <Box>

@@ -26,9 +26,10 @@ export interface PoolCardListProps {
 
 export interface PoolCardListContentProps {
   done: boolean;
+  next?: () => void;
   hasMore?: boolean;
   arePoolsLoading: boolean;
-  pools?: ReadonlyArray<SrAmmPool>;
+  pools?: ReadonlyArray<ReadonlyArray<SrAmmPool>>;
 }
 
 export interface PoolTokenWithMetadata extends AssetMetadata {
