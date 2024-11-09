@@ -68,7 +68,6 @@ const Header: FC = () => {
               p="l"
               key={v4()}
               display="flex"
-              width="4.563rem"
               cursor="pointer"
               height="1.375rem"
               borderRadius="xs"
@@ -84,9 +83,8 @@ const Header: FC = () => {
                 size="large"
                 variant="label"
                 color="onSurface"
-                nHover={{
-                  opacity: 0.7,
-                }}
+                whiteSpace="nowrap"
+                nHover={{ opacity: 0.7 }}
               >
                 {name}
               </Typography>
