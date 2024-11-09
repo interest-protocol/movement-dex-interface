@@ -101,6 +101,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
   return (
     <Button
       py="s"
+      my="l"
       mt="xl"
       mx="auto"
       variant="filled"
