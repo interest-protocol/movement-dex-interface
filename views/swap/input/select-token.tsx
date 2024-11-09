@@ -44,6 +44,8 @@ const SelectToken: FC<InputProps> = ({ label }) => {
   });
 
   const onSelect = async (metadata: AssetMetadata) => {
+    if (metadata.symbol === opposite.symbol) return;
+
     if (
       metadata.standard === opposite.standard &&
       metadata.symbol === opposite.symbol
