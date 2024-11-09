@@ -145,20 +145,17 @@ const PoolSummaryButton: FC = () => {
         txResult.hash
       );
 
+      fetch('https://pool-indexer-production.up.railway.app/api/pool/sr-amm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          network,
+          poolId: pool.poolAddress?.toString(),
+        }),
+      });
+
       push(
         `${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress?.toString()}`
-      ).then(() =>
-        fetch(
-          'https://pool-indexer-production.up.railway.app/api/pool/sr-amm',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              network,
-              poolId: pool.poolAddress?.toString(),
-            }),
-          }
-        )
       );
     } catch (error) {
       console.warn({ error });
