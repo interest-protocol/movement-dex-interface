@@ -25,11 +25,7 @@ export interface ProfileTabItemProps {
   value: ProfileTabsMenuEnum;
 }
 
-export interface VerifiedCoinCardProps extends UnverifiedCoinCardProps {
-  apy: number;
-}
-
-export interface UnverifiedCoinCardProps {
+export interface CoinCardProps {
   token: AssetMetadata;
 }
 

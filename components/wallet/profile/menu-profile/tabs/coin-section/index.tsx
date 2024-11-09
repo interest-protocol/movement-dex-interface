@@ -4,7 +4,7 @@ import { FC } from 'react';
 import UnverifiedCoinList from './unverified-list';
 import VerifiedList from './verified-list';
 
-const CoinSection: FC = () => (
+const CoinSection: FC<{ isFA?: boolean }> = ({ isFA }) => (
   <Box
     py="l"
     gap="s"
@@ -14,8 +14,8 @@ const CoinSection: FC = () => (
     justifyContent="center"
   >
     <Box display="flex" flexDirection="column" width="100%" gap="xs">
-      {<VerifiedList />}
-      {<UnverifiedCoinList />}
+      <VerifiedList isFA={!!isFA} />
+      <UnverifiedCoinList isFA={!!isFA} />
     </Box>
   </Box>
 );

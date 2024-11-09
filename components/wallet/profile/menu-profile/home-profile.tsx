@@ -5,7 +5,6 @@ import { v4 } from 'uuid';
 import BalanceCard from '../balance-card';
 import { PROFILE_TAB } from './menu.data';
 import CoinSection from './tabs/coin-section';
-import NFASection from './tabs/nfa-section';
 import { ProfileTabsMenuEnum } from './user-info.types';
 
 const HomeProfile: FC = () => {
@@ -46,7 +45,11 @@ const HomeProfile: FC = () => {
           </Box>
         ))}
       </Box>
-      {tabItem == ProfileTabsMenuEnum.coin ? <CoinSection /> : <NFASection />}
+      {tabItem == ProfileTabsMenuEnum.coin ? (
+        <CoinSection />
+      ) : (
+        <CoinSection isFA />
+      )}
     </>
   );
 };

@@ -5,9 +5,12 @@ import {
   Network,
 } from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
+import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
+import { PRICE_TYPE } from '@/constants/prices';
+import { PriceResponse } from '@/interface';
 import { isAptos } from '@/utils';
 
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
@@ -51,7 +54,6 @@ const CoinsManager: FC = () => {
 
           coinsMetadata[item.asset_type!] = metadata;
         }
-
         const coins: Record<string, Asset> = coinsData.reduce(
           (acc, { asset_type, amount }) => {
             if (!asset_type || !coinsMetadata[asset_type]) return acc;
@@ -107,7 +109,34 @@ const CoinsManager: FC = () => {
           {} as Record<string, Asset>
         );
 
-        setCoins?.(coins);
+        const coinsPriceType = values(coins)
+          .filter(({ symbol }) => PRICE_TYPE[symbol])
+          .map(({ type, symbol }) => [type, PRICE_TYPE[symbol]]);
+
+        const prices: ReadonlyArray<PriceResponse> = await fetch(
+          'https://rates-api-production.up.railway.app/api/fetch-quote',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', accept: '*/*' },
+            body: JSON.stringify({
+              coins: coinsPriceType.map(([, type]) => type),
+            }),
+          }
+        ).then((response) => response.json());
+
+        const coinsWithPrice = coinsPriceType.reduce(
+          (acc, [coin], index) => ({
+            ...acc,
+            [coin]: {
+              ...coins[coin],
+              usdPrice: prices[index].price,
+              usdPrice24Change: prices[index].priceChange24HoursPercentage,
+            },
+          }),
+          coins
+        );
+
+        setCoins?.(coinsWithPrice);
       } catch (e) {
         setError((e as Error).message);
       } finally {
@@ -115,9 +144,9 @@ const CoinsManager: FC = () => {
       }
     },
     {
-      refreshInterval: 15000,
-      revalidateOnFocus: false,
+      refreshInterval: 30000,
       revalidateOnMount: true,
+      revalidateOnFocus: false,
       refreshWhenHidden: false,
     }
   );

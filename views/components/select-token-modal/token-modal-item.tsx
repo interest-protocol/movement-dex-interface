@@ -52,7 +52,7 @@ const TokenModalItem: FC<TokenModalItemProps> = ({
           withBg
           url={iconUri}
           size="1.3rem"
-          rounded={isFA}
+          rounded={!isFA}
           symbol={symbol}
           network={network}
         />

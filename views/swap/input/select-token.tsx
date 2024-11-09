@@ -114,7 +114,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
             size="1.1rem"
             network={network}
             symbol={currentSymbol}
-            rounded={currentToken.standard === TokenStandard.FA}
+            rounded={currentToken.standard === TokenStandard.COIN}
           />
         ),
       })}
