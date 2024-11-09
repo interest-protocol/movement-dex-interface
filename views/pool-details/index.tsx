@@ -1,20 +1,30 @@
 import { Box } from '@interest-protocol/ui-kit';
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Layout from '@/components/layout';
 import { Routes, RoutesEnum } from '@/constants';
 
 import PoolTitleBar from '../components/pool-title-bar';
-import { PoolDetailsFormProps } from './pool-details.types';
+import { IPoolForm, PoolOption } from '../pools/pools.types';
 import PoolForm from './pool-form';
 import PoolInfo from './pool-info';
 
-const PoolDetails: FC<PoolDetailsFormProps> = ({
-  poolOptionView,
-  handleOptionTab,
-}) => {
+const PoolDetails: FC = () => {
   const { push } = useRouter();
+  const form = useFormContext<IPoolForm>();
+  const [poolOptionView, setPoolOptionView] = useState<PoolOption>(
+    PoolOption.Deposit
+  );
+
+  useEffect(() => {
+    form.resetField('lpCoin.value');
+    form.resetField('tokenList.0.value');
+    form.resetField('tokenList.1.value');
+  }, [poolOptionView]);
+
+  const handleOptionTab = (index: PoolOption) => setPoolOptionView(index);
 
   return (
     <Layout>

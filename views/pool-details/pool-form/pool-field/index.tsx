@@ -1,21 +1,22 @@
 import { Network } from '@interest-protocol/aptos-sr-amm';
-import { TokenField } from '@interest-protocol/ui-kit';
+import { Box } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { TokenIcon } from '@/components';
-import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
-import { PoolForm, PoolOption } from '@/views/pools/pools.types';
+import { parseInputEventToNumberString } from '@/utils';
+import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
+import { IPoolForm, PoolOption } from '@/views/pools/pools.types';
 
+import Balance from './balance';
+import MaxButton from './input-max-button';
 import { PoolFieldsProps } from './pool-field.types';
+import PoolFieldManager from './pool-field-manager';
 
 const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
-  const { coinsMap } = useCoins();
   const network = useNetwork<Network>();
-  const { register, setValue, getValues } = useFormContext<PoolForm>();
+  const { register, setValue, getValues } = useFormContext<IPoolForm>();
 
   const isDeposit = poolOptionView === PoolOption.Deposit;
 
@@ -25,52 +26,40 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
 
   const token = getValues(fieldName);
 
-  const type = token.type || '';
-  const decimals = token.decimals;
   const symbol = token.symbol;
 
-  const balance = type
-    ? FixedPointMath.toNumber(
-        coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-        coinsMap[type]?.decimals ?? decimals
-      )
-    : 1;
+  const handleChange = (v: ChangeEvent<HTMLInputElement>) => {
+    const amount = parseInputEventToNumberString(v);
 
-  const handleDepositLock = () => {
-    if ('tokenList.0' === fieldName) {
-      setValue('tokenList.0.locked', true);
-      setValue('tokenList.1.locked', false);
-      return;
-    }
-    if ('tokenList.1' === fieldName) {
-      setValue('tokenList.1.locked', true);
-      setValue('tokenList.0.locked', false);
-      return;
-    }
+    setValue(`lpCoin.locked`, false);
+    setValue(`tokenList.0.locked`, false);
+    setValue(`tokenList.1.locked`, false);
+    setValue(`${fieldName}.locked`, true);
+
+    setValue(`${fieldName}.value`, amount);
   };
 
   return (
-    <TokenField
-      placeholder="0"
-      textAlign="right"
-      fieldProps={{ bg: 'lowestContainer' }}
-      tokenName={symbol}
-      TokenIcon={
-        token && <TokenIcon withBg network={network} symbol={symbol} />
-      }
-      handleMax={() => {
-        if (isDeposit) handleDepositLock();
-
-        setValue(`${fieldName}.value`, String(balance));
-      }}
-      {...register(`${fieldName}.value`, {
-        onChange: (v: ChangeEvent<HTMLInputElement>) => {
-          if (isDeposit) handleDepositLock();
-
-          setValue(`${fieldName}.value`, parseInputEventToNumberString(v));
-        },
-      })}
-    />
+    <>
+      <PoolFieldManager name={fieldName} />
+      <TokenField
+        active
+        placeholder="0"
+        textAlign="right"
+        Balance={<Balance name={fieldName} />}
+        ButtonMax={<MaxButton name={fieldName} />}
+        fieldProps={{ bg: 'lowestContainer', p: 'xs' }}
+        TokenIcon={
+          <Box display="flex" alignItems="center" gap="s">
+            <TokenIcon withBg network={network} symbol={symbol} />
+            {symbol}
+          </Box>
+        }
+        {...register(`${fieldName}.value`, {
+          onChange: handleChange,
+        })}
+      />
+    </>
   );
 };
 

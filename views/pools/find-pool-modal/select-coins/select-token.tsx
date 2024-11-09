@@ -12,7 +12,7 @@ import {
 } from '@/lib/coins-manager/coins-manager.types';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
-import { PoolForm } from '../../pools.types';
+import { IPoolForm } from '../../pools.types';
 import { SelectTokenProps } from '../find-pool-modal.types';
 
 const SelectToken: FC<SelectTokenProps> = ({
@@ -24,7 +24,7 @@ const SelectToken: FC<SelectTokenProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { setValue, control, getValues } = useFormContext<PoolForm>();
+  const { setValue, control, getValues } = useFormContext<IPoolForm>();
 
   const currentSymbol = useWatch({
     control,

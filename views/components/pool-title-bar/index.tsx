@@ -7,20 +7,19 @@ import { v4 } from 'uuid';
 import { TokenIcon } from '@/components';
 import { ArrowLeftSVG } from '@/components/svg';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 import { PoolTitleBarProps } from './pool-title-bar.types';
 
 const PoolTitleBar: FC<PoolTitleBarProps> = ({ onBack, centerTile }) => {
   const network = useNetwork<Network>();
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
 
   const tokens = useWatch({
     control: control,
     name: 'tokenList',
   });
 
-  console.log(tokens, 'Tokens');
   const name = tokens.reduce(
     (acc, token) => `${acc ? `${acc}•` : ''}${token?.symbol ?? ''}`,
     ''

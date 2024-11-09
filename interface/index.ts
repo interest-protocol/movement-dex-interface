@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { AccountAddress } from '@aptos-labs/ts-sdk';
+import { SrPool } from '@interest-protocol/aptos-sr-amm';
 import BigNumber from 'bignumber.js';
 
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
@@ -12,31 +14,47 @@ export interface CoinData {
 }
 
 export interface PoolPageProps {
-  objectId: string;
-  stateId: string;
+  address: string;
 }
 
 export enum PoolTypeEnum {
   CLAMM = 'CLAMM',
-  AMM = 'AMM',
+  srAMM = 'SR-AMM',
 }
 
 export interface AmmPoolCoinTypes {
-  coinX: AssetMetadata;
-  coinY: AssetMetadata;
-  lpCoin: string;
+  typeX: string;
+  typeY: string;
 }
 
-export interface AmmPool {
-  poolObjectId: string;
-  stateId: string;
-  type: string;
-  coins: AmmPoolCoinTypes;
-  poolType: PoolTypeEnum;
+export interface SrAmmPool {
   isVolatile: boolean;
+  poolAddress: string;
+  poolType: PoolTypeEnum;
+  coins: AmmPoolCoinTypes;
+}
+
+export interface SrAmmPoolWithMetadata
+  extends Omit<SrPool, 'metadataX' | 'metadataY'> {
+  metadata: AssetMetadata;
+  metadataX: AssetMetadata;
+  metadataY: AssetMetadata;
 }
 
 export interface CoinBalance {
   type: string;
   balance: bigint;
+}
+
+export interface SdkSrAmmConfig {
+  type: `${string}::${string}::${string}`;
+  admin: AccountAddress;
+  adminFee: bigint;
+  delay: bigint;
+  fee: bigint;
+  newFaPaymentAmount: bigint;
+  pendingAdmin: AccountAddress;
+  slotWindow: bigint;
+  start: bigint;
+  treasury: AccountAddress;
 }

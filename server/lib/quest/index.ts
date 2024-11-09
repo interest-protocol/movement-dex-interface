@@ -6,26 +6,39 @@ import QuestModel, { Quest, SwapData } from '@/server/model/quest';
 import QuestProfileModel from '@/server/model/quest-profile';
 import { getExactDayTimestamp, getFirstWeekDayTimestamp } from '@/utils';
 
-type ProfileField = 'swap' | 'createToken' | 'createAndDeployToken';
+type ProfileField =
+  | 'swap'
+  | 'createPool'
+  | 'createToken'
+  | 'addLiquidity'
+  | 'createAndDeployToken';
 
 type MetricField =
   | 'weeklySwaps'
+  | 'weeklyDeposits'
+  | 'weeklyCreatePools'
   | 'weeklyCreateTokens'
   | 'weeklyCreateAndDeployTokens';
 
 type LastField =
   | 'lastSwapAt'
+  | 'lastCreatePoolAt'
   | 'lastCreateTokenAt'
+  | 'lastAddLiquidityAt'
   | 'lastCreateAndDeployTokenAt';
 
 const lastFieldMap: Record<ProfileField, LastField> = {
   swap: 'lastSwapAt',
+  createPool: 'lastCreatePoolAt',
   createToken: 'lastCreateTokenAt',
+  addLiquidity: 'lastAddLiquidityAt',
   createAndDeployToken: 'lastCreateAndDeployTokenAt',
 };
 
 const metricsFieldMap: Record<ProfileField, MetricField> = {
   swap: 'weeklySwaps',
+  addLiquidity: 'weeklyDeposits',
+  createPool: 'weeklyCreatePools',
   createToken: 'weeklyCreateTokens',
   createAndDeployToken: 'weeklyCreateAndDeployTokens',
 };
@@ -114,6 +127,10 @@ export const findMetrics = async (network: Network) => {
       weeklyTXs: {},
       weeklyUsers: {},
       weeklySwaps: {},
+      weeklyDeposits: {},
+      weeklyCreatePools: {},
+      weeklyCreateTokens: {},
+      weeklyCreateTokensAndDeploy: {},
     })
   );
 };

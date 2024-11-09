@@ -13,13 +13,13 @@ import { useModal } from '@/hooks/use-modal';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import FindPoolModal from '../find-pool-modal';
-import { PoolForm } from '../pools.types';
+import { IPoolForm } from '../pools.types';
 
 const FindPoolButton: FC = () => {
   const { colors } = useTheme() as Theme;
   const { setModal, handleClose } = useModal();
 
-  const form = useFormContext<PoolForm>();
+  const form = useFormContext<IPoolForm>();
 
   const openModal = () => {
     form.setValue('tokenList', [

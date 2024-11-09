@@ -2,10 +2,10 @@ import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { PoolForm } from '@/views/pools/pools.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 const PoolFormDepositReceive: FC = () => {
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
   const value = useWatch({ control, name: 'lpCoin.value' });
   const symbol = useWatch({ control, name: 'lpCoin.symbol' });
 

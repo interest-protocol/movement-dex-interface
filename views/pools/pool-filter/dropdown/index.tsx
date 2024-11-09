@@ -10,12 +10,12 @@ import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 import { updateURL } from '@/utils';
 
 import { FormFilterValue } from '../../pool-card/pool-card.types';
-import { FilterItemProps, PoolForm } from '../../pools.types';
+import { FilterItemProps, IPoolForm } from '../../pools.types';
 import { DropdownProps } from './dropdown.types';
 
 const Dropdown: FC<DropdownProps> = ({ label, type, filterData, disabled }) => {
   const boxId = useId();
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
   const fields = useWatch({ control, name: 'filterList' });
   const { replace } = useFieldArray({
     control,

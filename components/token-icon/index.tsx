@@ -7,6 +7,8 @@ import { DefaultTokenSVG } from '@/components/svg';
 import { TOKEN_ICONS } from './token-icon.data';
 import { TokenIconProps } from './token-icon.types';
 
+const PADDING_BORDER_SYMBOLS = ['nETH'];
+
 const TokenIcon: FC<TokenIconProps> = ({
   url,
   symbol,
@@ -127,8 +129,16 @@ const TokenIcon: FC<TokenIconProps> = ({
         >
           <TokenIcon
             width="100%"
-            maxWidth={size ?? '1.5rem'}
-            maxHeight={size ?? '1.5rem'}
+            maxWidth={
+              PADDING_BORDER_SYMBOLS.includes(symbol)
+                ? `calc(${size} * 1.66)`
+                : (size ?? '1.5rem')
+            }
+            maxHeight={
+              PADDING_BORDER_SYMBOLS.includes(symbol)
+                ? `calc(${size} * 1.66)`
+                : (size ?? '1.5rem')
+            }
           />
         </Box>
       </Box>
@@ -195,7 +205,6 @@ const TokenIcon: FC<TokenIconProps> = ({
           width={`calc(${size} * 1.66)`}
           height={`calc(${size} * 1.66)`}
           borderRadius={rounded ? 'full' : 'xs'}
-          {...(withBg && { bg: 'onSurface', color: 'surface' })}
         >
           <Box
             overflow="hidden"

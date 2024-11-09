@@ -1,9 +1,13 @@
-import { Network, SrAmm } from '@interest-protocol/aptos-sr-amm';
+import {
+  getDefaultClient,
+  Network,
+  SrAmm,
+} from '@interest-protocol/aptos-sr-amm';
 
-import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
+const network = Network.Porto;
 
-export const useInterestDex = () => {
-  const client = useAptosClient();
+const client = getDefaultClient(network);
 
-  return new SrAmm({ network: Network.Porto, client });
-};
+const dex = new SrAmm({ network, client });
+
+export const useInterestDex = () => dex;

@@ -5,11 +5,11 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { PlusSVG } from '@/components/svg';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
-import { PoolForm } from '../../pools.types';
+import { IPoolForm } from '../../pools.types';
 import SelectToken from './select-token';
 
 const SelectCoins: FC = () => {
-  const { control } = useFormContext<PoolForm>();
+  const { control } = useFormContext<IPoolForm>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'tokenList',

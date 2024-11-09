@@ -7,3 +7,7 @@ export interface PoolFieldsProps extends PoolFormProps {
 export interface PoolFormProps {
   poolOptionView: PoolOption;
 }
+
+export interface NameProps {
+  name: `tokenList.${number}` | 'lpCoin';
+}

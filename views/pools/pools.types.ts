@@ -1,4 +1,4 @@
-import { AmmPool } from '@/interface';
+import { SrAmmPool } from '@/interface';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 import { ISwapSettings } from '../swap/swap.types';
@@ -26,9 +26,10 @@ export interface PoolCardListProps {
 
 export interface PoolCardListContentProps {
   done: boolean;
+  next?: () => void;
   hasMore?: boolean;
   arePoolsLoading: boolean;
-  pools?: ReadonlyArray<AmmPool>;
+  pools?: ReadonlyArray<ReadonlyArray<SrAmmPool>>;
 }
 
 export interface PoolTokenWithMetadata extends AssetMetadata {
@@ -38,7 +39,7 @@ export interface PoolTokenWithMetadata extends AssetMetadata {
 
 export type PoolToken = PoolTokenWithMetadata;
 
-export interface PoolForm {
+export interface IPoolForm {
   error: string | null;
   lpCoin: PoolToken;
   tokenSelected?: string;
@@ -47,7 +48,7 @@ export interface PoolForm {
   settings: ISwapSettings;
   tokenList: ReadonlyArray<PoolToken>;
   filterList: ReadonlyArray<FilterItemProps>;
-  pool: AmmPool;
+  pool: SrAmmPool;
 }
 
 export interface FilterItemProps {

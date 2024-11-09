@@ -1,24 +1,70 @@
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button, Motion } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import invariant from 'tiny-invariant';
 
+import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
+import { useInterestDex } from '@/hooks/use-interest-dex';
 import { useModal } from '@/hooks/use-modal';
-import { PoolForm } from '@/views/pools/pools.types';
+import { FixedPointMath } from '@/lib';
+import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
+import { IPoolForm } from '@/views/pools/pools.types';
 
 import PoolPreview from '../pool-form-preview';
 
 const PoolFormWithdrawButton: FC = () => {
+  const dex = useInterestDex();
+  const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
+  const { account, signTransaction } = useWallet();
   const { setModal, handleClose: closeModal } = useModal();
-  const { getValues, control, setValue } = useFormContext<PoolForm>();
+  const { getValues, control, setValue } = useFormContext<IPoolForm>();
 
   const error = useWatch({ control, name: 'error' });
 
   const handleWithdraw = async () => {
-    return new Promise<void>((resolve) => {
-      resolve();
-    });
+    try {
+      invariant(account, 'You must be connected to proceed');
+
+      const lpCoin = getValues('lpCoin');
+
+      const data = dex.removeLiquidity({
+        lpFa: lpCoin.type,
+        recipient: account.address,
+        amount: BigInt(
+          FixedPointMath.toBigNumber(lpCoin.value, lpCoin.decimals).toFixed(0)
+        ),
+      });
+
+      const tx = await client.transaction.build.simple({
+        data,
+        sender: account!.address,
+      });
+
+      const senderAuthenticator = await signTransaction(tx);
+
+      const txResult = await client.transaction.submit.simple({
+        transaction: tx,
+        senderAuthenticator,
+      });
+
+      await client.waitForTransaction({
+        transactionHash: txResult.hash,
+        options: { checkSuccess: true },
+      });
+
+      setValue(
+        'explorerLink',
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+      );
+    } catch (e) {
+      console.warn('>> handle withdraw issue. More info: ', { e });
+
+      throw e;
+    }
   };
 
   const gotoExplorer = () => {

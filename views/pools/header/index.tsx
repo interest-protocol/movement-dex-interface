@@ -7,13 +7,13 @@ import { v4 } from 'uuid';
 import useEventListener from '@/hooks/use-event-listener';
 
 import { FormFilterValue } from '../pool-card/pool-card.types';
-import { FilterItemProps, FilterTypeEnum, PoolForm } from '../pools.types';
+import { FilterItemProps, FilterTypeEnum, IPoolForm } from '../pools.types';
 import CreatePoolButton from './create-pool-button';
 import FindPoolButton from './find-pool-button';
 import { HeaderProps } from './header.types';
 
 const Header: FC<HeaderProps> = ({ currentTab, setTab }) => {
-  const { setValue } = useFormContext<PoolForm>();
+  const { setValue } = useFormContext<IPoolForm>();
   const [showSearchField, setShowSearchField] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 

@@ -1,19 +1,58 @@
+import { MoveValue } from '@aptos-labs/ts-sdk';
 import { Button, ProgressIndicator } from '@interest-protocol/ui-kit';
 import { type FC, useMemo, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
+import { useInterestDex } from '@/hooks/use-interest-dex';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+
 import { CreatePoolForm, CreatePoolStep } from './pool-create.types';
 
 const PoolNextButton: FC = () => {
+  const dex = useInterestDex();
   const [loading, setLoading] = useState<boolean>(false);
   const { control, setValue, getValues } = useFormContext<CreatePoolForm>();
+
   const { step, tokens } = useWatch({ control });
 
   const error = getValues('error');
 
   const checkIfPoolExists = async () => {
+    const internTokens = getValues('tokens');
+
+    if (!internTokens || internTokens.length) return false;
+
+    let pool: {
+      exists: MoveValue;
+      poolAddress: MoveValue;
+    };
+
+    const [coins, fas] = [
+      internTokens.filter(({ standard }) => standard === TokenStandard.COIN),
+      internTokens.filter(({ standard }) => standard === TokenStandard.FA),
+    ];
+
+    if (coins.length > 1) {
+      pool = await dex.getPoolAddress({
+        faA: COIN_TYPE_TO_FA[coins[0].type].toString(),
+        faB: COIN_TYPE_TO_FA[coins[1].type].toString(),
+      });
+    } else if (coins.length === 1) {
+      pool = await dex.getPoolAddress({
+        faA: COIN_TYPE_TO_FA[coins[0].type].toString(),
+        faB: fas[0].type,
+      });
+    } else {
+      pool = await dex.getPoolAddress({
+        faA: fas[0].type,
+        faB: fas[1].type,
+      });
+    }
+
     setLoading(false);
-    return false;
+
+    return pool.exists as boolean;
   };
 
   const isDisabled = useMemo(() => {
