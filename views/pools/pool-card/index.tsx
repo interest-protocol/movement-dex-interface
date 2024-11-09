@@ -5,7 +5,6 @@ import { FC, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import { Routes, RoutesEnum } from '@/constants';
-import useSrAmmPool from '@/hooks/use-sr-amm-pool';
 import { FixedPointMath } from '@/lib';
 
 import { LINES } from './pool-card.data';
@@ -14,33 +13,23 @@ import PoolCardHeader from './pool-card-header';
 import PoolCardInfo from './pool-card-info';
 import PoolCardTrade from './pool-card-trade';
 
-const PoolCard: FC<PoolCardProps> = ({ address }) => {
-  const { pool, config, loading } = useSrAmmPool(address);
+const PoolCard: FC<PoolCardProps> = ({ pool }) => {
   const [poolData, setPoolData] = useState<ReadonlyArray<string>>([
-    'N/A',
+    '0.3%',
     'N/A',
   ]);
 
   useEffect(() => {
-    if (!pool) return;
-
     setPoolData((data) => [
       data[0],
-      `${FixedPointMath.toNumber(BigNumber(String(pool.bidLiquidity)), pool.metadata.decimals)}`,
+      `${FixedPointMath.toNumber(BigNumber(String(pool.bidLiquidity)), pool.metadata.pool.decimals)}`,
     ]);
-  }, [pool]);
-
-  useEffect(() => {
-    if (!config) return;
-
-    setPoolData((data) => [
-      `${FixedPointMath.toNumber(BigNumber(String(config.fee)), 9) * 100}%`,
-      data[1],
-    ]);
-  }, [config]);
+  }, []);
 
   return (
-    <Link href={`${Routes[RoutesEnum.PoolDetails]}?address=${address}`}>
+    <Link
+      href={`${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress}`}
+    >
       <Box
         p="m"
         flex="1"
@@ -62,10 +51,7 @@ const PoolCard: FC<PoolCardProps> = ({ address }) => {
         }}
       >
         <PoolCardHeader tags={['SR-AMM', FormFilterValue['volatile']]} />
-        <PoolCardInfo
-          loading={loading}
-          coins={pool ? [pool.metadataX, pool.metadataY] : []}
-        />
+        <PoolCardInfo coins={pool ? [pool.metadata.x, pool.metadata.y] : []} />
         <Box px="m" py="xs" bg="surface" borderRadius="1rem">
           {LINES.map((line, index) => (
             <PoolCardTrade

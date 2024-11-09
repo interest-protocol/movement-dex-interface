@@ -24,11 +24,11 @@ export const CATEGORY = [
 ];
 
 export const FILTERS_DATA = [
-  {
-    label: 'Algorithm',
-    data: ALGORITHM_TYPE,
-    type: FilterTypeEnum.ALGORITHM,
-  },
+  // {
+  //   label: 'Algorithm',
+  //   data: ALGORITHM_TYPE,
+  //   type: FilterTypeEnum.ALGORITHM,
+  // },
   {
     label: 'Category',
     data: CATEGORY,

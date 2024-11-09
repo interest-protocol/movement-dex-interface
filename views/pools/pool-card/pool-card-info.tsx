@@ -10,7 +10,7 @@ import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { PoolCardTokenInfoProps } from './pool-card.types';
 
-const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ loading, coins }) => {
+const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ coins }) => {
   const network = useNetwork<Network>();
 
   return (
@@ -30,34 +30,19 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ loading, coins }) => {
         alignItems="center"
         alignSelf="stretch"
       >
-        {loading
-          ? Array.from({ length: 2 }, () => (
-              <TokenIcon withBg symbol="" key={v4()} network={network} />
-            ))
-          : coins.map(({ symbol, iconUri, standard }) => (
-              <TokenIcon
-                withBg
-                key={v4()}
-                url={iconUri}
-                symbol={symbol}
-                network={network}
-                rounded={standard === TokenStandard.COIN}
-              />
-            ))}
+        {coins.map(({ symbol, iconUri, standard }) => (
+          <TokenIcon
+            withBg
+            key={v4()}
+            url={iconUri}
+            symbol={symbol}
+            network={network}
+            rounded={standard === TokenStandard.COIN}
+          />
+        ))}
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center">
-        {loading ? (
-          <Typography
-            size="small"
-            variant="body"
-            fontSize="1rem"
-            fontWeight="700"
-            lineHeight="1.7rem"
-            color="onSurface"
-          >
-            <Skeleton height="100%" width="7rem" />
-          </Typography>
-        ) : (
+        {
           <Typography
             gap="xs"
             size="small"
@@ -74,7 +59,7 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ loading, coins }) => {
               coin.symbol || <Skeleton key={v4()} width="4rem" />,
             ])}
           </Typography>
-        )}
+        }
       </Box>
     </Box>
   );
