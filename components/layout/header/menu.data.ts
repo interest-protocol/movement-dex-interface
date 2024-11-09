@@ -11,4 +11,8 @@ export const MENU_ITEMS: ReadonlyArray<MenuItemsProps> = [
     name: 'Pool',
     path: Routes[RoutesEnum.Pools],
   },
+  {
+    name: 'Create Token',
+    path: Routes[RoutesEnum.TokenCreate],
+  },
 ];
