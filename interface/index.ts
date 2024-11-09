@@ -58,3 +58,9 @@ export interface SdkSrAmmConfig {
   start: bigint;
   treasury: AccountAddress;
 }
+
+export interface PriceResponse {
+  coin: string;
+  price: number;
+  priceChange24HoursPercentage: number;
+}

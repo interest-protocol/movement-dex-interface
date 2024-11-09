@@ -17,7 +17,9 @@ export type AssetMetadata = {
 };
 
 export interface Asset extends AssetMetadata {
+  usdPrice?: number;
   balance: BigNumber;
+  usdPrice24Change?: number;
 }
 
 export interface UseCoins {

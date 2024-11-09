@@ -88,7 +88,7 @@ const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
               withBg
               network={network}
               symbol={currentSymbol}
-              rounded={currentToken.standard === TokenStandard.FA}
+              rounded={currentToken.standard === TokenStandard.COIN}
             />
           ),
         })}

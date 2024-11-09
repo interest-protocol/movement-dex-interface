@@ -1,4 +1,5 @@
 import { Box, Motion, Typography } from '@interest-protocol/ui-kit';
+import { not } from 'ramda';
 import { FC, useState } from 'react';
 
 import { CollapseProps } from './collapse.types';
@@ -12,11 +13,9 @@ const variants = {
 };
 
 const Collapse: FC<CollapseProps> = ({ title, children }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleCollapseClick = () => {
-    setIsExpanded(!isExpanded);
-  };
+  const handleCollapseClick = () => setIsExpanded(not);
 
   return (
     <>
@@ -40,7 +39,7 @@ const Collapse: FC<CollapseProps> = ({ title, children }) => {
           display="flex"
           initial="rest"
           alignItems="center"
-          animate={isExpanded ? 'collapsed' : 'rest'}
+          animate={isExpanded ? 'rest' : 'collapsed'}
         >
           <CollapseIcon />
         </Motion>

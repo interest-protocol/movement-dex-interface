@@ -31,7 +31,6 @@ const SelectToken: FC<InputProps> = ({ label, isMobile }) => {
           PrefixIcon={
             <TokenIcon
               withBg
-              rounded={true}
               network={network}
               url={tokenImageUrl}
               symbol={tokenSymbol}
@@ -62,9 +61,7 @@ const SelectToken: FC<InputProps> = ({ label, isMobile }) => {
         color="onSurface"
         borderRadius="xs"
         nDisabled={{ bg: 'transparent' }}
-        PrefixIcon={
-          <TokenIcon withBg rounded symbol="MOVE" network={network} />
-        }
+        PrefixIcon={<TokenIcon withBg symbol="MOVE" network={network} />}
       >
         <Typography
           p="xs"

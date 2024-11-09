@@ -41,7 +41,7 @@ const PoolCardInfo: FC<PoolCardTokenInfoProps> = ({ loading, coins }) => {
                 url={iconUri}
                 symbol={symbol}
                 network={network}
-                rounded={standard === TokenStandard.FA}
+                rounded={standard === TokenStandard.COIN}
               />
             ))}
       </Box>

@@ -77,7 +77,7 @@ const SelectToken: FC<SelectTokenProps> = ({
                 withBg
                 network={network}
                 symbol={currentSymbol}
-                rounded={currentStandard === TokenStandard.FA}
+                rounded={currentStandard === TokenStandard.COIN}
               />
               <Typography variant="body" size="medium">
                 {currentSymbol}

@@ -166,7 +166,7 @@ const PoolSummary: FC = () => {
                   withBg
                   network={network}
                   symbol={token.symbol}
-                  rounded={token.standard === TokenStandard.FA}
+                  rounded={token.standard === TokenStandard.COIN}
                 />
               </Box>
               <Typography variant="body" size="medium">

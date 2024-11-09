@@ -42,44 +42,42 @@ const CurrencyProfile: FC<MenuCurrencyProps> = ({ handleBack }) => {
           suggested currencies
         </Typography>
         <Box mt="xl">
-          {SUGGESTED_CURRENCY_DATA.map(({ symbol, Icon }) => {
-            return (
-              <Box
-                p="xs"
-                my="xs"
-                key={v4()}
-                display="flex"
-                bg="surface"
-                height="4.5rem"
-                borderRadius="xs"
-                alignItems="center"
-                justifyContent="space-between"
-                border={selectCurrency === symbol ? '1px solid' : ''}
-                borderColor={selectCurrency === symbol ? 'outline' : ''}
-                onClick={() => handleCurrency(symbol)}
-              >
-                <Box display="flex" alignItems="center">
-                  <Icon
-                    width="2.5rem"
-                    height="2.5rem"
-                    maxHeight="100%"
-                    maxWidth="100%"
-                  />
-                  <Typography size="large" variant="label" mx="xs">
-                    {symbol}
-                  </Typography>
-                </Box>
-                {selectCurrency === symbol && (
-                  <CheckedSVG
-                    width="1.5rem"
-                    height="1.5rem"
-                    maxWidth="100%"
-                    maxHeight="100%"
-                  />
-                )}
+          {SUGGESTED_CURRENCY_DATA.map(({ symbol, Icon }) => (
+            <Box
+              p="xs"
+              my="xs"
+              key={v4()}
+              display="flex"
+              bg="surface"
+              height="4.5rem"
+              borderRadius="xs"
+              alignItems="center"
+              justifyContent="space-between"
+              border={selectCurrency === symbol ? '1px solid' : ''}
+              borderColor={selectCurrency === symbol ? 'outline' : ''}
+              onClick={() => handleCurrency(symbol)}
+            >
+              <Box display="flex" alignItems="center">
+                <Icon
+                  width="2.5rem"
+                  height="2.5rem"
+                  maxHeight="100%"
+                  maxWidth="100%"
+                />
+                <Typography size="large" variant="label" mx="xs">
+                  {symbol}
+                </Typography>
               </Box>
-            );
-          })}
+              {selectCurrency === symbol && (
+                <CheckedSVG
+                  width="1.5rem"
+                  height="1.5rem"
+                  maxWidth="100%"
+                  maxHeight="100%"
+                />
+              )}
+            </Box>
+          ))}
         </Box>
       </Box>
       <Box py="s">

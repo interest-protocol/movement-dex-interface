@@ -31,7 +31,7 @@ const SuccessModalTokenCard: FC<SuccessModalTokenCardProps> = ({
           size="1rem"
           network={network}
           symbol={from.symbol}
-          rounded={from.standard === TokenStandard.FA}
+          rounded={from.standard === TokenStandard.COIN}
         />
         <Typography
           alignItems="center"
@@ -58,7 +58,7 @@ const SuccessModalTokenCard: FC<SuccessModalTokenCardProps> = ({
           size="1.1rem"
           symbol={to.symbol}
           network={network as Network}
-          rounded={to.standard === TokenStandard.FA}
+          rounded={to.standard === TokenStandard.COIN}
         />
         <Typography
           alignItems="center"

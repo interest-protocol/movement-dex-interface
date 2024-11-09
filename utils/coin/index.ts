@@ -24,8 +24,12 @@ import {
   MetadataSources,
 } from './coin.types';
 
-export const isAptos = (type: string) =>
-  type === '0x1::aptos_coin::AptosCoin' || Number(type) === 0xa;
+export const isAptosCoin = (type: string) =>
+  type.endsWith('1::aptos_coin::AptosCoin');
+
+export const isAptosFA = (type: string) => Number(type) === 0xa;
+
+export const isAptos = (type: string) => isAptosFA(type) || isAptosCoin(type);
 
 export const getCoinTypeFromCoinStoreType = (coinStoreType: string) =>
   coinStoreType.split('<')[1].split('>')[0];

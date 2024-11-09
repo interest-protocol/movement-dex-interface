@@ -4,12 +4,8 @@ import { FC } from 'react';
 import { ArrowLeftSVG } from '@/components/svg';
 
 import { SettingMenuProps } from '../user-info.types';
-import SettingOption from './setting-option';
 
-const SettingProfile: FC<SettingMenuProps> = ({
-  handleToggleProfile,
-  handleCurrency,
-}) => {
+const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
 
@@ -38,7 +34,7 @@ const SettingProfile: FC<SettingMenuProps> = ({
           Settings
         </Typography>
       </Box>
-      <SettingOption label="hide small balances" isToggleEnable={false} />
+      {/* <SettingOption label="hide small balances" isToggleEnable={false} />
       <SettingOption
         label="hide unknown tokens & nfts"
         isToggleEnable={false}
@@ -51,7 +47,7 @@ const SettingProfile: FC<SettingMenuProps> = ({
       <SettingOption
         label="hide unknown tokens & nfts"
         isToggleEnable={false}
-      />
+      /> */}
       <Box
         py="m"
         width="100%"
@@ -66,13 +62,9 @@ const SettingProfile: FC<SettingMenuProps> = ({
           m={0}
           p="0.5rem"
           display="flex"
+          borderRadius="xs"
           alignItems="center"
           justifyContent="flex-end"
-          onClick={handleCurrency}
-          borderRadius="xs"
-          nHover={{
-            background: 'lowContainer',
-          }}
         >
           <Typography size="medium" variant="body" opacity="0.7">
             USD
