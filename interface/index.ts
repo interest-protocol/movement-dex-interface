@@ -34,6 +34,25 @@ export interface SrAmmPool {
   coins: AmmPoolCoinTypes;
 }
 
+export interface ISrPool {
+  supply: bigint;
+  balanceY: bigint;
+  balanceX: bigint;
+  metadataY: string;
+  metadataX: string;
+  isSrMode: boolean;
+  poolAddress: string;
+  bidLiquidity: bigint;
+  slotBalanceX: bigint;
+  slotBalanceY: bigint;
+  lastSlotTimestamp: bigint;
+  metadata: {
+    x: AssetMetadata;
+    y: AssetMetadata;
+    pool: AssetMetadata;
+  };
+}
+
 export interface SrAmmPoolWithMetadata
   extends Omit<SrPool, 'metadataX' | 'metadataY'> {
   metadata: AssetMetadata;

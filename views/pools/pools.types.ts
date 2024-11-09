@@ -1,4 +1,4 @@
-import { SrAmmPool } from '@/interface';
+import { ISrPool } from '@/interface';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
 import { ISwapSettings } from '../swap/swap.types';
@@ -29,7 +29,7 @@ export interface PoolCardListContentProps {
   next?: () => void;
   hasMore?: boolean;
   arePoolsLoading: boolean;
-  pools?: ReadonlyArray<ReadonlyArray<SrAmmPool>>;
+  pools?: ReadonlyArray<ReadonlyArray<ISrPool>>;
 }
 
 export interface PoolTokenWithMetadata extends AssetMetadata {
@@ -48,7 +48,7 @@ export interface IPoolForm {
   settings: ISwapSettings;
   tokenList: ReadonlyArray<PoolToken>;
   filterList: ReadonlyArray<FilterItemProps>;
-  pool: SrAmmPool;
+  pool: ISrPool;
 }
 
 export interface FilterItemProps {

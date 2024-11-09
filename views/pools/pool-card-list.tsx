@@ -44,11 +44,21 @@ const Pools: FC = () => {
             { metadataY: { $in: tokenList?.map(({ type }) => type) } },
           ],
         }
-      : {}
+      : !filterProps?.some(
+            (filterProp) =>
+              filterProp.type === FilterTypeEnum.CATEGORY &&
+              filterProp.value === FormFilterValue.all
+          )
+        ? {
+            poolAddress: {
+              $in: POOL_DATA?.map(({ poolAddress }) => poolAddress),
+            },
+          }
+        : {}
   );
 
   useEffect(() => {
-    if (page != 1) {
+    if (isFindingPool || page != 1) {
       setPools([[]]);
       setPage(1);
     }
@@ -57,22 +67,6 @@ const Pools: FC = () => {
   useEffect(() => {
     if (data?.pools) setPools([...pools.slice(0, page), data.pools]);
   }, [data?.pools]);
-
-  if (
-    !isFindingPool &&
-    !filterProps?.some(
-      (filterProp) =>
-        filterProp.type === FilterTypeEnum.CATEGORY &&
-        filterProp.value === FormFilterValue.all
-    )
-  )
-    return (
-      <PoolCardListContent
-        done={false}
-        pools={[POOL_DATA]}
-        arePoolsLoading={false}
-      />
-    );
 
   return (
     <PoolCardListContent
@@ -188,9 +182,7 @@ const PoolCardListContent: FC<PoolCardListContentProps> = ({
         ]}
       >
         {pools?.flatMap((poolPage) =>
-          poolPage.map((poolPage) => (
-            <PoolCard key={v4()} address={poolPage.poolAddress} />
-          ))
+          poolPage.map((pool) => <PoolCard key={v4()} pool={pool} />)
         )}
         {arePoolsLoading && <PoolCardSkeleton />}
       </Box>
