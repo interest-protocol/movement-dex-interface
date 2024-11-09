@@ -63,37 +63,33 @@ const Header: FC = () => {
           alignItems="center"
           justifyContent="center"
         >
-          {MENU_ITEMS.map(({ name, path }) => {
-            return (
-              <Box
-                p="l"
-                key={v4()}
-                display="flex"
-                width="4.563rem"
-                cursor="pointer"
-                height="1.375rem"
-                borderRadius="xs"
-                alignItems="center"
-                alignContent="center"
-                nHover={{ color: 'primary' }}
-                onClick={() => goToPath(path)}
-                transition="all 350ms ease-in-out"
-                bg={asPath === path ? 'container' : ''}
-                color={asPath === path ? 'primary' : 'onSurface'}
+          {MENU_ITEMS.map(({ name, path }) => (
+            <Box
+              p="l"
+              key={v4()}
+              display="flex"
+              cursor="pointer"
+              height="1.375rem"
+              borderRadius="xs"
+              alignItems="center"
+              alignContent="center"
+              nHover={{ color: 'primary' }}
+              onClick={() => goToPath(path)}
+              transition="all 350ms ease-in-out"
+              bg={asPath === path ? 'container' : ''}
+              color={asPath === path ? 'primary' : 'onSurface'}
+            >
+              <Typography
+                size="large"
+                variant="label"
+                color="onSurface"
+                whiteSpace="nowrap"
+                nHover={{ opacity: 0.7 }}
               >
-                <Typography
-                  size="large"
-                  variant="label"
-                  color="onSurface"
-                  nHover={{
-                    opacity: 0.7,
-                  }}
-                >
-                  {name}
-                </Typography>
-              </Box>
-            );
-          })}
+                {name}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       )}
       <Box
