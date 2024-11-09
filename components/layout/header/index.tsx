@@ -10,8 +10,8 @@ import Wallet from '@/components/wallet';
 import { Routes, RoutesEnum } from '@/constants';
 import useEventListener from '@/hooks/use-event-listener';
 
+import { SIDEBAR_ITEMS } from '../sidebar/sidebar.data';
 import LogoWrapper from './logo-wrapper';
-import { MENU_ITEMS } from './menu.data';
 
 const Header: FC = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -25,7 +25,7 @@ const Header: FC = () => {
   };
 
   const handleSetDesktop = useCallback(() => {
-    const mediaIsMobile = !window.matchMedia('(min-width: 65em)').matches;
+    const mediaIsMobile = !window.matchMedia('(min-width: 64em)').matches;
     setIsMobile(mediaIsMobile);
   }, []);
 
@@ -57,15 +57,11 @@ const Header: FC = () => {
         <LogoWrapper />
       )}
       {!isMobile && (
-        <Box
-          gap="2xl"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {MENU_ITEMS.map(({ name, path }) => (
+        <Box gap="m" display="flex" alignItems="center" justifyContent="center">
+          {SIDEBAR_ITEMS.map(({ name, path }) => (
             <Box
-              p="l"
+              py="l"
+              px="xs"
               key={v4()}
               display="flex"
               cursor="pointer"
@@ -76,15 +72,17 @@ const Header: FC = () => {
               nHover={{ color: 'primary' }}
               onClick={() => goToPath(path)}
               transition="all 350ms ease-in-out"
-              bg={asPath === path ? 'container' : ''}
               color={asPath === path ? 'primary' : 'onSurface'}
+              opacity={asPath === path ? '1' : '.6'}
             >
               <Typography
                 size="large"
                 variant="label"
                 color="onSurface"
-                whiteSpace="nowrap"
-                nHover={{ opacity: 0.7 }}
+                width="max-content"
+                nHover={{
+                  opacity: 0.7,
+                }}
               >
                 {name}
               </Typography>
