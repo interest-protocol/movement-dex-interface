@@ -7,9 +7,9 @@ import ManageSlippage from '@/views/swap/manage-slippage';
 
 import PoolField from '../pool-field';
 import { PoolFormProps } from '../pool-field/pool-field.types';
-import PoolFormDepositButton from './pool-form-deposit-button';
 import DepositManager from './pool-form-deposit-manager';
 import PoolReceiveSection from './pool-form-deposit-receive';
+import PoolPreviewFormDepositButton from './pool-preview-form-deposit-button';
 
 const PoolDeposit: FC<PoolFormProps> = ({ poolOptionView }) => {
   const { control } = useFormContext<IPoolForm>();
@@ -36,7 +36,7 @@ const PoolDeposit: FC<PoolFormProps> = ({ poolOptionView }) => {
         </Box>
       </Box>
       <DepositManager />
-      <PoolFormDepositButton />
+      <PoolPreviewFormDepositButton />
     </>
   );
 };

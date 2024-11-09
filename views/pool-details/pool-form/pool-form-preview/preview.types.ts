@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { UseFormGetValues } from 'react-hook-form';
 import { SWRResponse } from 'swr';
 
@@ -14,7 +15,7 @@ export interface PoolPreviewWrapperHeaderProps {
 export interface PoolPreviewProps
   extends PoolPreviewWrapperHeaderProps,
     FieldProps {
-  onSubmit: () => void;
+  onSubmit: ReactNode;
 }
 
 export interface PoolPreviewWrapperProps extends PoolPreviewProps {
