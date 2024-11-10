@@ -81,7 +81,7 @@ const Profile: FC = () => {
             'flex',
           ]}
           alignItems="center"
-          onClick={handleOpenProfile}
+          onClick={isOpenProfile ? handleCloseProfile : handleOpenProfile}
         >
           <Avatar isLarge />
         </Box>
