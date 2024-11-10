@@ -82,7 +82,11 @@ const SelectToken: FC<InputProps> = ({ label }) => {
         initial={{ scale: 0.85 }}
         transition={{ duration: 0.3 }}
       >
-        <SelectTokenModal closeModal={handleClose} onSelect={onSelect} />
+        <SelectTokenModal
+          onSelect={onSelect}
+          closeModal={handleClose}
+          isOutput={label === 'to'}
+        />
       </Motion>,
       {
         isOpen: true,
