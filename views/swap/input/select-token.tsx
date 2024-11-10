@@ -5,6 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ChevronDownSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
@@ -44,7 +45,15 @@ const SelectToken: FC<InputProps> = ({ label }) => {
   });
 
   const onSelect = async (metadata: AssetMetadata) => {
-    if (metadata.symbol === opposite.symbol) return;
+    if (
+      (metadata.standard == TokenStandard.FA
+        ? metadata.type
+        : COIN_TYPE_TO_FA[metadata.type].toString()) ==
+      (opposite.standard == TokenStandard.FA
+        ? opposite.type
+        : COIN_TYPE_TO_FA[opposite.type].toString())
+    )
+      return;
 
     if (
       metadata.standard === opposite.standard &&
