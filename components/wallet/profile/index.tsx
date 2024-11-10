@@ -1,6 +1,7 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Box } from '@interest-protocol/ui-kit';
 import { useRouter } from 'next/router';
+import { not } from 'ramda';
 import { FC, useState } from 'react';
 
 import Avatar from '@/components/account-info/avatar';
@@ -36,7 +37,7 @@ const Profile: FC = () => {
     url.searchParams.set('profile', 'true');
 
     window.history.pushState('', '', url.toString());
-    setIsOpenProfile(true);
+    setIsOpenProfile(not);
   };
 
   const handleCloseProfile = () => {
