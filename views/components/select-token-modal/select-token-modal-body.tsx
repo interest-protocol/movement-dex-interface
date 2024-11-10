@@ -20,9 +20,13 @@ import {
 
 const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   control,
+  isOutput,
   handleSelectToken,
 }) => {
   const { coins, loading } = useCoins();
+  const validCoins = coins.filter(
+    ({ standard }) => !isOutput || standard === TokenStandard.FA
+  );
 
   const filterSelected = useWatch({ control, name: 'filter' });
 
@@ -53,15 +57,16 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
       />
     );
 
-  if (!coins.length && loading) return <FetchingToken />;
+  if (!validCoins.length && loading) return <FetchingToken />;
 
-  const noWalletToShow = filterSelected == TokenOrigin.Wallet && !coins?.length;
+  const noWalletToShow =
+    filterSelected == TokenOrigin.Wallet && !validCoins?.length;
 
   if (filterSelected === TokenOrigin.Wallet && !noWalletToShow)
     return (
       <ModalTokenBody
-        tokens={coins}
         loading={loading}
+        tokens={validCoins}
         handleSelectToken={handleSelectToken}
       />
     );
