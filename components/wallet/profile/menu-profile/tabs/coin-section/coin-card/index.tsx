@@ -166,6 +166,7 @@ const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
               variant="text"
               color="primary"
               onClick={handleWrapCoin}
+              disabled={!coin || coin.balance.isZero()}
             >
               <WrapSVG maxHeight="1rem" maxWidth="1rem" width="100%" />
             </Button>
