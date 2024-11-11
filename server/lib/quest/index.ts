@@ -8,6 +8,7 @@ import { getExactDayTimestamp, getFirstWeekDayTimestamp } from '@/utils';
 
 type ProfileField =
   | 'swap'
+  | 'wrapCoin'
   | 'createPool'
   | 'createToken'
   | 'addLiquidity'
@@ -16,12 +17,14 @@ type ProfileField =
 type MetricField =
   | 'weeklySwaps'
   | 'weeklyDeposits'
+  | 'weeklyWrapCoins'
   | 'weeklyCreatePools'
   | 'weeklyCreateTokens'
   | 'weeklyCreateAndDeployTokens';
 
 type LastField =
   | 'lastSwapAt'
+  | 'lastWrapCoinAt'
   | 'lastCreatePoolAt'
   | 'lastCreateTokenAt'
   | 'lastAddLiquidityAt'
@@ -29,6 +32,7 @@ type LastField =
 
 const lastFieldMap: Record<ProfileField, LastField> = {
   swap: 'lastSwapAt',
+  wrapCoin: 'lastWrapCoinAt',
   createPool: 'lastCreatePoolAt',
   createToken: 'lastCreateTokenAt',
   addLiquidity: 'lastAddLiquidityAt',
@@ -37,6 +41,7 @@ const lastFieldMap: Record<ProfileField, LastField> = {
 
 const metricsFieldMap: Record<ProfileField, MetricField> = {
   swap: 'weeklySwaps',
+  wrapCoin: 'weeklyWrapCoins',
   addLiquidity: 'weeklyDeposits',
   createPool: 'weeklyCreatePools',
   createToken: 'weeklyCreateTokens',
@@ -128,6 +133,7 @@ export const findMetrics = async (network: Network) => {
       weeklyUsers: {},
       weeklySwaps: {},
       weeklyDeposits: {},
+      weeklyWrapCoins: {},
       weeklyCreatePools: {},
       weeklyCreateTokens: {},
       weeklyCreateTokensAndDeploy: {},
