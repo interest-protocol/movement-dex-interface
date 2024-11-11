@@ -5,6 +5,7 @@ const modelName = 'MovementQuestProfilePorto';
 export interface QuestProfile {
   address: string;
   lastSwapAt: number;
+  lastWrapCoinAt: number;
   lastCreatePoolAt: number;
   lastCreateTokenAt: number;
   lastAddLiquidityAt: number;
@@ -17,6 +18,7 @@ export type QuestProfileDocument = Document & QuestProfile;
 export const QuestProfileSchema = new Schema({
   address: { index: true, type: String, required: true, unique: true },
   lastSwapAt: { type: Number },
+  lastWrapCoinAt: { type: Number },
   lastCreatePoolAt: { type: Number },
   lastCreateTokenAt: { type: Number },
   lastAddLiquidityAt: { type: Number },

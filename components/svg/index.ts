@@ -102,5 +102,6 @@ export { default as USDTSVG } from './usdt';
 export { default as UserSVG } from './user';
 export { default as WalletSVG } from './wallet';
 export { default as WarningSVG } from './warning';
+export { default as WrapSVG } from './wrap';
 export { default as XSVG } from './x';
 export { default as XCirlceSVG } from './x-circle';

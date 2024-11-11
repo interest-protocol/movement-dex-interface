@@ -13,7 +13,7 @@ export interface SwapData {
   coinOut: Coin;
 }
 
-export interface CreateTokenData {
+export interface TokenData {
   symbol: string;
 }
 
@@ -33,11 +33,11 @@ export type Quest = {
     }
   | {
       kind: 'createToken';
-      data: CreateTokenData;
+      data: TokenData;
     }
   | {
       kind: 'createAndDeployToken';
-      data: CreateTokenData;
+      data: TokenData;
     }
   | {
       kind: 'createPool';
@@ -46,6 +46,10 @@ export type Quest = {
   | {
       kind: 'addLiquidity';
       data: PoolData;
+    }
+  | {
+      kind: 'wrapCoin';
+      data: TokenData;
     }
 );
 
