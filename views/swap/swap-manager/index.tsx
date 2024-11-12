@@ -76,7 +76,10 @@ const SwapManager: FC = () => {
             );
 
             if (amount === '0') setHasNoMarket(true);
-            else setValue('to.value', amount);
+            else {
+              setHasNoMarket(false);
+              setValue('to.value', amount);
+            }
           })
           .catch((e) => {
             console.warn(e);
@@ -97,7 +100,10 @@ const SwapManager: FC = () => {
             );
 
             if (amount === '0') setHasNoMarket(true);
-            else setValue('from.value', amount);
+            else {
+              setHasNoMarket(false);
+              setValue('from.value', amount);
+            }
           })
           .catch((e) => {
             console.warn(e);

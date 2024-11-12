@@ -38,6 +38,14 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
       from.decimals
     ) < Number(fromValue);
 
+  const hasAtLeastOneMove =
+    isAptos(from.type) &&
+    FixedPointMath.toNumber(
+      coinsMap[from.type]?.balance.minus(BigNumber(100000000)) ??
+        ZERO_BIG_NUMBER,
+      from.decimals
+    ) < Number(fromValue);
+
   useEffect(() => {
     setValue(
       'readyToSwap',
@@ -78,24 +86,17 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
       return;
     }
 
-    if (hasNoMarket) {
-      setValue('error', SwapMessagesEnum.noMarket);
-      return;
-    }
-
     if (isGreaterThanBalance) {
       setValue('error', SwapMessagesEnum.greaterThanBalance);
       return;
     }
 
-    if (
-      isAptos(from.type) &&
-      FixedPointMath.toNumber(
-        coinsMap[from.type]?.balance.minus(BigNumber(100000000)) ??
-          ZERO_BIG_NUMBER,
-        from.decimals
-      ) < Number(fromValue)
-    ) {
+    if (hasNoMarket) {
+      setValue('error', SwapMessagesEnum.noMarket);
+      return;
+    }
+
+    if (hasAtLeastOneMove) {
       setValue('error', SwapMessagesEnum.leastOneMove);
       return;
     }
