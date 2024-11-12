@@ -17,12 +17,16 @@ const SwapManager: FC = () => {
   const { control, setValue, getValues } = useFormContext<SwapForm>();
 
   const origin = useWatch({ control, name: 'origin' });
-  const [value] = useDebounce(useWatch({ control, name: 'from.value' }), 800);
+  const [fromValue] = useDebounce(
+    useWatch({ control, name: 'from.value' }),
+    800
+  );
+  const [toValue] = useDebounce(useWatch({ control, name: 'to.value' }), 800);
 
   useEffect(() => {
     setValue('error', null);
 
-    if (!Number(value)) {
+    if (!Number(fromValue)) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
       return;
     }
@@ -46,9 +50,13 @@ const SwapManager: FC = () => {
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
+      FixedPointMath.toBigNumber(
+        origin == 'from' ? fromValue : toValue,
+        origin == 'from' ? from.decimals : to.decimals
+      ).toFixed(0)
     );
 
+    console.log(origin, '>>>origin');
     origin === 'from'
       ? dex
           .quotePathAmountOut({
@@ -57,15 +65,23 @@ const SwapManager: FC = () => {
           })
           .then(({ amountOut }) => {
             setValue('path', path);
-            setValue(
-              'to.value',
-              String(
-                FixedPointMath.toNumber(
-                  BigNumber(amountOut!.toString()),
-                  to.decimals
-                )
+            const tmp = String(
+              FixedPointMath.toNumber(
+                BigNumber(amountOut!.toString()),
+                to.decimals
               )
             );
+            if (tmp == '0') setValue('error', 'No Market');
+            else
+              setValue(
+                'to.value',
+                String(
+                  FixedPointMath.toNumber(
+                    BigNumber(amountOut!.toString()),
+                    to.decimals
+                  )
+                )
+              );
           })
           .catch((e) => {
             console.warn(e);
@@ -90,7 +106,7 @@ const SwapManager: FC = () => {
           .catch((e) => {
             console.warn(e);
           });
-  }, [value]);
+  }, [fromValue, toValue]);
 
   return (
     <>
