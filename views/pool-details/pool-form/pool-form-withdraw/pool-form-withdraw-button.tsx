@@ -9,7 +9,6 @@ import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { useModal } from '@/hooks/use-modal';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 
 import { PoolFormButtonProps } from '../pool-form.types';
@@ -33,9 +32,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       const data = dex.removeLiquidity({
         lpFa: lpCoin.type,
         recipient: account.address,
-        amount: BigInt(
-          FixedPointMath.toBigNumber(lpCoin.value, lpCoin.decimals).toFixed(0)
-        ),
+        amount: BigInt(lpCoin.valueBN.toFixed(0)),
       });
 
       const tx = await client.transaction.build.simple({
@@ -105,9 +102,9 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       mt="xl"
       mx="auto"
       variant="filled"
-      width="fill-available"
-      onClick={onWithdraw}
       disabled={!!error}
+      onClick={onWithdraw}
+      width="fill-available"
     >
       <Typography variant="label" size="large" textAlign="center" width="100%">
         Confirm Withdraw

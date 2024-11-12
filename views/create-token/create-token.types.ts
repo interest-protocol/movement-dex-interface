@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { UseFormSetValue } from 'react-hook-form';
 
 export interface ICreateTokenPool {
@@ -5,6 +6,8 @@ export interface ICreateTokenPool {
   quoteValue: string;
   tokenValue: string;
   quoteUsdPrice: number;
+  quoteValueBN: BigNumber;
+  tokenValueBN: BigNumber;
 }
 
 export interface ICreateTokenForm {

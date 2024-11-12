@@ -8,7 +8,6 @@ import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
@@ -47,9 +46,7 @@ const SwapButton = () => {
 
       const { from, to, path } = getValues();
 
-      const amountIn = BigInt(
-        FixedPointMath.toBigNumber(from.value, from.decimals).toFixed(0)
-      );
+      const amountIn = BigInt(from.valueBN.toFixed(0));
 
       const data =
         from.standard === TokenStandard.COIN

@@ -73,12 +73,8 @@ const CreateTokenFormButton = () => {
             totalSupply: BigInt(
               FixedPointMath.toBigNumber(supply!, decimals).toString()
             ),
-            liquidityMemeAmount: BigInt(
-              FixedPointMath.toBigNumber(pool!.tokenValue!, decimals).toString()
-            ),
-            liquidityAptosAmount: BigInt(
-              FixedPointMath.toBigNumber(pool!.quoteValue!).toString()
-            ),
+            liquidityMemeAmount: BigInt(pool!.tokenValueBN!.toString()),
+            liquidityAptosAmount: BigInt(pool!.quoteValueBN!.toString()),
           })
         : dex.createFA({
             name,

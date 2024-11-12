@@ -8,7 +8,6 @@ import invariant from 'tiny-invariant';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 
 import { PoolFormButtonProps } from '../pool-form.types';
@@ -18,8 +17,8 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const dex = useInterestDex();
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useWallet();
   const { getValues, control, setValue } = form;
+  const { account, signTransaction } = useWallet();
 
   const handleDeposit = async () => {
     try {
@@ -31,12 +30,8 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
-        amountA: BigInt(
-          FixedPointMath.toBigNumber(token0.value, token0.decimals).toFixed(0)
-        ),
-        amountB: BigInt(
-          FixedPointMath.toBigNumber(token0.value, token0.decimals).toFixed(0)
-        ),
+        amountA: BigInt(token0.valueBN.toFixed(0)),
+        amountB: BigInt(token1.valueBN.toFixed(0)),
       });
 
       const tx = await client.transaction.build.simple({

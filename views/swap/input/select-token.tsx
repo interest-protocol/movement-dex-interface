@@ -12,6 +12,7 @@ import {
   AssetMetadata,
   TokenStandard,
 } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { SwapForm } from '../swap.types';
@@ -58,6 +59,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       ...metadata,
       value: '',
       usdPrice: null,
+      valueBN: ZERO_BIG_NUMBER,
     });
 
     fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
@@ -69,7 +71,10 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       .then((data) => setValue(`${label}.usdPrice`, data[0].price))
       .catch(() => null);
 
-    if (label === 'from') setValue('to.value', '');
+    if (label === 'from') {
+      setValue('to.value', '');
+      setValue('to.valueBN', ZERO_BIG_NUMBER);
+    }
 
     setValue('lock', false);
   };

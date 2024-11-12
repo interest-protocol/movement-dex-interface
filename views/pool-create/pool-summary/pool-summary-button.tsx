@@ -111,12 +111,8 @@ const PoolSummaryButton: FC = () => {
           faA: fas[0].type,
           faB: fas[1].type,
           recipient: account.address,
-          amountA: BigInt(
-            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals).toFixed(0)
-          ),
-          amountB: BigInt(
-            FixedPointMath.toBigNumber(fas[1].value, fas[1].decimals).toFixed(0)
-          ),
+          amountA: BigInt(fas[0].valueBN.toFixed(0)),
+          amountB: BigInt(fas[1].valueBN.toFixed(0)),
         });
       }
 

@@ -56,12 +56,11 @@ const SwapFormFieldSlider: FC = () => {
         initial={initial}
         disabled={!balance || balance.isZero?.() || swapping}
         onChange={(value: number) => {
+          const valueBN = balance.times(value / 100);
+          setValue('from.valueBN', valueBN);
           setValue(
             'from.value',
-            String(
-              FixedPointMath.toNumber(balance, coinsMap[type].decimals) *
-                (value / 100)
-            )
+            String(FixedPointMath.toNumber(valueBN, coinsMap[type].decimals))
           );
           setValue('origin', 'from');
 

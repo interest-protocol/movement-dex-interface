@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import { ISrPool } from '@/interface';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
@@ -35,6 +37,7 @@ export interface PoolCardListContentProps {
 export interface PoolTokenWithMetadata extends AssetMetadata {
   value: string;
   locked: boolean;
+  valueBN: BigNumber;
 }
 
 export type PoolToken = PoolTokenWithMetadata;
