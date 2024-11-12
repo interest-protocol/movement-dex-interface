@@ -35,8 +35,6 @@ const SwapButton = () => {
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
-  const symbolIn = useWatch({ control, name: 'from.symbol' });
-  const symbolOut = useWatch({ control, name: 'to.symbol' });
   const from = useWatch({ control: control, name: 'from' });
   const to = useWatch({ control: control, name: 'to' });
 
@@ -169,8 +167,7 @@ const SwapButton = () => {
     !notEnoughBalance &&
     !notEnoughMoveToGas &&
     !!Number(from.value) &&
-    !!Number(to.value) &&
-    !(symbolIn && symbolOut);
+    !!Number(to.value);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
