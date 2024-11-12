@@ -174,7 +174,6 @@ const SwapButton = () => {
     <Box display="flex" flexDirection="column" gap="l">
       {error && <SwapMessages />}
       <Button
-        py="m"
         variant="filled"
         onClick={onSwap}
         disabled={!disabled}

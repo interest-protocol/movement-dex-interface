@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useDebounce } from 'use-debounce';
 
@@ -16,20 +16,11 @@ const SwapManager: FC = () => {
   const dex = useInterestDex();
   const { control, setValue, getValues } = useFormContext<SwapForm>();
 
-  const [hasError, setHasError] = useState(false);
-  const [isZeroSwapAmount] = useState(false);
-
   const origin = useWatch({ control, name: 'origin' });
   const [value] = useDebounce(useWatch({ control, name: 'from.value' }), 800);
 
-  const isFetchingSwapAmount = useWatch({
-    control,
-    name: 'to.isFetchingSwap',
-  });
-
   useEffect(() => {
     setValue('error', null);
-    setHasError(false);
 
     if (!Number(value)) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
@@ -75,11 +66,9 @@ const SwapManager: FC = () => {
                 )
               )
             );
-            setHasError(false);
           })
           .catch((e) => {
             console.warn(e);
-            setHasError(true);
           })
       : dex
           .quotePathAmountIn({
@@ -97,22 +86,15 @@ const SwapManager: FC = () => {
                 )
               )
             );
-            setHasError(false);
           })
           .catch((e) => {
             console.warn(e);
-            setHasError(true);
           });
   }, [value]);
 
   return (
     <>
-      <SwapMessages
-        error={hasError}
-        control={control}
-        isZeroSwapAmount={isZeroSwapAmount}
-        isFetchingSwapAmount={!!isFetchingSwapAmount}
-      />
+      <SwapMessages control={control} />
     </>
   );
 };
