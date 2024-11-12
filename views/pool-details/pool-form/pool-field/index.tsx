@@ -51,7 +51,11 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
         fieldProps={{ bg: 'lowestContainer', p: 'xs' }}
         TokenIcon={
           <Box display="flex" alignItems="center" gap="s">
-            <TokenIcon withBg network={network} symbol={symbol} />
+            <TokenIcon
+              withBg
+              network={network}
+              symbol={isDeposit ? symbol : token.name}
+            />
             {symbol}
           </Box>
         }

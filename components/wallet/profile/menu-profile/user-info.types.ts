@@ -26,6 +26,7 @@ export interface ProfileTabItemProps {
 }
 
 export interface CoinCardProps {
+  isFA: boolean;
   token: AssetMetadata;
 }
 

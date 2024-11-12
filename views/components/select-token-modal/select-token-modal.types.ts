@@ -10,20 +10,20 @@ export interface TokenModalItemProps
 }
 
 export interface SelectTokenModalProps {
-  faucet?: boolean;
-  simple?: boolean;
+  isOutput?: boolean;
   closeModal: () => void;
   onSelect: (metadata: AssetMetadata) => void;
 }
 
-export interface SelectTokenFilterProps {
+export interface SelectTokenFilterProps
+  extends Pick<SelectTokenModalProps, 'isOutput'> {
   control: Control<SearchTokenForm>;
   setValue: UseFormSetValue<SearchTokenForm>;
 }
 
 export enum TokenOrigin {
-  FA,
   Coin,
+  FA,
   Wallet,
 }
 
@@ -33,7 +33,7 @@ export interface SearchTokenForm {
 }
 
 export interface SelectTokenModalBodyProps
-  extends Pick<SelectTokenModalProps, 'faucet'> {
+  extends Pick<SelectTokenModalProps, 'isOutput'> {
   control: Control<SearchTokenForm>;
   handleSelectToken: (metadata: AssetMetadata) => void;
 }

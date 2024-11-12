@@ -41,7 +41,7 @@ const CreateTokenForm: FC = () => {
                 label="Name"
                 fontFamily="Proto"
                 {...register('name')}
-                placeholder="Eg. Sui"
+                placeholder="Eg. Ruco"
                 nPlaceholder={{ opacity: 0.7 }}
                 status={errors.name && 'error'}
                 supportingText={errors.name?.message}
@@ -52,7 +52,7 @@ const CreateTokenForm: FC = () => {
               <TextField
                 label="Symbol"
                 fontFamily="Proto"
-                placeholder="Eg. SUI"
+                placeholder="Eg. Ruco"
                 {...register('symbol')}
                 nPlaceholder={{ opacity: 0.7 }}
                 status={errors.symbol && 'error'}
@@ -68,7 +68,7 @@ const CreateTokenForm: FC = () => {
               {...register('projectUrl')}
               nPlaceholder={{ opacity: 0.7 }}
               status={errors.projectUrl && 'error'}
-              placeholder="Eg. https://www.memez.gg"
+              placeholder="Eg. https://www.Ruco.com"
               supportingText={errors.projectUrl?.message}
               fieldProps={{ borderRadius: '2xs', height: '3rem' }}
             />

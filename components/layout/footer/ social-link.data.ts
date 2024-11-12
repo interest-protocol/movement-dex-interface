@@ -20,7 +20,7 @@ export const SOCIAL_LINK: ReadonlyArray<SocialLinkProps> = [
   },
   {
     title: 'X',
-    pathname: 'https://x.com/IPXSui',
+    pathname: 'https://x.com/InterestDEX',
     Icon: XSVG,
   },
 ];
