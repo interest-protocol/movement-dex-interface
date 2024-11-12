@@ -12,7 +12,10 @@ import { isAptos, ZERO_BIG_NUMBER } from '@/utils';
 import { SwapMessagesEnum } from '../swap.data';
 import { SwapMessagesProps } from './swap-manager.types';
 
-export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
+export const SwapMessages: FC<SwapMessagesProps> = ({
+  control,
+  hasNoMarket,
+}) => {
   const { setValue } = useFormContext();
   const { coinsMap } = useCoins();
   const to = useWatch({ control: control, name: 'to' });
@@ -72,6 +75,11 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
 
     if (from?.type == to?.type) {
       setValue('error', SwapMessagesEnum.sameCoin);
+      return;
+    }
+
+    if (hasNoMarket) {
+      setValue('error', SwapMessagesEnum.noMarket);
       return;
     }
 

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useDebounce } from 'use-debounce';
 
@@ -18,6 +18,8 @@ const SwapManager: FC = () => {
 
   const origin = useWatch({ control, name: 'origin' });
   const [value] = useDebounce(useWatch({ control, name: 'from.value' }), 800);
+
+  const [hasNoMarket, setHasNoMarket] = useState(false);
 
   useEffect(() => {
     setValue('error', null);
@@ -57,15 +59,16 @@ const SwapManager: FC = () => {
           })
           .then(({ amountOut }) => {
             setValue('path', path);
-            setValue(
-              'to.value',
-              String(
-                FixedPointMath.toNumber(
-                  BigNumber(amountOut!.toString()),
-                  to.decimals
-                )
+
+            const amount = String(
+              FixedPointMath.toNumber(
+                BigNumber(amountOut!.toString()),
+                to.decimals
               )
             );
+
+            if (amount === '0') setHasNoMarket(true);
+            else setValue('to.value', amount);
           })
           .catch((e) => {
             console.warn(e);
@@ -77,15 +80,16 @@ const SwapManager: FC = () => {
           })
           .then(({ amountIn }) => {
             setValue('path', path);
-            setValue(
-              'from.value',
-              String(
-                FixedPointMath.toNumber(
-                  BigNumber(amountIn!.toString()),
-                  from.decimals
-                )
+
+            const amount = String(
+              FixedPointMath.toNumber(
+                BigNumber(amountIn!.toString()),
+                from.decimals
               )
             );
+
+            if (amount === '0') setHasNoMarket(true);
+            else setValue('from.value', amount);
           })
           .catch((e) => {
             console.warn(e);
@@ -94,7 +98,7 @@ const SwapManager: FC = () => {
 
   return (
     <>
-      <SwapMessages control={control} />
+      <SwapMessages control={control} hasNoMarket={hasNoMarket} />
     </>
   );
 };
