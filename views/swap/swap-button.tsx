@@ -167,8 +167,10 @@ const SwapButton = () => {
     coinsExist &&
     !loading &&
     !notEnoughBalance &&
-    !notEnoughMoveToGas;
-  !!Number(from.value) && !!Number(to.value) && !(symbolIn && symbolOut);
+    !notEnoughMoveToGas &&
+    !!Number(from.value) &&
+    !!Number(to.value) &&
+    !(symbolIn && symbolOut);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">

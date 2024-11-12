@@ -21,7 +21,6 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
   const swapping = useWatch({ control: control, name: 'swapping' });
   const error = useWatch({ control: control, name: 'error' });
 
-  console.log(error, '>>>error');
   const isFetchingSwapAmount = useWatch({
     control,
     name: 'to.isFetchingSwap',
@@ -29,6 +28,12 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
 
   const fromValue = +(propOr('0', 'value', from) as string);
   const toValue = +(propOr('0', 'value', to) as string);
+
+  const isGreaterThanBalance =
+    FixedPointMath.toNumber(
+      coinsMap[from.type]?.balance ?? ZERO_BIG_NUMBER,
+      from.decimals
+    ) < Number(fromValue);
 
   useEffect(() => {
     setValue(
@@ -40,8 +45,6 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
         !(propOr('', 'type', from) === propOr('', 'type', to))
     );
   }, [error, fromValue, toValue, isFetchingSwapAmount, from, to]);
-
-  const amountNotEnough = !!fromValue && !isFetchingSwapAmount;
 
   useEffect(() => {
     if (isFetchingSwapAmount && !toastState) setToastState(true);
@@ -67,23 +70,13 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
 
     if (swapping) return;
 
-    /*if (error) {
-      setValue('error', 'Something went wrong...');
-      return;
-    }*/
-
-    if (from?.type === to?.type) {
-      setValue('error', "You can't swap the same coin");
+    if (from?.type == to?.type) {
+      setValue('error', SwapMessagesEnum.sameCoin);
       return;
     }
 
-    if (
-      FixedPointMath.toNumber(
-        coinsMap[from.type]?.balance ?? ZERO_BIG_NUMBER,
-        from.decimals
-      ) < Number(fromValue)
-    ) {
-      setValue('error', "Sell value can't be greater than balance");
+    if (isGreaterThanBalance) {
+      setValue('error', SwapMessagesEnum.greaterThanBalance);
       return;
     }
 
@@ -99,13 +92,8 @@ export const SwapMessages: FC<SwapMessagesProps> = ({ control }) => {
       return;
     }
 
-    /*if (amountNotEnough) {
-      setValue('error', "You don't have enough balance to swap");
-      return;
-    }*/
-
     setValue('error', null);
-  }, [error, amountNotEnough, from?.type, to?.type, fromValue]);
+  }, [error, from?.type, to?.type, fromValue]);
 
   return null;
 };
