@@ -104,10 +104,8 @@ const FindPoolButton: FC = () => {
           color="surface"
           height="1.5rem"
           variant="filled"
-          nHover={{
-            bg: 'outline',
-          }}
           onClick={openModal}
+          nHover={{ bg: 'outline' }}
         >
           <Box height="1.25rem" width="1.25rem">
             <SearchSVG maxHeight="1.25rem" maxWidth="1.25rem" width="100%" />

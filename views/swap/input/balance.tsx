@@ -65,7 +65,7 @@ const Balance: FC<InputProps> = ({ label }) => {
 
     setValue(
       `${label}.value`,
-      FixedPointMath.toNumber(value, decimals).toFixed(0)
+      FixedPointMath.toNumber(value, decimals).toString()
     );
     setValue(`${label}.valueBN`, value);
     setValue('origin', label);
@@ -91,7 +91,9 @@ const Balance: FC<InputProps> = ({ label }) => {
         />
       </Box>
       <Typography size="small" variant="body" fontSize="s">
-        {symbol ? `${balance} ${symbol}` : '0'}
+        {symbol
+          ? `${FixedPointMath.toNumber(balance, decimals).toString()} ${symbol}`
+          : '0'}
       </Typography>
       {loading && (
         <Box

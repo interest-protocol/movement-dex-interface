@@ -52,9 +52,9 @@ const Balance: FC<InputProps> = ({ index }) => {
 
     setValue(
       `tokens.${index}.value`,
-      String(FixedPointMath.toNumber(balance, decimals))
+      String(FixedPointMath.toNumber(value, decimals))
     );
-    setValue(`tokens.${index}.valueBN`, balance);
+    setValue(`tokens.${index}.valueBN`, value);
   };
 
   return (
@@ -71,7 +71,12 @@ const Balance: FC<InputProps> = ({ index }) => {
       className="loading-balance"
     >
       <Typography size="small" variant="body" fontSize="xs">
-        Balance: {!loading ? (symbol ? `${balance}` : '--') : ''}
+        Balance:{' '}
+        {!loading
+          ? symbol
+            ? `${FixedPointMath.toNumber(balance, decimals)}`
+            : '--'
+          : ''}
       </Typography>
       {loading && <ProgressIndicator variant="loading" size={12} />}
     </Button>
