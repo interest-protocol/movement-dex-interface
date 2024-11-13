@@ -69,16 +69,14 @@ const PoolSummaryButton: FC = () => {
           coinB: coins[1].type,
           recipient: account.address,
           amountA: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[0].value,
-              coins[0].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[0].value, coins[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
           amountB: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[1].value,
-              coins[1].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[1].value, coins[1].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
         });
       } else if (coins.length === 1) {
@@ -92,13 +90,14 @@ const PoolSummaryButton: FC = () => {
           faB: fas[0].type,
           recipient: account.address,
           amountA: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[0].value,
-              coins[0].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[0].value, coins[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
           amountB: BigInt(
-            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals).toFixed(0)
+            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
         });
       } else {
@@ -111,8 +110,8 @@ const PoolSummaryButton: FC = () => {
           faA: fas[0].type,
           faB: fas[1].type,
           recipient: account.address,
-          amountA: BigInt(fas[0].valueBN.toFixed(0)),
-          amountB: BigInt(fas[1].valueBN.toFixed(0)),
+          amountA: BigInt(fas[0].valueBN.decimalPlaces(0, 1).toString()),
+          amountB: BigInt(fas[1].valueBN.decimalPlaces(0, 1).toString()),
         });
       }
 

@@ -44,7 +44,8 @@ const SwapFormFieldSlider: FC = () => {
             coinsMap[type].decimals
           )
             .div(balance)
-            .toFixed(0)
+            .decimalPlaces(0, 1)
+            .toString()
         : 100
       : 0;
 

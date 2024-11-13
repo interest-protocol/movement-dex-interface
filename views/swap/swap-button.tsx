@@ -46,7 +46,7 @@ const SwapButton = () => {
 
       const { from, to, path } = getValues();
 
-      const amountIn = BigInt(from.valueBN.toFixed(0));
+      const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
       const data =
         from.standard === TokenStandard.COIN

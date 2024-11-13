@@ -32,7 +32,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       const data = dex.removeLiquidity({
         lpFa: lpCoin.type,
         recipient: account.address,
-        amount: BigInt(lpCoin.valueBN.toFixed(0)),
+        amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
       const tx = await client.transaction.build.simple({

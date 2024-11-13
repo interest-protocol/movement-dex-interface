@@ -38,7 +38,13 @@ const Balance: FC<NameProps> = ({ name }) => {
     }
 
     setValue(`${name}.valueBN`, value);
-    setValue(`${name}.value`, FixedPointMath.toNumber(value).toFixed(0));
+    setValue(
+      `${name}.value`,
+      FixedPointMath.toNumber(
+        value.decimalPlaces(0, 1),
+        token.decimals
+      ).toString()
+    );
   };
 
   return (

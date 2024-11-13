@@ -47,7 +47,9 @@ const SwapManager: FC = () => {
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
+      FixedPointMath.toBigNumber(value, from.decimals)
+        .decimalPlaces(0, 1)
+        .toString()
     );
 
     origin === 'from'

@@ -30,8 +30,8 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
-        amountA: BigInt(token0.valueBN.toFixed(0)),
-        amountB: BigInt(token1.valueBN.toFixed(0)),
+        amountA: BigInt(token0.valueBN.decimalPlaces(0, 1).toString()),
+        amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
       const tx = await client.transaction.build.simple({
