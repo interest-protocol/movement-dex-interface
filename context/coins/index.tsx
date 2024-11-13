@@ -9,29 +9,33 @@ import {
 
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 
-export const CoinsContext = createContext({});
+import { CoinsContextProps } from './coin-context.types';
+
+export const CoinsContext = createContext<CoinsContextProps>({
+  coinsWithoutLP: [],
+  hideLPTokensActive: false,
+  handleHideLPTokens: () => {},
+});
 
 export const CoinsProvider: FC<PropsWithChildren> = ({ children }) => {
   const { coins } = useCoins();
-  const [coinList, setCoinList] = useState(coins);
+  const [coinsWithoutLP, setCoinsWithoutLP] = useState(coins);
   const [hideLPTokensActive, setHideLPTokensActive] = useState(false);
-  console.log('All coins >>', coinList);
 
   const handleHideLPTokens = () => {
     setHideLPTokensActive(not);
     if (!hideLPTokensActive) {
-      const coinsWithoutLPTokens = coins.filter(
+      const filteredCoins = coins.filter(
         ({ name }) => !name.includes('sr-MOVE/')
       );
-      setCoinList(coinsWithoutLPTokens);
-    } else {
-      setCoinList(coins);
+      setCoinsWithoutLP(filteredCoins);
     }
+    return;
   };
 
   return (
     <CoinsContext.Provider
-      value={{ coinList, hideLPTokensActive, handleHideLPTokens }}
+      value={{ coinsWithoutLP, hideLPTokensActive, handleHideLPTokens }}
     >
       {children}
     </CoinsContext.Provider>

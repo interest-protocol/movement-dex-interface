@@ -7,6 +7,7 @@ import { values } from 'ramda';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 
+import { useCoinContext } from '@/context/coins';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
@@ -24,6 +25,8 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   handleSelectToken,
 }) => {
   const { coins, loading } = useCoins();
+  const { coinsWithoutLP, hideLPTokensActive } = useCoinContext();
+
   const validCoins = coins.filter(
     ({ standard }) => !isOutput || standard === TokenStandard.FA
   );
@@ -66,7 +69,7 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
     return (
       <ModalTokenBody
         loading={loading}
-        tokens={validCoins}
+        tokens={hideLPTokensActive ? coinsWithoutLP : validCoins}
         handleSelectToken={handleSelectToken}
       />
     );
