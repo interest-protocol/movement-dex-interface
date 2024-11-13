@@ -1,6 +1,6 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
@@ -18,7 +18,7 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
-  const { account, signTransaction } = useWallet();
+  const { account, signTransaction } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
@@ -39,7 +39,14 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         sender: account!.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signTransactionResponse = await signTransaction(tx);
+
+      invariant(
+        signTransactionResponse.status === 'Approved',
+        'Rejected by user'
+      );
+
+      const senderAuthenticator = signTransactionResponse.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,

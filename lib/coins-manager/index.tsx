@@ -4,6 +4,7 @@ import {
   FA_ADDRESSES,
   Network,
 } from '@interest-protocol/aptos-sr-amm';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
@@ -14,14 +15,13 @@ import { PriceResponse } from '@/interface';
 import { isAptos } from '@/utils';
 
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
-import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
 import { useCoins } from './coins-manager.hooks';
 import { Asset, TokenStandard } from './coins-manager.types';
 
 const CoinsManager: FC = () => {
   const id = useId();
   const client = useAptosClient();
-  const currentAccount = useCurrentAccount();
+  const { account: currentAccount } = useAptosWallet();
 
   const { setError, setLoading, setCoins, setMutate } = useCoins();
 
