@@ -86,6 +86,11 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
       return;
     }
 
+    if (hasAtLeastOneMove) {
+      setValue('error', SwapMessagesEnum.leastOneMove);
+      return;
+    }
+
     if (isGreaterThanBalance) {
       setValue('error', SwapMessagesEnum.greaterThanBalance);
       return;
@@ -93,11 +98,6 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
 
     if (hasNoMarket) {
       setValue('error', SwapMessagesEnum.noMarket);
-      return;
-    }
-
-    if (hasAtLeastOneMove) {
-      setValue('error', SwapMessagesEnum.leastOneMove);
       return;
     }
 
