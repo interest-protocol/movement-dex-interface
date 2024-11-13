@@ -1,11 +1,19 @@
-import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import {
+  Box,
+  Button,
+  ToggleButton,
+  Typography,
+} from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
 import { ArrowLeftSVG } from '@/components/svg';
+import { useCoinContext } from '@/context/coins';
 
 import { SettingMenuProps } from '../user-info.types';
 
 const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
+  const { handleHideLPTokens, hideLPTokensActive } = useCoinContext();
+
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
 
@@ -50,25 +58,49 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
       /> */}
       <Box
         py="m"
+        gap="s"
         width="100%"
         display="flex"
+        flexDirection="column"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-start"
       >
-        <Typography size="medium" variant="label">
-          Currency
-        </Typography>
         <Box
-          m={0}
-          p="0.5rem"
           display="flex"
-          borderRadius="xs"
+          justifyContent="space-between"
           alignItems="center"
-          justifyContent="flex-end"
+          width="100%"
         >
-          <Typography size="medium" variant="body" opacity="0.7">
-            USD
+          <Typography size="medium" variant="label">
+            Hide LP tokens
           </Typography>
+          <ToggleButton
+            name="Hide LP tokens"
+            defaultValue={hideLPTokensActive}
+            onClick={handleHideLPTokens}
+          />
+        </Box>
+        <Box
+          width="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography size="medium" variant="label">
+            Currency
+          </Typography>
+          <Box
+            m={0}
+            p="0.5rem"
+            display="flex"
+            borderRadius="xs"
+            alignItems="center"
+            justifyContent="flex-end"
+          >
+            <Typography size="medium" variant="body" opacity="0.7">
+              USD
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Box>

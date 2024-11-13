@@ -17,6 +17,8 @@ export type AssetMetadata = {
 };
 
 export interface Asset extends AssetMetadata {
+  toLowerCase(): unknown;
+  includes(arg0: string): unknown;
   usdPrice?: number;
   balance: BigNumber;
   usdPrice24Change?: number;
