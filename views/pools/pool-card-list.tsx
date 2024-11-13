@@ -51,7 +51,7 @@ const Pools: FC = () => {
           )
         ? {
             poolAddress: {
-              $in: POOL_DATA?.map(({ poolAddress }) => poolAddress),
+              $in: POOL_DATA.map(({ poolAddress }) => poolAddress),
             },
           }
         : {}
