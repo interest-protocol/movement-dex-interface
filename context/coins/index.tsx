@@ -13,25 +13,25 @@ import { CoinsContextProps } from './coin-context.types';
 
 export const CoinsContext = createContext<CoinsContextProps>({
   coinsWithoutLP: [],
-  hideLPTokensActive: false,
+  isLPTokensHiden: false,
   handleHideLPTokens: () => {},
 });
 
 export const CoinsProvider: FC<PropsWithChildren> = ({ children }) => {
   const { coins } = useCoins();
   const [coinsWithoutLP, setCoinsWithoutLP] = useState(coins);
-  const [hideLPTokensActive, setHideLPTokensActive] = useState(false);
+  const [isLPTokensHiden, setIsLPTokensHiden] = useState(false);
 
   const handleHideLPTokens = () => {
-    setHideLPTokensActive(not);
-    if (!hideLPTokensActive) {
+    setIsLPTokensHiden(not);
+    if (!isLPTokensHiden) {
       const filteredCoinsWithoudLP = coins.filter(
         ({ name }) => !name.includes('sr-MOVE/')
       );
       setCoinsWithoutLP(filteredCoinsWithoudLP);
-      localStorage.setItem(
-        'hideLPTokens',
-        `${hideLPTokensActive ? filteredCoinsWithoudLP : coins}`
+      window.localStorage.setItem(
+        'isLPTokensHiden',
+        isLPTokensHiden.toString()
       );
     }
     return;
@@ -39,7 +39,7 @@ export const CoinsProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <CoinsContext.Provider
-      value={{ coinsWithoutLP, hideLPTokensActive, handleHideLPTokens }}
+      value={{ coinsWithoutLP, isLPTokensHiden, handleHideLPTokens }}
     >
       {children}
     </CoinsContext.Provider>

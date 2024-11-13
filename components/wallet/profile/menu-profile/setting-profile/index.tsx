@@ -12,7 +12,7 @@ import { useCoinContext } from '@/context/coins';
 import { SettingMenuProps } from '../user-info.types';
 
 const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
-  const { handleHideLPTokens, hideLPTokensActive } = useCoinContext();
+  const { handleHideLPTokens, isLPTokensHiden } = useCoinContext();
 
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
@@ -76,7 +76,7 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
           </Typography>
           <ToggleButton
             name="Hide LP tokens"
-            defaultValue={hideLPTokensActive}
+            defaultValue={isLPTokensHiden}
             onClick={handleHideLPTokens}
           />
         </Box>

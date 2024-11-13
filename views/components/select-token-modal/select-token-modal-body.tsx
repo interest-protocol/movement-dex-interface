@@ -25,7 +25,7 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   handleSelectToken,
 }) => {
   const { coins, loading } = useCoins();
-  const { coinsWithoutLP, hideLPTokensActive } = useCoinContext();
+  const { coinsWithoutLP, isLPTokensHiden } = useCoinContext();
 
   const validCoins = coins.filter(
     ({ standard }) => !isOutput || standard === TokenStandard.FA
@@ -69,7 +69,7 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
     return (
       <ModalTokenBody
         loading={loading}
-        tokens={hideLPTokensActive ? coinsWithoutLP : validCoins}
+        tokens={isLPTokensHiden ? coinsWithoutLP : validCoins}
         handleSelectToken={handleSelectToken}
       />
     );
