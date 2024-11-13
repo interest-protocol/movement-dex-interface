@@ -1,16 +1,13 @@
-import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-
-import { PlusSVG } from '@/components/svg';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import { IPoolForm } from '../../pools.types';
 import SelectToken from './select-token';
 
 const SelectCoins: FC = () => {
   const { control } = useFormContext<IPoolForm>();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: 'tokenList',
     rules: { maxLength: 2 },
@@ -36,32 +33,6 @@ const SelectCoins: FC = () => {
             />
           ))}
         </Box>
-        {fields.length < 2 && (
-          <Button
-            mt="xl"
-            mx="auto"
-            variant="outline"
-            color="onSurface"
-            borderRadius="xs"
-            borderColor="outlineVariant"
-            onClick={() =>
-              append({
-                name: '',
-                type: '',
-                symbol: '',
-                value: '0',
-                decimals: 0,
-                locked: false,
-                standard: TokenStandard.FA,
-              })
-            }
-            PrefixIcon={
-              <PlusSVG maxWidth="1rem" maxHeight="1rem" width="100%" />
-            }
-          >
-            Add Coin
-          </Button>
-        )}
       </Box>
     </Box>
   );

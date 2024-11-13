@@ -15,10 +15,7 @@ const MaxButton: FC<NameProps> = ({ name }) => {
 
   const token = useWatch({ control, name });
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[token.type]?.balance ?? ZERO_BIG_NUMBER,
-    token.decimals
-  );
+  const balance = coinsMap[token.type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
     setValue(`lpCoin.locked`, false);
@@ -26,12 +23,24 @@ const MaxButton: FC<NameProps> = ({ name }) => {
     setValue(`tokenList.1.locked`, false);
     setValue(`${name}.locked`, true);
 
-    if (isAptos(token.type) && balance < 1) {
+    const value = balance.minus(
+      FixedPointMath.toBigNumber(isAptos(token.type) ? 1 : 0, token.decimals)
+    );
+
+    if (isAptos(token.type) && !value.isPositive()) {
       setValue(`${name}.value`, '0');
+      setValue(`${name}.valueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
-    setValue(`${name}.value`, String(balance - (isAptos(token.type) ? 1 : 0)));
+    setValue(`${name}.valueBN`, value);
+    setValue(
+      `${name}.value`,
+      FixedPointMath.toNumber(
+        value.decimalPlaces(0, 1),
+        token.decimals
+      ).toString()
+    );
   };
 
   return (

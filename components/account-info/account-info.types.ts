@@ -1,7 +1,7 @@
-import { AccountInfo } from '@aptos-labs/wallet-adapter-react';
+import type { useAptosWallet } from '@razorlabs/wallet-kit';
 
 export interface AvatarProps {
   isLarge?: boolean;
-  account?: AccountInfo;
   withNameOrAddress?: boolean;
+  account?: ReturnType<typeof useAptosWallet>['account'];
 }

@@ -1,6 +1,6 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 
 import { EXTERNAL_FAUCET_URL } from '@/constants';
@@ -10,7 +10,7 @@ import ConnectWalletButton from './connect-wallet';
 import Profile from './profile';
 
 const Wallet: FC = () => {
-  const { account } = useWallet();
+  const { account } = useAptosWallet();
 
   return (
     <Box gap="s" display="flex" alignItems="center" justifyContent="flex-end">

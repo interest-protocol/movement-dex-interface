@@ -7,6 +7,7 @@ import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { SwapForm } from '../swap.types';
 import { getPath } from '../swap.utils';
@@ -30,6 +31,7 @@ const SwapManager: FC = () => {
 
     if (!Number(fromValue)) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
+      setValue(`${origin === 'from' ? 'to' : 'from'}.valueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
@@ -52,13 +54,11 @@ const SwapManager: FC = () => {
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(
-        origin == 'from' ? fromValue : toValue,
-        origin == 'from' ? from.decimals : to.decimals
-      ).toFixed(0)
+      FixedPointMath.toBigNumber(fromValue, from.decimals)
+        .decimalPlaces(0, 1)
+        .toString()
     );
 
-    console.log(origin, '>>>origin');
     origin === 'from'
       ? dex
           .quotePathAmountOut({
@@ -68,17 +68,18 @@ const SwapManager: FC = () => {
           .then(({ amountOut }) => {
             setValue('path', path);
 
-            const amount = String(
+            const receivedAmountOut = String(
               FixedPointMath.toNumber(
                 BigNumber(amountOut!.toString()),
                 to.decimals
               )
             );
 
-            if (amount === '0') setHasNoMarket(true);
+            if (receivedAmountOut === '0') setHasNoMarket(true);
             else {
               setHasNoMarket(false);
-              setValue('to.value', amount);
+              setValue('to.value', receivedAmountOut);
+              setValue('to.valueBN', BigNumber(amountOut!.toString()));
             }
           })
           .catch((e) => {
@@ -92,17 +93,18 @@ const SwapManager: FC = () => {
           .then(({ amountIn }) => {
             setValue('path', path);
 
-            const amount = String(
+            const receivedAmountIn = String(
               FixedPointMath.toNumber(
                 BigNumber(amountIn!.toString()),
                 from.decimals
               )
             );
 
-            if (amount === '0') setHasNoMarket(true);
+            if (receivedAmountIn === '0') setHasNoMarket(true);
             else {
               setHasNoMarket(false);
-              setValue('from.value', amount);
+              setValue('from.value', receivedAmountIn);
+              setValue('from.valueBN', BigNumber(amountIn!.toString()));
             }
           })
           .catch((e) => {

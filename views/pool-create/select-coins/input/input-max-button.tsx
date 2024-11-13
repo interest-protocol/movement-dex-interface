@@ -17,21 +17,24 @@ const InputMaxButton: FC<InputProps> = ({ index }) => {
   const decimals = useWatch({ control, name: `tokens.${index}.decimals` });
   const symbol = useWatch({ control, name: `tokens.${index}.symbol` });
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[type]?.decimals ?? decimals
-  );
+  const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
-    if (isAptos(type) && balance < 1) {
+    const value = balance.minus(
+      FixedPointMath.toBigNumber(isAptos(type) ? 1 : 0)
+    );
+
+    if (isAptos(type) && !value.isPositive()) {
       setValue(`tokens.${index}.value`, '0');
+      setValue(`tokens.${index}.valueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
     setValue(
       `tokens.${index}.value`,
-      String(balance - (isAptos(type) ? 1 : 0))
+      String(FixedPointMath.toNumber(value, decimals))
     );
+    setValue(`tokens.${index}.valueBN`, value);
   };
 
   return (

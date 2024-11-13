@@ -2,6 +2,7 @@ import { Box } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString } from '@/utils';
 import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
 
@@ -14,7 +15,7 @@ import InputMaxButton from './input-max-button';
 import SelectToken from './select-token';
 
 const Input: FC<InputProps> = ({ index }) => {
-  const { register, setValue } = useFormContext<CreatePoolForm>();
+  const { register, getValues, setValue } = useFormContext<CreatePoolForm>();
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const handleSetMobile = useCallback(() => {
@@ -42,9 +43,14 @@ const Input: FC<InputProps> = ({ index }) => {
         Bottom={<FormInputDollar index={index} />}
         {...register(`tokens.${index}.value`, {
           onChange: (v: ChangeEvent<HTMLInputElement>) => {
+            const value = parseInputEventToNumberString(v);
+            setValue?.(`tokens.${index}.value`, value);
             setValue?.(
-              `tokens.${index}.value`,
-              parseInputEventToNumberString(v)
+              `tokens.${index}.valueBN`,
+              FixedPointMath.toBigNumber(
+                value,
+                getValues(`tokens.${index}.decimals`)
+              )
             );
           },
         })}

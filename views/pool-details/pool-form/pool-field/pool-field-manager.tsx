@@ -13,6 +13,9 @@ const PoolFieldManager: FC<NameProps> = ({ name }) => {
   const { control, setValue, getValues } = useFormContext<IPoolForm>();
 
   const amount = useWatch({ control, name: `${name}.value` });
+  const lpCoinDecimals = useWatch({ control, name: `lpCoin.decimals` });
+  const token0Decimals = useWatch({ control, name: `tokenList.0.decimals` });
+  const token1Decimals = useWatch({ control, name: `tokenList.1.decimals` });
 
   useEffect(() => {
     if (!pool) return;
@@ -33,9 +36,11 @@ const PoolFieldManager: FC<NameProps> = ({ name }) => {
     if (!getValues(`${name}.locked`)) return;
 
     if (name !== 'lpCoin') {
-      const first = 'tokenList.0' === name;
-      const reserveX = first ? reserve0 : reserve1;
-      const reserveY = first ? reserve1 : reserve0;
+      const isFirst = 'tokenList.0' === name;
+      const decimals = isFirst ? token1Decimals : token0Decimals;
+
+      const reserveX = isFirst ? reserve0 : reserve1;
+      const reserveY = isFirst ? reserve1 : reserve0;
 
       const amountX = Number(amount);
       const amountY = (amountX * reserveY) / reserveX;
@@ -45,8 +50,17 @@ const PoolFieldManager: FC<NameProps> = ({ name }) => {
 
       const liquidity = liquidityX > liquidityY ? liquidityY : liquidityX;
 
-      setValue(`tokenList.${!first ? '0' : '1'}.value`, String(amountY));
+      setValue(`tokenList.${!isFirst ? '0' : '1'}.value`, String(amountY));
+      setValue(
+        `tokenList.${!isFirst ? '0' : '1'}.valueBN`,
+        FixedPointMath.toBigNumber(String(amountY), decimals)
+      );
+
       setValue('lpCoin.value', String(liquidity));
+      setValue(
+        'lpCoin.valueBN',
+        FixedPointMath.toBigNumber(String(liquidity), lpCoinDecimals)
+      );
     } else {
       const lpAmount = Number(amount);
 
@@ -55,6 +69,14 @@ const PoolFieldManager: FC<NameProps> = ({ name }) => {
 
       setValue(`tokenList.0.value`, String(amount0));
       setValue(`tokenList.1.value`, String(amount1));
+      setValue(
+        `tokenList.0.valueBN`,
+        FixedPointMath.toBigNumber(String(amount0), token0Decimals)
+      );
+      setValue(
+        `tokenList.1.valueBN`,
+        FixedPointMath.toBigNumber(String(amount1), token1Decimals)
+      );
     }
   }, [amount]);
 

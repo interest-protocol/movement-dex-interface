@@ -81,6 +81,11 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
 
     if (swapping) return;
 
+    if (hasNoMarket) {
+      setValue('error', SwapMessagesEnum.noMarket);
+      return;
+    }
+
     if (from?.type == to?.type) {
       setValue('error', SwapMessagesEnum.sameCoin);
       return;
@@ -93,11 +98,6 @@ export const SwapMessages: FC<SwapMessagesProps> = ({
 
     if (isGreaterThanBalance) {
       setValue('error', SwapMessagesEnum.greaterThanBalance);
-      return;
-    }
-
-    if (hasNoMarket) {
-      setValue('error', SwapMessagesEnum.noMarket);
       return;
     }
 
