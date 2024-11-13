@@ -1,25 +1,27 @@
+import { GetFungibleAssetMetadataResponse } from '@aptos-labs/ts-sdk';
 import {
   COIN_TYPES,
-  COINS,
   FA_ADDRESSES,
   Network,
 } from '@interest-protocol/aptos-sr-amm';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
-import { getAddressCoinBalances, getFaPrimaryStore, isAptos } from '@/utils';
+import { PRICE_TYPE } from '@/constants/prices';
+import { PriceResponse } from '@/interface';
+import { isAptos } from '@/utils';
 
 import { useAptosClient } from '../aptos-provider/aptos-client/aptos-client.hooks';
-import { useCurrentAccount } from '../aptos-provider/wallet/wallet.hooks';
 import { useCoins } from './coins-manager.hooks';
-import { Asset } from './coins-manager.types';
+import { Asset, TokenStandard } from './coins-manager.types';
 
 const CoinsManager: FC = () => {
   const id = useId();
   const client = useAptosClient();
-  const currentAccount = useCurrentAccount();
+  const { account: currentAccount } = useAptosWallet();
 
   const { setError, setLoading, setCoins, setMutate } = useCoins();
 
@@ -36,75 +38,105 @@ const CoinsManager: FC = () => {
 
         if (!currentAccount?.address) return setCoins({});
 
-        const fasRaw = await Promise.all(
-          values(FA_ADDRESSES[Network.Porto]).map((address) =>
-            getFaPrimaryStore(
-              currentAccount.address,
-              address.toString(),
-              client
-            )
-          )
-        );
+        const coinsData = await client.getAccountCoinsData({
+          accountAddress: currentAccount.address,
+        });
 
-        const fas = fasRaw.reduce(
-          (acc, fa) => {
-            if (BigNumber(String(fa.balance)).isZero()) return acc;
+        const coinsMetadata: Record<
+          string,
+          GetFungibleAssetMetadataResponse[0]
+        > = {};
+
+        for (const item of coinsData) {
+          const metadata = await client.getFungibleAssetMetadataByAssetType({
+            assetType: item.asset_type!,
+          });
+
+          coinsMetadata[item.asset_type!] = metadata;
+        }
+        const coins: Record<string, Asset> = coinsData.reduce(
+          (acc, { asset_type, amount }) => {
+            if (!asset_type || !coinsMetadata[asset_type]) return acc;
+
+            const {
+              name,
+              symbol,
+              decimals,
+              token_standard,
+              icon_uri: iconUri,
+              project_uri: projectUri,
+            } = coinsMetadata[asset_type];
+
+            if (isAptos(asset_type)) {
+              const type = (
+                token_standard === TokenStandard.COIN
+                  ? COIN_TYPES[Network.Porto].APT
+                  : FA_ADDRESSES[Network.Porto].APT
+              ).toString();
+
+              return {
+                ...acc,
+                [type]: {
+                  type,
+                  name,
+                  symbol,
+                  decimals,
+                  balance: BigNumber(amount.toString()),
+                  standard: token_standard as TokenStandard,
+                  ...(!!projectUri && { projectUri }),
+                  ...(!!iconUri && { iconUri: iconUri }),
+                },
+              };
+            }
 
             return {
               ...acc,
-              [fa.fa.address.toString()]: {
-                metadata: {
-                  name: fa.fa.name,
-                  symbol: fa.fa.symbol,
-                  address: fa.fa.address,
-                  decimals: Number(fa.fa.decimals),
-                },
-                balance: BigNumber(fa.balance.toString()),
+              [asset_type]: {
+                name,
+                symbol,
+                decimals,
+                type: asset_type,
+                balance: BigNumber(amount.toString()),
+                standard:
+                  token_standard === 'v1'
+                    ? TokenStandard.COIN
+                    : TokenStandard.FA,
+                ...(!!projectUri && { projectUri }),
+                ...(!!iconUri && { iconUri: iconUri }),
               },
             };
           },
           {} as Record<string, Asset>
         );
 
-        const coinsRaw = await getAddressCoinBalances(
-          currentAccount.address,
-          client
+        const coinsPriceType = values(coins)
+          .filter(({ symbol }) => PRICE_TYPE[symbol])
+          .map(({ type, symbol }) => [type, PRICE_TYPE[symbol]]);
+
+        const prices: ReadonlyArray<PriceResponse> = await fetch(
+          'https://rates-api-production.up.railway.app/api/fetch-quote',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', accept: '*/*' },
+            body: JSON.stringify({
+              coins: coinsPriceType.map(([, type]) => type),
+            }),
+          }
+        ).then((response) => response.json());
+
+        const coinsWithPrice = coinsPriceType.reduce(
+          (acc, [coin], index) => ({
+            ...acc,
+            [coin]: {
+              ...coins[coin],
+              usdPrice: prices[index].price,
+              usdPrice24Change: prices[index].priceChange24HoursPercentage,
+            },
+          }),
+          coins
         );
 
-        const coins = coinsRaw.reduce(
-          (acc, { type, balance }) => {
-            if (
-              values(COIN_TYPES[Network.Porto]).some((coinType) =>
-                type.includes(coinType)
-              )
-            ) {
-              const coinType = values(COIN_TYPES[Network.Porto]).find(
-                (coinType) => type.includes(coinType)
-              )!;
-
-              if (isAptos(coinType))
-                return {
-                  ...acc,
-                  [type]: {
-                    metadata: COINS[Network.Porto].APT!,
-                    balance: BigNumber(balance.toString()),
-                  },
-                };
-
-              return {
-                ...acc,
-                [coinType]: {
-                  metadata: COINS[Network.Porto][coinType],
-                  balance: BigNumber(balance.toString()),
-                },
-              };
-            }
-            return acc;
-          },
-          {} as Record<string, Asset>
-        );
-
-        setCoins?.({ ...coins, ...fas } as Record<string, Asset>);
+        setCoins?.(coinsWithPrice);
       } catch (e) {
         setError((e as Error).message);
       } finally {
@@ -112,9 +144,9 @@ const CoinsManager: FC = () => {
       }
     },
     {
-      refreshInterval: 15000,
-      revalidateOnFocus: false,
+      refreshInterval: 30000,
       revalidateOnMount: true,
+      revalidateOnFocus: false,
       refreshWhenHidden: false,
     }
   );

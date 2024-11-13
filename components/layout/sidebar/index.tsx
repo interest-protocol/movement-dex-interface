@@ -4,9 +4,9 @@ import { useIsMounted, useReadLocalStorage } from 'usehooks-ts';
 
 import { LOCAL_STORAGE_VERSION } from '@/constants';
 
+import SidebarHeader from '../header/logo-wrapper';
 import SidebarMenuList from './menu-list';
 import SidebarCollapseButton from './sidebar-collapse-button';
-import SidebarHeader from './sidebar-logo';
 
 const itemVariants = {
   open: {
@@ -25,8 +25,6 @@ const Sidebar: FC = () => {
 
   const [isOpen, setTemporarilyOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isLocalCollapsed ?? false);
-
-  return null;
 
   return (
     <Motion
@@ -55,7 +53,7 @@ const Sidebar: FC = () => {
       }
     >
       <Box>
-        <SidebarHeader isCollapsed={!isOpen && isCollapsed} />
+        <SidebarHeader />
         <SidebarMenuList
           setIsCollapsed={setIsCollapsed}
           isCollapsed={!isOpen && isCollapsed}

@@ -20,15 +20,14 @@ import SelectTokenModalBody from './select-token-modal-body';
 import SelectTokenFilter from './select-token-modal-filter';
 
 const SelectTokenModal: FC<SelectTokenModalProps> = ({
-  faucet,
-  simple,
+  isOutput,
   onSelect,
   closeModal,
 }) => {
   const { control, register, setValue } = useForm<SearchTokenForm>({
     defaultValues: {
       search: '',
-      filter: simple ? TokenOrigin.Wallet : TokenOrigin.FA,
+      filter: isOutput ? TokenOrigin.FA : TokenOrigin.Coin,
     },
   });
 
@@ -78,7 +77,11 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
             Prefix={<SearchSVG maxWidth="1rem" maxHeight="1rem" width="100%" />}
           />
         </Box>
-        {!simple && <SelectTokenFilter control={control} setValue={setValue} />}
+        <SelectTokenFilter
+          control={control}
+          setValue={setValue}
+          isOutput={isOutput}
+        />
       </Box>
       <Box
         flex="1"
@@ -88,8 +91,8 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
         flexDirection="column"
       >
         <SelectTokenModalBody
-          faucet={faucet}
           control={control}
+          isOutput={isOutput}
           handleSelectToken={handleSelectToken}
         />
       </Box>

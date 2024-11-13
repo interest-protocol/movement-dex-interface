@@ -2,7 +2,6 @@ import { AccountAddress } from '@aptos-labs/ts-sdk';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 
 import { fasByPool } from '@/constants/pools';
-import { CoinMetadata, FAMetadata } from '@/interface';
 import { Quest } from '@/server/model/quest';
 
 import { SwapToken } from './swap.types';
@@ -27,16 +26,12 @@ export const logSwap = (
       kind: 'swap',
       data: {
         coinIn: {
-          id:
-            (from as CoinMetadata).type ??
-            (from as FAMetadata).address.toString(),
+          type: from.type,
           amount: from.value,
           symbol: from.symbol,
         },
         coinOut: {
-          id:
-            (from as CoinMetadata).type ??
-            (from as FAMetadata).address.toString(),
+          type: from.type,
           amount: to.value,
           symbol: to.symbol,
         },
@@ -51,7 +46,9 @@ const getFaOptions = (fa: AccountAddress) =>
     return acc;
   }, [] as ReadonlyArray<AccountAddress>);
 
-export const getPath = (faIn: AccountAddress, faOut: AccountAddress) => {
+export const getPath = (typeIn: string, typeOut: string) => {
+  const [faIn, faOut] = [typeIn, typeOut].map(AccountAddress.from);
+
   const faInOptions = getFaOptions(faIn);
 
   if (faInOptions.some((fa) => fa?.equals(faOut))) return [faIn, faOut];

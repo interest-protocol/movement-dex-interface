@@ -6,7 +6,8 @@ import { useDebounce } from 'use-debounce';
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { SwapForm } from '../swap.types';
 import { getPath } from '../swap.utils';
@@ -23,6 +24,7 @@ const SwapManager: FC = () => {
 
     if (!Number(value)) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
+      setValue(`${origin === 'from' ? 'to' : 'from'}.valueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
@@ -30,37 +32,71 @@ const SwapManager: FC = () => {
 
     const to = getValues('to');
     const from = getValues('from');
-    const tokenOut = isCoin(to) ? COIN_TYPE_TO_FA[to.type] : to.address;
-    const tokenIn = isCoin(from) ? COIN_TYPE_TO_FA[from.type] : from.address;
+
+    const tokenIn = (
+      from.standard === TokenStandard.COIN
+        ? COIN_TYPE_TO_FA[from.type]
+        : from.type
+    ).toString();
+    const tokenOut = (
+      to.standard === TokenStandard.COIN ? COIN_TYPE_TO_FA[to.type] : to.type
+    ).toString();
 
     const path = getPath(tokenIn, tokenOut).map((address) =>
       address.toString()
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
+      FixedPointMath.toBigNumber(value, from.decimals)
+        .decimalPlaces(0, 1)
+        .toString()
     );
 
-    dex[origin === 'from' ? 'quotePathAmountOut' : 'quotePathAmountIn']({
-      path,
-      amount,
-    })
-      .then(({ amountOut }) => {
-        setValue('path', path);
-        setValue(
-          'to.value',
-          String(
-            FixedPointMath.toNumber(
-              BigNumber(amountOut!.toString()),
-              to.decimals
-            )
-          )
-        );
-      })
-      .catch((e) => {
-        console.warn(e);
-        setValue('error', 'Failed to quote. Reduce the Swapping amount.');
-      });
+    origin === 'from'
+      ? dex
+          .quotePathAmountOut({
+            path,
+            amount,
+          })
+          .then(({ amountOut }) => {
+            setValue('path', path);
+            setValue('to.valueBN', BigNumber(amountOut!.toString()));
+            setValue(
+              'to.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountOut!.toString()),
+                  to.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          })
+      : dex
+          .quotePathAmountIn({
+            path,
+            amount,
+          })
+          .then(({ amountIn }) => {
+            setValue('path', path);
+            setValue('from.valueBN', BigNumber(amountIn!.toString()));
+            setValue(
+              'from.value',
+              String(
+                FixedPointMath.toNumber(
+                  BigNumber(amountIn!.toString()),
+                  from.decimals
+                )
+              )
+            );
+          })
+          .catch((e) => {
+            console.warn(e);
+            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
+          });
   }, [value]);
 
   return null;

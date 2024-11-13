@@ -11,6 +11,7 @@ import { TokenModalItemProps } from './select-token-modal.types';
 const TokenModalItem: FC<TokenModalItemProps> = ({
   isFA,
   symbol,
+  iconUri,
   onClick,
   selected,
 }) => {
@@ -49,8 +50,9 @@ const TokenModalItem: FC<TokenModalItemProps> = ({
       <Box display="flex" alignItems="center" gap="xs">
         <TokenIcon
           withBg
+          url={iconUri}
           size="1.3rem"
-          rounded={isFA}
+          rounded={!isFA}
           symbol={symbol}
           network={network}
         />

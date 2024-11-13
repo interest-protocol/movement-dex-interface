@@ -1,12 +1,22 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 import invariant from 'tiny-invariant';
 
-export const getAptosClient = (network: string, rpc?: string) => {
-  const configParams = rpc
-    ? { fullnode: rpc }
-    : Object.values(Network).includes(network as Network)
-      ? { network: network as Network }
-      : null;
+import { NetworkConfig } from '../aptos-provider.types';
+
+export const getAptosClient = ({
+  network,
+  faucet,
+  rpc,
+  indexer,
+}: NetworkConfig) => {
+  const configParams = {
+    faucet,
+    indexer,
+    fullnode: rpc,
+    ...(Object.values(Network).includes(network as Network) && {
+      network: network as Network,
+    }),
+  };
 
   invariant(
     configParams,

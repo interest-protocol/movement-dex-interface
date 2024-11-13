@@ -3,10 +3,20 @@ import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 import { v4 } from 'uuid';
 
-import { SelectTokenFilterProps } from './select-token-modal.types';
+import {
+  SelectTokenFilterProps,
+  TokenOrigin,
+} from './select-token-modal.types';
+
+const ORIGIN_TITLE = {
+  [TokenOrigin.Coin]: 'Coin',
+  [TokenOrigin.FA]: 'FA',
+  [TokenOrigin.Wallet]: 'Wallet',
+};
 
 const SelectTokenFilter: FC<SelectTokenFilterProps> = ({
   control,
+  isOutput,
   setValue,
 }) => {
   const filterSelected = useWatch({ control, name: 'filter' });
@@ -17,18 +27,21 @@ const SelectTokenFilter: FC<SelectTokenFilterProps> = ({
       gap="s"
       display="grid"
       flexWrap="wrap"
-      gridTemplateColumns="1fr 1fr 1fr"
+      gridTemplateColumns={isOutput ? '1fr 1fr' : '1fr 1fr 1fr'}
     >
-      {['FA', 'Coin', 'Wallet'].map((item, index) => (
+      {(isOutput
+        ? [TokenOrigin.FA, TokenOrigin.Wallet]
+        : [TokenOrigin.Coin, TokenOrigin.FA, TokenOrigin.Wallet]
+      ).map((item) => (
         <Box
           key={v4()}
           cursor="pointer"
-          onClick={() => setValue('filter', index)}
+          onClick={() => setValue('filter', item)}
         >
           <Typography variant="body" size="medium" textAlign="center" py="m">
-            {item}
+            {ORIGIN_TITLE[item]}
           </Typography>
-          {filterSelected === index && (
+          {filterSelected === item && (
             <Motion layout borderBottom="2px solid" borderColor="primary" />
           )}
         </Box>

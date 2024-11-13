@@ -5,11 +5,15 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ChevronDownSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { PRICE_TYPE } from '@/constants/prices';
 import { useModal } from '@/hooks/use-modal';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
-import { isCoin } from '@/lib/coins-manager/coins-manager.utils';
+import {
+  AssetMetadata,
+  TokenStandard,
+} from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { SwapForm } from '../swap.types';
@@ -43,7 +47,17 @@ const SelectToken: FC<InputProps> = ({ label }) => {
 
   const onSelect = async (metadata: AssetMetadata) => {
     if (
-      isCoin(metadata) === isCoin(opposite) &&
+      (metadata.standard == TokenStandard.FA
+        ? metadata.type
+        : COIN_TYPE_TO_FA[metadata.type].toString()) ==
+      (opposite.standard == TokenStandard.FA
+        ? opposite.type
+        : COIN_TYPE_TO_FA[opposite.type].toString())
+    )
+      return;
+
+    if (
+      metadata.standard === opposite.standard &&
       metadata.symbol === opposite.symbol
     ) {
       setValue(label === 'to' ? 'from' : 'to', {
@@ -56,6 +70,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       ...metadata,
       value: '',
       usdPrice: null,
+      valueBN: ZERO_BIG_NUMBER,
     });
 
     fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
@@ -67,7 +82,10 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       .then((data) => setValue(`${label}.usdPrice`, data[0].price))
       .catch(() => null);
 
-    if (label === 'from') setValue('to.value', '');
+    if (label === 'from') {
+      setValue('to.value', '');
+      setValue('to.valueBN', ZERO_BIG_NUMBER);
+    }
 
     setValue('lock', false);
   };
@@ -80,7 +98,11 @@ const SelectToken: FC<InputProps> = ({ label }) => {
         initial={{ scale: 0.85 }}
         transition={{ duration: 0.3 }}
       >
-        <SelectTokenModal closeModal={handleClose} onSelect={onSelect} />
+        <SelectTokenModal
+          onSelect={onSelect}
+          closeModal={handleClose}
+          isOutput={label === 'to'}
+        />
       </Motion>,
       {
         isOpen: true,
@@ -110,9 +132,9 @@ const SelectToken: FC<InputProps> = ({ label }) => {
           <TokenIcon
             withBg
             size="1.1rem"
+            network={network}
             symbol={currentSymbol}
-            network={network as Network}
-            rounded={!isCoin(currentToken)}
+            rounded={currentToken.standard === TokenStandard.COIN}
           />
         ),
       })}

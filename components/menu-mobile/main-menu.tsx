@@ -4,7 +4,6 @@ import { FC } from 'react';
 import MenuButton from '../wallet/menu-button';
 import { MainMenuMobileProps } from './menu.types';
 import MobileMenuList from './menu-list';
-import MenuSettingsList from './menu-settings';
 
 const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
   <Box
@@ -18,7 +17,7 @@ const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
   >
     <Box zIndex="2" gridColumn="1/-1">
       <Box
-        display={['flex', 'flex', 'flex', 'none']}
+        display={['flex', 'flex', 'flex', 'flex', 'none']}
         flexDirection="row-reverse"
         pb="l"
         color="onSurface"
@@ -29,7 +28,6 @@ const MainMenu: FC<MainMenuMobileProps> = ({ closeMenu }) => (
         Menu
       </Typography>
       <MobileMenuList />
-      <MenuSettingsList />
     </Box>
   </Box>
 );

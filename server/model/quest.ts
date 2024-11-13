@@ -3,7 +3,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 const modelName = 'MovementQuestPorto';
 
 interface Coin {
-  id: string;
+  type: string;
   symbol: string;
   amount: string;
 }
@@ -13,14 +13,45 @@ export interface SwapData {
   coinOut: Coin;
 }
 
+export interface TokenData {
+  symbol: string;
+}
+
+export interface PoolData {
+  coinA: Coin;
+  coinB: Coin;
+}
+
 export type Quest = {
   address: string;
   txDigest: string;
   timestamp: number;
-} & {
-  kind: 'swap';
-  data: SwapData;
-};
+} & (
+  | {
+      kind: 'swap';
+      data: SwapData;
+    }
+  | {
+      kind: 'createToken';
+      data: TokenData;
+    }
+  | {
+      kind: 'createAndDeployToken';
+      data: TokenData;
+    }
+  | {
+      kind: 'createPool';
+      data: PoolData;
+    }
+  | {
+      kind: 'addLiquidity';
+      data: PoolData;
+    }
+  | {
+      kind: 'wrapCoin';
+      data: TokenData;
+    }
+);
 
 export type QuestDocument = Document & Quest;
 

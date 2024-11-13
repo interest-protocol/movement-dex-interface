@@ -20,13 +20,10 @@ const Balance: FC<InputProps> = ({ label }) => {
   const { control, setValue, getValues } = useFormContext<SwapForm>();
 
   const type = useWatch({ control, name: `${label}.type` });
-  const address = useWatch({ control, name: `${label}.address` });
-  const decimals = useWatch({ control, name: `${label}.decimals` });
   const symbol = useWatch({ control, name: `${label}.symbol` });
+  const decimals = useWatch({ control, name: `${label}.decimals` });
 
-  const id = type ?? address?.toString();
-
-  if (!id)
+  if (!type)
     return (
       <Box
         p="2xs"
@@ -49,14 +46,16 @@ const Balance: FC<InputProps> = ({ label }) => {
       </Box>
     );
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[id]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[id]?.metadata.decimals ?? decimals
-  );
+  const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
-    if (isAptos(id) && balance < 1 && label === 'from') {
+    const value = balance.minus(
+      FixedPointMath.toBigNumber(isAptos(type) ? 1 : 0)
+    );
+
+    if (isAptos(type) && !value.isPositive()) {
       setValue('from.value', '0');
+      setValue('from.valueBN', ZERO_BIG_NUMBER);
       return;
     }
 
@@ -64,7 +63,11 @@ const Balance: FC<InputProps> = ({ label }) => {
 
     setValue('updateSlider', {});
 
-    setValue(`${label}.value`, String(balance - (isAptos(id) ? 1 : 0)));
+    setValue(
+      `${label}.value`,
+      FixedPointMath.toNumber(value, decimals).toString()
+    );
+    setValue(`${label}.valueBN`, value);
     setValue('origin', label);
   };
 
@@ -88,7 +91,9 @@ const Balance: FC<InputProps> = ({ label }) => {
         />
       </Box>
       <Typography size="small" variant="body" fontSize="s">
-        {symbol ? `${balance} ${symbol}` : '0'}
+        {symbol
+          ? `${FixedPointMath.toNumber(balance, decimals).toString()} ${symbol}`
+          : '0'}
       </Typography>
       {loading && (
         <Box

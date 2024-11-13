@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 
 import { SVGProps } from '@/components/svg/svg.types';
@@ -9,6 +10,7 @@ export interface ISwapSettings {
 
 export type SwapToken = AssetMetadata & {
   value: string;
+  valueBN: BigNumber;
   usdPrice: number | null;
   isFetchingSwap?: boolean;
 };
@@ -35,6 +37,7 @@ export interface SwapForm {
   error?: string | null;
   updateSlider: object;
   explorerLink: string;
+  executionTime: string;
   loading: boolean;
   focus: boolean;
   swapping: boolean;

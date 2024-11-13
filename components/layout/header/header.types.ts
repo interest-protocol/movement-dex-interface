@@ -3,3 +3,8 @@ export enum DeviceMenuType {
   Desktop = 'desktop',
   Both = 'both',
 }
+
+export interface MenuItemsProps {
+  name: string;
+  path: string;
+}

@@ -8,6 +8,7 @@ import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
+import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import FetchingToken from './fetching-token';
 import ModalTokenBody from './modal-token-body';
@@ -19,9 +20,13 @@ import {
 
 const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   control,
+  isOutput,
   handleSelectToken,
 }) => {
   const { coins, loading } = useCoins();
+  const validCoins = coins.filter(
+    ({ standard }) => !isOutput || standard === TokenStandard.FA
+  );
 
   const filterSelected = useWatch({ control, name: 'filter' });
 
@@ -30,7 +35,10 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
       <ModalTokenBody
         loading={false}
         handleSelectToken={handleSelectToken}
-        tokens={values(COINS[Network.Porto])}
+        tokens={values(COINS[Network.Porto]).map((token) => ({
+          ...token,
+          standard: TokenStandard.COIN,
+        }))}
       />
     );
 
@@ -39,20 +47,27 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
       <ModalTokenBody
         loading={false}
         handleSelectToken={handleSelectToken}
-        tokens={values(FUNGIBLE_ASSETS[Network.Porto])}
+        tokens={values(FUNGIBLE_ASSETS[Network.Porto]).map(
+          ({ address, ...token }) => ({
+            ...token,
+            type: address.toString(),
+            standard: TokenStandard.FA,
+          })
+        )}
       />
     );
 
-  if (!coins.length && loading) return <FetchingToken />;
+  if (!validCoins.length && loading) return <FetchingToken />;
 
-  const noWalletToShow = filterSelected == TokenOrigin.Wallet && !coins?.length;
+  const noWalletToShow =
+    filterSelected == TokenOrigin.Wallet && !validCoins?.length;
 
   if (filterSelected === TokenOrigin.Wallet && !noWalletToShow)
     return (
       <ModalTokenBody
         loading={loading}
+        tokens={validCoins}
         handleSelectToken={handleSelectToken}
-        tokens={coins.map(({ metadata }) => metadata)}
       />
     );
 

@@ -21,9 +21,9 @@ export const AptosClientProvider: FC<
   const clients = useMemo<Record<string, AptosClientContext>>(
     () =>
       networks.reduce(
-        (acc, { network, rpc }) => ({
+        (acc, item) => ({
           ...acc,
-          [network]: getAptosClient(network, rpc),
+          [item.network]: getAptosClient(item),
         }),
         {}
       ),

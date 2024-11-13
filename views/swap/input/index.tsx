@@ -2,6 +2,7 @@ import { Box, TextField } from '@interest-protocol/ui-kit';
 import { ChangeEvent, FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString } from '@/utils';
 
 import { SwapForm } from '../swap.types';
@@ -12,7 +13,7 @@ import { InputProps } from './input.types';
 import SelectToken from './select-token';
 
 const Input: FC<InputProps> = ({ label }) => {
-  const { register, setValue, control } = useFormContext<SwapForm>();
+  const { register, setValue, getValues, control } = useFormContext<SwapForm>();
 
   useWatch({ control, name: 'focus' });
 
@@ -53,6 +54,13 @@ const Input: FC<InputProps> = ({ label }) => {
                   const value = parseInputEventToNumberString(v);
                   setValue('lock', false);
                   setValue?.(`${label}.value`, value);
+                  setValue?.(
+                    `${label}.valueBN`,
+                    FixedPointMath.toBigNumber(
+                      value,
+                      getValues(`${label}.decimals`)
+                    )
+                  );
                 },
               })}
             />

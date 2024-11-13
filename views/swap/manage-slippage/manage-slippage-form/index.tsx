@@ -28,7 +28,7 @@ const ManageSlippageForm: FC<ManageSlippageFormProps> = ({
     setValue('settings.slippage', formTmpSettings.getValues('slippage'));
 
     localStorage.setItem(
-      `${LOCAL_STORAGE_VERSION}-movement-settings`,
+      `${LOCAL_STORAGE_VERSION}-movement-dex-settings`,
       JSON.stringify({ slippage: formTmpSettings.getValues('slippage') })
     );
 
@@ -36,13 +36,13 @@ const ManageSlippageForm: FC<ManageSlippageFormProps> = ({
   };
 
   return (
-    <Box gap="l" py="2xl" px="2xl" display="flex" flexDirection="column">
+    <Box gap="l" p="m" pt="unset" display="flex" flexDirection="column">
       <Box>
         <Typography variant="body" size="small" mb="0.5rem">
           Slippage Tolerance
         </Typography>
         <Box
-          gap="xs"
+          gap="s"
           flexDirection="column"
           gridTemplateColumns="4fr repeat(3, auto)"
           display={['flex', 'flex', 'flex', 'grid']}

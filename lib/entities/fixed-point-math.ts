@@ -44,7 +44,7 @@ export class FixedPointMath {
 
   public static toBigNumber(
     value: number | string,
-    decimals = 9,
+    decimals = 8,
     significant = 6
   ): BigNumber {
     if (value == null || isNaN(+value)) return ZERO_BIG_NUMBER;
@@ -67,7 +67,7 @@ export class FixedPointMath {
 
   public static toNumber(
     value: BigNumber,
-    decimals = 9,
+    decimals = 8,
     significantRounding = 4,
     significant = 6
   ): number {
@@ -81,7 +81,7 @@ export class FixedPointMath {
     return !decimals ? Math.floor(result) : result;
   }
 
-  public toNumber(decimals = 9, rounding = 4, significant = 6): number {
+  public toNumber(decimals = 8, rounding = 4, significant = 6): number {
     return FixedPointMath.toNumber(
       this._value,
       decimals,
