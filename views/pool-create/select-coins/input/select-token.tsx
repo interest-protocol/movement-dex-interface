@@ -12,6 +12,7 @@ import {
   AssetMetadata,
   TokenStandard,
 } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { CreatePoolForm } from '../../pool-create.types';
@@ -38,6 +39,7 @@ const SelectToken: FC<InputProps> = ({ index, isMobile }) => {
       ...metadata,
       value: '',
       usdPrice: null,
+      valueBN: ZERO_BIG_NUMBER,
     });
 
     fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
