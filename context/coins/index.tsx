@@ -25,10 +25,14 @@ export const CoinsProvider: FC<PropsWithChildren> = ({ children }) => {
   const handleHideLPTokens = () => {
     setHideLPTokensActive(not);
     if (!hideLPTokensActive) {
-      const filteredCoins = coins.filter(
+      const filteredCoinsWithoudLP = coins.filter(
         ({ name }) => !name.includes('sr-MOVE/')
       );
-      setCoinsWithoutLP(filteredCoins);
+      setCoinsWithoutLP(filteredCoinsWithoudLP);
+      localStorage.setItem(
+        'hideLPTokens',
+        `${hideLPTokensActive ? filteredCoinsWithoudLP : coins}`
+      );
     }
     return;
   };
