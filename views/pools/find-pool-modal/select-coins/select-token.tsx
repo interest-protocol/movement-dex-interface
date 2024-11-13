@@ -10,6 +10,7 @@ import {
   AssetMetadata,
   TokenStandard,
 } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
 import { IPoolForm } from '../../pools.types';
@@ -45,6 +46,7 @@ const SelectToken: FC<SelectTokenProps> = ({
       ...metadata,
       value: '',
       locked: false,
+      valueBN: ZERO_BIG_NUMBER,
     });
   };
 

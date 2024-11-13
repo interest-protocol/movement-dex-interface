@@ -46,14 +46,16 @@ const Balance: FC<InputProps> = ({ label }) => {
       </Box>
     );
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER,
-    coinsMap[type]?.decimals ?? decimals
-  );
+  const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
-    if (isAptos(type) && balance < 1 && label === 'from') {
+    const value = balance.minus(
+      FixedPointMath.toBigNumber(isAptos(type) ? 1 : 0)
+    );
+
+    if (isAptos(type) && !value.isPositive()) {
       setValue('from.value', '0');
+      setValue('from.valueBN', ZERO_BIG_NUMBER);
       return;
     }
 
@@ -61,7 +63,11 @@ const Balance: FC<InputProps> = ({ label }) => {
 
     setValue('updateSlider', {});
 
-    setValue(`${label}.value`, String(balance - (isAptos(type) ? 1 : 0)));
+    setValue(
+      `${label}.value`,
+      FixedPointMath.toNumber(value, decimals).toString()
+    );
+    setValue(`${label}.valueBN`, value);
     setValue('origin', label);
   };
 
@@ -85,7 +91,9 @@ const Balance: FC<InputProps> = ({ label }) => {
         />
       </Box>
       <Typography size="small" variant="body" fontSize="s">
-        {symbol ? `${balance} ${symbol}` : '0'}
+        {symbol
+          ? `${FixedPointMath.toNumber(balance, decimals).toString()} ${symbol}`
+          : '0'}
       </Typography>
       {loading && (
         <Box

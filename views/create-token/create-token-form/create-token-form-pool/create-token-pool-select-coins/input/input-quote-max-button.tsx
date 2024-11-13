@@ -14,17 +14,19 @@ const InputQuoteMaxButton: FC = () => {
 
   const type = FA_ADDRESSES[Network.Porto].APT.toString();
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER
-  );
+  const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
-    if (balance < 1) {
+    const value = balance.minus(FixedPointMath.toBigNumber(1));
+
+    if (!value.isPositive()) {
       setValue('pool.quoteValue', '0');
+      setValue('pool.quoteValueBN', ZERO_BIG_NUMBER);
       return;
     }
 
-    setValue('pool.quoteValue', String(balance - 1));
+    setValue('pool.quoteValueBN', value);
+    setValue('pool.quoteValue', String(FixedPointMath.toNumber(value)));
   };
 
   return (

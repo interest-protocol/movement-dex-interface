@@ -1,6 +1,6 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
@@ -9,7 +9,6 @@ import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { useModal } from '@/hooks/use-modal';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 
 import { PoolFormButtonProps } from '../pool-form.types';
@@ -18,9 +17,9 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
   const dex = useInterestDex();
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useWallet();
-  const { handleClose: closeModal } = useModal();
   const { getValues, control, setValue } = form;
+  const { handleClose: closeModal } = useModal();
+  const { account, signTransaction } = useAptosWallet();
 
   const error = useWatch({ control, name: 'error' });
 
@@ -33,9 +32,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       const data = dex.removeLiquidity({
         lpFa: lpCoin.type,
         recipient: account.address,
-        amount: BigInt(
-          FixedPointMath.toBigNumber(lpCoin.value, lpCoin.decimals).toFixed(0)
-        ),
+        amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
       const tx = await client.transaction.build.simple({
@@ -43,7 +40,14 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
         sender: account!.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signTransactionResponse = await signTransaction(tx);
+
+      invariant(
+        signTransactionResponse.status === 'Approved',
+        'Rejected by user'
+      );
+
+      const senderAuthenticator = signTransactionResponse.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,
@@ -105,9 +109,9 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       mt="xl"
       mx="auto"
       variant="filled"
-      width="fill-available"
-      onClick={onWithdraw}
       disabled={!!error}
+      onClick={onWithdraw}
+      width="fill-available"
     >
       <Typography variant="label" size="large" textAlign="center" width="100%">
         Confirm Withdraw

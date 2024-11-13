@@ -7,6 +7,7 @@ import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { SwapForm } from '../swap.types';
 import { getPath } from '../swap.utils';
@@ -23,6 +24,7 @@ const SwapManager: FC = () => {
 
     if (!Number(value)) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
+      setValue(`${origin === 'from' ? 'to' : 'from'}.valueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
@@ -45,7 +47,9 @@ const SwapManager: FC = () => {
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(value, from.decimals).toFixed(0)
+      FixedPointMath.toBigNumber(value, from.decimals)
+        .decimalPlaces(0, 1)
+        .toString()
     );
 
     origin === 'from'
@@ -56,6 +60,7 @@ const SwapManager: FC = () => {
           })
           .then(({ amountOut }) => {
             setValue('path', path);
+            setValue('to.valueBN', BigNumber(amountOut!.toString()));
             setValue(
               'to.value',
               String(
@@ -77,6 +82,7 @@ const SwapManager: FC = () => {
           })
           .then(({ amountIn }) => {
             setValue('path', path);
+            setValue('from.valueBN', BigNumber(amountIn!.toString()));
             setValue(
               'from.value',
               String(

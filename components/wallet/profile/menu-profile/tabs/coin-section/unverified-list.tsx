@@ -10,11 +10,12 @@ import { v4 } from 'uuid';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
+import { CoinCardProps } from '../../user-info.types';
 import NoCoin from '../no-coin';
 import CoinCard from './coin-card';
 import Collapse from './coin-card/collapse';
 
-const UnverifiedCoinList: FC<{ isFA: boolean }> = ({ isFA }) => {
+const UnverifiedCoinList: FC<Pick<CoinCardProps, 'isFA'>> = ({ isFA }) => {
   const { coins } = useCoins();
 
   const unverifiedCoins = coins.filter(
@@ -30,7 +31,9 @@ const UnverifiedCoinList: FC<{ isFA: boolean }> = ({ isFA }) => {
   return (
     <Collapse title={`${unverifiedCoins.length} unverified`}>
       {unverifiedCoins.length ? (
-        unverifiedCoins.map((coin) => <CoinCard key={v4()} token={coin} />)
+        unverifiedCoins.map((coin) => (
+          <CoinCard isFA={isFA} key={v4()} token={coin} />
+        ))
       ) : (
         <NoCoin />
       )}

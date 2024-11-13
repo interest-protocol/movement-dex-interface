@@ -2,12 +2,13 @@ import { Network } from '@interest-protocol/aptos-sr-amm';
 
 import dbConnect from '@/server';
 import metrics from '@/server/model/metrics';
-import QuestModel, { Quest, SwapData } from '@/server/model/quest';
+import QuestModel, { Quest, SwapData, TokenData } from '@/server/model/quest';
 import QuestProfileModel from '@/server/model/quest-profile';
 import { getExactDayTimestamp, getFirstWeekDayTimestamp } from '@/utils';
 
 type ProfileField =
   | 'swap'
+  | 'wrapCoin'
   | 'createPool'
   | 'createToken'
   | 'addLiquidity'
@@ -16,12 +17,14 @@ type ProfileField =
 type MetricField =
   | 'weeklySwaps'
   | 'weeklyDeposits'
+  | 'weeklyWrapCoins'
   | 'weeklyCreatePools'
   | 'weeklyCreateTokens'
   | 'weeklyCreateAndDeployTokens';
 
 type LastField =
   | 'lastSwapAt'
+  | 'lastWrapCoinAt'
   | 'lastCreatePoolAt'
   | 'lastCreateTokenAt'
   | 'lastAddLiquidityAt'
@@ -29,6 +32,7 @@ type LastField =
 
 const lastFieldMap: Record<ProfileField, LastField> = {
   swap: 'lastSwapAt',
+  wrapCoin: 'lastWrapCoinAt',
   createPool: 'lastCreatePoolAt',
   createToken: 'lastCreateTokenAt',
   addLiquidity: 'lastAddLiquidityAt',
@@ -37,6 +41,7 @@ const lastFieldMap: Record<ProfileField, LastField> = {
 
 const metricsFieldMap: Record<ProfileField, MetricField> = {
   swap: 'weeklySwaps',
+  wrapCoin: 'weeklyWrapCoins',
   addLiquidity: 'weeklyDeposits',
   createPool: 'weeklyCreatePools',
   createToken: 'weeklyCreateTokens',
@@ -101,10 +106,7 @@ export const findSwapBySymbols = async (
 ) => {
   await dbConnect();
 
-  const swapQuests = await QuestModel.find({
-    address,
-    kind: 'swap',
-  })
+  const swapQuests = await QuestModel.find({ address, kind: 'swap' })
     .lean()
     .exec();
 
@@ -113,6 +115,16 @@ export const findSwapBySymbols = async (
       (data as SwapData).coinIn.symbol === symbolIn &&
       (data as SwapData).coinOut.symbol === symbolOut
   );
+};
+
+export const findWrapBySymbol = async (symbol: string, address: string) => {
+  await dbConnect();
+
+  const wrapQuests = await QuestModel.find({ address, kind: 'wrap' })
+    .lean()
+    .exec();
+
+  return wrapQuests.find(({ data }) => (data as TokenData).symbol === symbol);
 };
 
 export const findMetrics = async (network: Network) => {
@@ -128,6 +140,7 @@ export const findMetrics = async (network: Network) => {
       weeklyUsers: {},
       weeklySwaps: {},
       weeklyDeposits: {},
+      weeklyWrapCoins: {},
       weeklyCreatePools: {},
       weeklyCreateTokens: {},
       weeklyCreateTokensAndDeploy: {},

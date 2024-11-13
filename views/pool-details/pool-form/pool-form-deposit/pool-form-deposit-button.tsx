@@ -1,6 +1,6 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
@@ -8,7 +8,6 @@ import invariant from 'tiny-invariant';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 
 import { PoolFormButtonProps } from '../pool-form.types';
@@ -18,8 +17,8 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const dex = useInterestDex();
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useWallet();
   const { getValues, control, setValue } = form;
+  const { account, signTransaction } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
@@ -31,12 +30,8 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
-        amountA: BigInt(
-          FixedPointMath.toBigNumber(token0.value, token0.decimals).toFixed(0)
-        ),
-        amountB: BigInt(
-          FixedPointMath.toBigNumber(token0.value, token0.decimals).toFixed(0)
-        ),
+        amountA: BigInt(token0.valueBN.decimalPlaces(0, 1).toString()),
+        amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
       const tx = await client.transaction.build.simple({
@@ -44,7 +39,14 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         sender: account!.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signTransactionResponse = await signTransaction(tx);
+
+      invariant(
+        signTransactionResponse.status === 'Approved',
+        'Rejected by user'
+      );
+
+      const senderAuthenticator = signTransactionResponse.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,

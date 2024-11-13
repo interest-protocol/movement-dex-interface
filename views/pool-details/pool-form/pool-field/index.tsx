@@ -4,6 +4,7 @@ import { ChangeEvent, FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { TokenIcon } from '@/components';
+import { FixedPointMath } from '@/lib';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { parseInputEventToNumberString } from '@/utils';
 import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
@@ -37,6 +38,10 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
     setValue(`${fieldName}.locked`, true);
 
     setValue(`${fieldName}.value`, amount);
+    setValue(
+      `${fieldName}.valueBN`,
+      FixedPointMath.toBigNumber(amount, token.decimals)
+    );
   };
 
   return (
@@ -51,7 +56,11 @@ const PoolField: FC<PoolFieldsProps> = ({ index, poolOptionView }) => {
         fieldProps={{ bg: 'lowestContainer', p: 'xs' }}
         TokenIcon={
           <Box display="flex" alignItems="center" gap="s">
-            <TokenIcon withBg network={network} symbol={symbol} />
+            <TokenIcon
+              withBg
+              network={network}
+              symbol={isDeposit ? symbol : token.name}
+            />
             {symbol}
           </Box>
         }

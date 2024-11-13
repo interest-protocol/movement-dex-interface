@@ -1,17 +1,16 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import invariant from 'tiny-invariant';
 
 import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
-import { useCurrentAccount } from '@/lib/aptos-provider/wallet/wallet.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
@@ -24,11 +23,10 @@ const SwapButton = () => {
   const dex = useInterestDex();
   const { mutate } = useCoins();
   const client = useAptosClient();
-  const account = useCurrentAccount();
   const network = useNetwork<Network>();
-  const { signTransaction } = useWallet();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
+  const { signTransaction, account } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
@@ -47,9 +45,7 @@ const SwapButton = () => {
 
       const { from, to, path } = getValues();
 
-      const amountIn = BigInt(
-        FixedPointMath.toBigNumber(from.value, from.decimals).toFixed(0)
-      );
+      const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
       const data =
         from.standard === TokenStandard.COIN
@@ -72,7 +68,14 @@ const SwapButton = () => {
         sender: account.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signTransactionResponse = await signTransaction(tx);
+
+      invariant(
+        signTransactionResponse.status === 'Approved',
+        'Rejected by user'
+      );
+
+      const senderAuthenticator = signTransactionResponse.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,

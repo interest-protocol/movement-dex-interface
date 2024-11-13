@@ -20,8 +20,11 @@ const PoolDetails: FC = () => {
 
   useEffect(() => {
     form.resetField('lpCoin.value');
+    form.resetField('lpCoin.valueBN');
     form.resetField('tokenList.0.value');
+    form.resetField('tokenList.0.valueBN');
     form.resetField('tokenList.1.value');
+    form.resetField('tokenList.1.valueBN');
   }, [poolOptionView]);
 
   const handleOptionTab = (index: PoolOption) => setPoolOptionView(index);

@@ -17,18 +17,19 @@ const QuoteBalance: FC = () => {
   const { setValue } = useFormContext<ICreateTokenForm>();
 
   const type = FA_ADDRESSES[Network.Porto].APT.toString();
-
-  const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance ?? ZERO_BIG_NUMBER
-  );
+  const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
-    if (balance < 1) {
-      setValue('pool.quoteValue', '0');
+    const value = balance.minus(FixedPointMath.toBigNumber(1));
+
+    if (!value.isPositive()) {
+      setValue(`pool.quoteValue`, '0');
+      setValue(`pool.quoteValueBN`, ZERO_BIG_NUMBER);
       return;
     }
 
-    setValue('pool.quoteValue', String(balance - 1));
+    setValue(`pool.quoteValue`, String(FixedPointMath.toNumber(value)));
+    setValue(`pool.quoteValueBN`, value);
   };
 
   return (
@@ -45,7 +46,7 @@ const QuoteBalance: FC = () => {
       className="loading-balance"
     >
       <Typography size="small" variant="body" fontSize="xs">
-        Balance: {balance ?? '--'}
+        Balance: {FixedPointMath.toNumber(balance) ?? '--'}
       </Typography>
       {loading && <ProgressIndicator variant="loading" size={12} />}
     </Button>

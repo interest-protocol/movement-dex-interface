@@ -2,9 +2,9 @@ import {
   InputGenerateTransactionPayloadData,
   MoveValue,
 } from '@aptos-labs/ts-sdk';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -27,7 +27,7 @@ const PoolSummaryButton: FC = () => {
   const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useWallet();
+  const { account, signTransaction } = useAptosWallet();
   const { getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
@@ -69,16 +69,14 @@ const PoolSummaryButton: FC = () => {
           coinB: coins[1].type,
           recipient: account.address,
           amountA: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[0].value,
-              coins[0].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[0].value, coins[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
           amountB: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[1].value,
-              coins[1].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[1].value, coins[1].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
         });
       } else if (coins.length === 1) {
@@ -92,13 +90,14 @@ const PoolSummaryButton: FC = () => {
           faB: fas[0].type,
           recipient: account.address,
           amountA: BigInt(
-            FixedPointMath.toBigNumber(
-              coins[0].value,
-              coins[0].decimals
-            ).toFixed(0)
+            FixedPointMath.toBigNumber(coins[0].value, coins[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
           amountB: BigInt(
-            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals).toFixed(0)
+            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals)
+              .decimalPlaces(0, 1)
+              .toString()
           ),
         });
       } else {
@@ -111,12 +110,8 @@ const PoolSummaryButton: FC = () => {
           faA: fas[0].type,
           faB: fas[1].type,
           recipient: account.address,
-          amountA: BigInt(
-            FixedPointMath.toBigNumber(fas[0].value, fas[0].decimals).toFixed(0)
-          ),
-          amountB: BigInt(
-            FixedPointMath.toBigNumber(fas[1].value, fas[1].decimals).toFixed(0)
-          ),
+          amountA: BigInt(fas[0].valueBN.decimalPlaces(0, 1).toString()),
+          amountB: BigInt(fas[1].valueBN.decimalPlaces(0, 1).toString()),
         });
       }
 
@@ -125,7 +120,14 @@ const PoolSummaryButton: FC = () => {
         sender: account.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signTransactionResponse = await signTransaction(tx);
+
+      invariant(
+        signTransactionResponse.status === 'Approved',
+        'Rejected by user'
+      );
+
+      const senderAuthenticator = signTransactionResponse.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,

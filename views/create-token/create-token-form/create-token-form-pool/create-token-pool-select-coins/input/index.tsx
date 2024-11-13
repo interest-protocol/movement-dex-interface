@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import useEventListener from '@/hooks/use-event-listener';
+import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString } from '@/utils';
 import { ICreateTokenForm } from '@/views/create-token/create-token.types';
 import { TokenField } from '@/views/pool-create/select-coins/input/token-field';
@@ -16,8 +17,8 @@ import TokenBalance from './token-balance';
 import QuoteInputDollar from './token-input-dollar';
 
 const Input: FC<InputProps> = ({ label }) => {
-  const { register, setValue } = useFormContext<ICreateTokenForm>();
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const { register, setValue, getValues } = useFormContext<ICreateTokenForm>();
 
   const handleSetMobile = useCallback(() => {
     const mediaIsMobile = !window.matchMedia('(max-width: 26.875rem)').matches;
@@ -49,7 +50,15 @@ const Input: FC<InputProps> = ({ label }) => {
         }
         {...register(`pool.${label}Value`, {
           onChange: (v: ChangeEvent<HTMLInputElement>) => {
-            setValue?.(`pool.${label}Value`, parseInputEventToNumberString(v));
+            const value = parseInputEventToNumberString(v);
+            setValue?.(`pool.${label}Value`, value);
+            setValue?.(
+              `pool.${label}ValueBN`,
+              FixedPointMath.toBigNumber(
+                value,
+                label === 'quote' ? 8 : getValues('decimals')
+              )
+            );
           },
         })}
       />
