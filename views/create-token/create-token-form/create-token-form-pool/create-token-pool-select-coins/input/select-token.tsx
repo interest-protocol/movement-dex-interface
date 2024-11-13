@@ -65,12 +65,12 @@ const SelectToken: FC<InputProps> = ({ label, isMobile }) => {
       >
         <Typography
           p="xs"
+          width="100%"
           variant="label"
           whiteSpace="nowrap"
-          width="100%"
           size={isMobile ? 'large' : 'small'}
         >
-          APT
+          MOVE
         </Typography>
       </Button>
     </Box>
