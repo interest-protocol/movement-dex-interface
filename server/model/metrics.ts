@@ -1,7 +1,7 @@
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const modelName = 'MovementMetricsPorto';
+const modelName = 'InterestDEXMetricsPorto';
 
 export interface Metrics {
   network: Network;
