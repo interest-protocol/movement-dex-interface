@@ -25,7 +25,7 @@ const PoolDetailsCollapseItemStandard: FC<
         color={labelColor ? labelColor : ''}
         variant="body"
       >
-        {label}
+        {loading ? <Skeleton width="5rem" /> : label}
       </Typography>
       <Box
         px="m"
@@ -36,12 +36,12 @@ const PoolDetailsCollapseItemStandard: FC<
         color="onSurface"
         alignItems="center"
         justifyContent="space-between"
-        width={isCopyClipBoard ? '10rem' : 'auto'}
+        width={isCopyClipBoard && !loading ? '10rem' : 'auto'}
       >
         <Box
           overflow="hidden"
-          mr={isCopyClipBoard || popupInfo ? 'xs' : ''}
-          width={isCopyClipBoard ? '8rem' : 'auto'}
+          mr={(isCopyClipBoard || popupInfo) && !loading ? 'xs' : ''}
+          width={isCopyClipBoard && !loading ? '8rem' : 'auto'}
         >
           <Typography
             size="medium"
@@ -53,35 +53,39 @@ const PoolDetailsCollapseItemStandard: FC<
             {loading ? <Skeleton width="5rem" /> : content}
           </Typography>
         </Box>
-        {popupInfo && (
-          <TooltipWrapper
-            bg="onSurface"
-            tooltipPosition="left"
-            tooltipContent={
-              <Typography variant="body" size="small" color="surface">
-                {popupInfo}
-              </Typography>
-            }
-          >
-            <InformationCircleSVG
-              width="0.875rem"
-              cursor="pointer"
-              maxWidth="0.875rem"
-              maxHeight="0.875rem"
-            />
-          </TooltipWrapper>
-        )}
-        {isCopyClipBoard && (
-          <ClipboardSVG
-            onClick={(e) => {
-              e.stopPropagation();
-              copyToClipboard(content.toString(), clipBoardSuccessMessage);
-            }}
-            width="1.25rem"
-            cursor="pointer"
-            maxWidth="1.25rem"
-            maxHeight="1.25rem"
-          />
+        {!loading && (
+          <Box>
+            {popupInfo && (
+              <TooltipWrapper
+                bg="onSurface"
+                tooltipPosition="left"
+                tooltipContent={
+                  <Typography variant="body" size="small" color="surface">
+                    {popupInfo}
+                  </Typography>
+                }
+              >
+                <InformationCircleSVG
+                  width="0.875rem"
+                  cursor="pointer"
+                  maxWidth="0.875rem"
+                  maxHeight="0.875rem"
+                />
+              </TooltipWrapper>
+            )}
+            {isCopyClipBoard && (
+              <ClipboardSVG
+                onClick={(e) => {
+                  e.stopPropagation();
+                  copyToClipboard(content.toString(), clipBoardSuccessMessage);
+                }}
+                width="1.25rem"
+                cursor="pointer"
+                maxWidth="1.25rem"
+                maxHeight="1.25rem"
+              />
+            )}
+          </Box>
         )}
       </Box>
     </Box>

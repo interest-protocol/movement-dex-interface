@@ -13,7 +13,7 @@ import { POOL_INFORMATION, POOL_STATISTICS } from './pool-info.data';
 
 const PoolDetail = () => {
   const { query } = useRouter();
-  const { pool, config } = usePoolDetails();
+  const { pool, config, loading } = usePoolDetails();
 
   const infoData = [(query.address as string) ?? 'N/A', 'SR-AMM', 'Volatile'];
 
@@ -38,7 +38,7 @@ const PoolDetail = () => {
           <ItemStandard
             key={v4()}
             label={label}
-            loading={false}
+            loading={loading}
             popupInfo={popupInfo}
             content={infoData[index]}
             isCopyClipBoard={isCopyClipBoard}
@@ -52,7 +52,7 @@ const PoolDetail = () => {
           <ItemStandard
             key={v4()}
             label={label}
-            loading={false}
+            loading={loading}
             popupInfo={popupInfo}
             content={statsData[index]}
             isCopyClipBoard={isCopyClipBoard}
