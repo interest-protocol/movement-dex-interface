@@ -1,4 +1,7 @@
-import { GetFungibleAssetMetadataResponse } from '@aptos-labs/ts-sdk';
+import {
+  AccountAddress,
+  GetFungibleAssetMetadataResponse,
+} from '@aptos-labs/ts-sdk';
 import {
   COIN_TYPES,
   FA_ADDRESSES,
@@ -10,6 +13,7 @@ import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
 
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { PRICE_TYPE } from '@/constants/prices';
 import { PriceResponse } from '@/interface';
 import { isAptos } from '@/utils';
@@ -42,6 +46,8 @@ const CoinsManager: FC = () => {
           accountAddress: currentAccount.address,
         });
 
+        console.log({ coinsData });
+
         const coinsMetadata: Record<
           string,
           GetFungibleAssetMetadataResponse[0]
@@ -54,6 +60,7 @@ const CoinsManager: FC = () => {
 
           coinsMetadata[item.asset_type!] = metadata;
         }
+
         const coins: Record<string, Asset> = coinsData.reduce(
           (acc, { asset_type, amount }) => {
             if (!asset_type || !coinsMetadata[asset_type]) return acc;
@@ -72,6 +79,9 @@ const CoinsManager: FC = () => {
                 token_standard === TokenStandard.COIN
                   ? COIN_TYPES[Network.Porto].APT
                   : FA_ADDRESSES[Network.Porto].APT
+              ).toString();
+              const symbol = (
+                token_standard === TokenStandard.COIN ? 'MOVE' : 'faMOVE'
               ).toString();
 
               return {
@@ -93,10 +103,16 @@ const CoinsManager: FC = () => {
               ...acc,
               [asset_type]: {
                 name,
-                symbol,
                 decimals,
                 type: asset_type,
                 balance: BigNumber(amount.toString()),
+                symbol:
+                  token_standard === TokenStandard.FA &&
+                  values(COIN_TYPE_TO_FA).some((address) =>
+                    address.equals(AccountAddress.from(asset_type))
+                  )
+                    ? `fa${symbol}`
+                    : symbol,
                 standard:
                   token_standard === 'v1'
                     ? TokenStandard.COIN
@@ -138,6 +154,8 @@ const CoinsManager: FC = () => {
 
         setCoins?.(coinsWithPrice);
       } catch (e) {
+        console.warn('error: ', e);
+
         setError((e as Error).message);
       } finally {
         setLoading(false);
