@@ -46,8 +46,6 @@ const CoinsManager: FC = () => {
           accountAddress: currentAccount.address,
         });
 
-        console.log({ coinsData });
-
         const coinsMetadata: Record<
           string,
           GetFungibleAssetMetadataResponse[0]
@@ -75,13 +73,14 @@ const CoinsManager: FC = () => {
             } = coinsMetadata[asset_type];
 
             if (isAptos(asset_type)) {
+              const symbol = (
+                token_standard === TokenStandard.COIN ? 'MOVE' : 'faMOVE'
+              ).toString();
+
               const type = (
                 token_standard === TokenStandard.COIN
                   ? COIN_TYPES[Network.Porto].APT
                   : FA_ADDRESSES[Network.Porto].APT
-              ).toString();
-              const symbol = (
-                token_standard === TokenStandard.COIN ? 'MOVE' : 'faMOVE'
               ).toString();
 
               return {

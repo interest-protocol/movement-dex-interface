@@ -17,7 +17,6 @@ export interface MenuCurrencyProps {
 
 export enum ProfileTabsMenuEnum {
   coin,
-  nfa,
 }
 
 export interface ProfileTabItemProps {
