@@ -29,9 +29,13 @@ const SwapManager: FC = () => {
   useEffect(() => {
     setValue('error', null);
 
-    if (!Number(fromValue)) {
+    if (
+      (origin === 'from' && !Number(fromValue)) ||
+      (origin === 'to' && !Number(toValue))
+    ) {
       setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
       setValue(`${origin === 'from' ? 'to' : 'from'}.valueBN`, ZERO_BIG_NUMBER);
+      setHasNoMarket(false);
       return;
     }
 
@@ -54,7 +58,10 @@ const SwapManager: FC = () => {
     );
 
     const amount = BigInt(
-      FixedPointMath.toBigNumber(fromValue, from.decimals)
+      FixedPointMath.toBigNumber(
+        origin === 'from' ? fromValue : toValue,
+        origin === 'from' ? from.decimals : to.decimals
+      )
         .decimalPlaces(0, 1)
         .toString()
     );
