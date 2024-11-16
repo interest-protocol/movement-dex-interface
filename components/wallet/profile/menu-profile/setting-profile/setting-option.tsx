@@ -5,6 +5,7 @@ import { SettingOptionProps } from '../../profile.types';
 
 const SettingOption: FC<SettingOptionProps> = ({
   label,
+  onClick,
   description,
   isToggleEnable,
 }) => (
@@ -38,9 +39,8 @@ const SettingOption: FC<SettingOptionProps> = ({
     <Box display="flex" justifyContent="flex-end" alignItems="center">
       <ToggleButton
         name="toggle"
-        onChange={() => {}}
+        onChange={onClick}
         defaultValue={isToggleEnable}
-        disabled
       />
     </Box>
   </Box>

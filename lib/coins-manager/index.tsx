@@ -9,7 +9,9 @@ import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
 import useSWR from 'swr';
+import { useReadLocalStorage } from 'usehooks-ts';
 
+import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { PRICE_TYPE } from '@/constants/prices';
 import { PriceResponse } from '@/interface';
 import { isAptos } from '@/utils';
@@ -22,7 +24,9 @@ const CoinsManager: FC = () => {
   const id = useId();
   const client = useAptosClient();
   const { account: currentAccount } = useAptosWallet();
-
+  const isHideLPToken = useReadLocalStorage<boolean>(
+    `${LOCAL_STORAGE_VERSION}-movement-dex-hide-lp-token`
+  );
   const { setError, setLoading, setCoins, setMutate } = useCoins();
 
   useEffect(() => {
@@ -54,60 +58,64 @@ const CoinsManager: FC = () => {
 
           coinsMetadata[item.asset_type!] = metadata;
         }
-        const coins: Record<string, Asset> = coinsData.reduce(
-          (acc, { asset_type, amount }) => {
-            if (!asset_type || !coinsMetadata[asset_type]) return acc;
+        const coins: Record<string, Asset> = coinsData
+          .filter(({ metadata }) =>
+            isHideLPToken ? !metadata?.symbol.includes('sr-LpFa') : true
+          )
+          .reduce(
+            (acc, { asset_type, amount }) => {
+              if (!asset_type || !coinsMetadata[asset_type]) return acc;
 
-            const {
-              name,
-              symbol,
-              decimals,
-              token_standard,
-              icon_uri: iconUri,
-              project_uri: projectUri,
-            } = coinsMetadata[asset_type];
+              const {
+                name,
+                symbol,
+                decimals,
+                token_standard,
+                icon_uri: iconUri,
+                project_uri: projectUri,
+              } = coinsMetadata[asset_type];
 
-            if (isAptos(asset_type)) {
-              const type = (
-                token_standard === TokenStandard.COIN
-                  ? COIN_TYPES[Network.Porto].APT
-                  : FA_ADDRESSES[Network.Porto].APT
-              ).toString();
+              if (isAptos(asset_type)) {
+                const type = (
+                  token_standard === TokenStandard.COIN
+                    ? COIN_TYPES[Network.Porto].APT
+                    : FA_ADDRESSES[Network.Porto].APT
+                ).toString();
+
+                return {
+                  ...acc,
+                  [type]: {
+                    type,
+                    name,
+                    symbol,
+                    decimals,
+                    balance: BigNumber(amount.toString()),
+                    standard: token_standard as TokenStandard,
+                    ...(!!projectUri && { projectUri }),
+                    ...(!!iconUri && { iconUri: iconUri }),
+                  },
+                };
+              }
 
               return {
                 ...acc,
-                [type]: {
-                  type,
+                [asset_type]: {
                   name,
                   symbol,
                   decimals,
+                  type: asset_type,
                   balance: BigNumber(amount.toString()),
-                  standard: token_standard as TokenStandard,
+                  standard:
+                    token_standard === 'v1'
+                      ? TokenStandard.COIN
+                      : TokenStandard.FA,
                   ...(!!projectUri && { projectUri }),
                   ...(!!iconUri && { iconUri: iconUri }),
                 },
               };
-            }
-
-            return {
-              ...acc,
-              [asset_type]: {
-                name,
-                symbol,
-                decimals,
-                type: asset_type,
-                balance: BigNumber(amount.toString()),
-                standard:
-                  token_standard === 'v1'
-                    ? TokenStandard.COIN
-                    : TokenStandard.FA,
-                ...(!!projectUri && { projectUri }),
-                ...(!!iconUri && { iconUri: iconUri }),
-              },
-            };
-          },
-          {} as Record<string, Asset>
-        );
+            },
+            {} as Record<string, Asset>
+          );
 
         const coinsPriceType = values(coins)
           .filter(({ symbol }) => PRICE_TYPE[symbol])
@@ -153,7 +161,7 @@ const CoinsManager: FC = () => {
 
   useEffect(() => {
     setMutate(mutate);
-  }, []);
+  }, [isHideLPToken]);
 
   return null;
 };

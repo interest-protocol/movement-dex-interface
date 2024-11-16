@@ -1,17 +1,28 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import { not } from 'ramda';
 import { FC } from 'react';
+import { useLocalStorage } from 'usehooks-ts';
 
 import { ArrowLeftSVG } from '@/components/svg';
+import { LOCAL_STORAGE_VERSION } from '@/constants';
 
 import { SettingMenuProps } from '../user-info.types';
+import SettingOption from './setting-option';
 
 const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
+  const [isHideLPToken, setIsHideLPToken] = useLocalStorage<boolean>(
+    `${LOCAL_STORAGE_VERSION}-movement-dex-hide-lp-token`,
+    false
+  );
+
   const handleBackProfile = () => {
     const url = new URL(window.location.href);
 
     window.history.pushState('', '', url.toString());
     handleToggleProfile();
   };
+
+  const toggleHideLPToken = () => setIsHideLPToken(not);
 
   return (
     <Box width="100%" py="s" color="secondary">
@@ -34,20 +45,11 @@ const SettingProfile: FC<SettingMenuProps> = ({ handleToggleProfile }) => {
           Settings
         </Typography>
       </Box>
-      {/* <SettingOption label="hide small balances" isToggleEnable={false} />
       <SettingOption
-        label="hide unknown tokens & nfts"
-        isToggleEnable={false}
+        label="Hide LP tokens"
+        onClick={toggleHideLPToken}
+        isToggleEnable={isHideLPToken}
       />
-      <SettingOption
-        label="hide unknown tokens & nfts"
-        description="we use anonymized data to enhance your experience"
-        isToggleEnable={false}
-      />
-      <SettingOption
-        label="hide unknown tokens & nfts"
-        isToggleEnable={false}
-      /> */}
       <Box
         py="m"
         width="100%"
