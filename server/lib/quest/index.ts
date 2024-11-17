@@ -117,6 +117,27 @@ export const findSwapBySymbols = async (
   );
 };
 
+export const findAddLiquidityBySymbols = async (
+  address: string,
+  symbolIn: string,
+  symbolOut: string
+) => {
+  await dbConnect();
+
+  const addLiquidityQuests = await QuestModel.find({
+    address,
+    kind: 'addLiquidity',
+  })
+    .lean()
+    .exec();
+
+  return addLiquidityQuests.find(
+    ({ data }) =>
+      (data as SwapData).coinIn.symbol === symbolIn &&
+      (data as SwapData).coinOut.symbol === symbolOut
+  );
+};
+
 export const findWrapBySymbol = async (symbol: string, address: string) => {
   await dbConnect();
 

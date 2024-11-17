@@ -27,7 +27,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
   const { control, register, setValue } = useForm<SearchTokenForm>({
     defaultValues: {
       search: '',
-      filter: isOutput ? TokenOrigin.FA : TokenOrigin.Coin,
+      filter: TokenOrigin.Strict,
     },
   });
 
@@ -77,11 +77,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
             Prefix={<SearchSVG maxWidth="1rem" maxHeight="1rem" width="100%" />}
           />
         </Box>
-        <SelectTokenFilter
-          control={control}
-          setValue={setValue}
-          isOutput={isOutput}
-        />
+        <SelectTokenFilter control={control} setValue={setValue} />
       </Box>
       <Box
         flex="1"

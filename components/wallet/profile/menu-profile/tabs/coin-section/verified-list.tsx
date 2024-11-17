@@ -1,35 +1,21 @@
-import {
-  COINS,
-  FUNGIBLE_ASSETS,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
-import { values } from 'ramda';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { TOKENS } from '@/constants/coin-fa';
 import { parseToMetadata } from '@/utils';
-import { FAMetadata } from '@/utils/coin/coin.types';
+import { CoinMetadata, FAMetadata } from '@/utils/coin/coin.types';
 
-import { CoinCardProps } from '../../user-info.types';
 import CoinCard from './coin-card';
 
-const VerifiedCoinList: FC<Pick<CoinCardProps, 'isFA'>> = ({ isFA }) => {
-  const verifiedCoins = values(
-    (isFA ? FUNGIBLE_ASSETS : COINS)[Network.Porto]
-  ).map((metadata) => parseToMetadata(metadata as FAMetadata));
+const VerifiedCoinList: FC = () => {
+  const verifiedTokens = TOKENS.map((metadata) =>
+    parseToMetadata(metadata as CoinMetadata | FAMetadata)
+  );
 
   return (
     <>
-      {verifiedCoins.map((coin) => (
-        <CoinCard
-          key={v4()}
-          isFA={isFA}
-          token={{
-            ...coin,
-            standard: TokenStandard.COIN,
-          }}
-        />
+      {verifiedTokens.map((token) => (
+        <CoinCard key={v4()} token={token} />
       ))}
     </>
   );

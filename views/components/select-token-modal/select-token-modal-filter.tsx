@@ -9,14 +9,12 @@ import {
 } from './select-token-modal.types';
 
 const ORIGIN_TITLE = {
-  [TokenOrigin.Coin]: 'Coin',
-  [TokenOrigin.FA]: 'FA',
+  [TokenOrigin.Strict]: 'Strict',
   [TokenOrigin.Wallet]: 'Wallet',
 };
 
 const SelectTokenFilter: FC<SelectTokenFilterProps> = ({
   control,
-  isOutput,
   setValue,
 }) => {
   const filterSelected = useWatch({ control, name: 'filter' });
@@ -27,12 +25,9 @@ const SelectTokenFilter: FC<SelectTokenFilterProps> = ({
       gap="s"
       display="grid"
       flexWrap="wrap"
-      gridTemplateColumns={isOutput ? '1fr 1fr' : '1fr 1fr 1fr'}
+      gridTemplateColumns="1fr 1fr"
     >
-      {(isOutput
-        ? [TokenOrigin.FA, TokenOrigin.Wallet]
-        : [TokenOrigin.Coin, TokenOrigin.FA, TokenOrigin.Wallet]
-      ).map((item) => (
+      {[TokenOrigin.Strict, TokenOrigin.Wallet].map((item) => (
         <Box
           key={v4()}
           cursor="pointer"
