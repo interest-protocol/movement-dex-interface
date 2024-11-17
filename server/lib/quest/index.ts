@@ -2,7 +2,12 @@ import { Network } from '@interest-protocol/aptos-sr-amm';
 
 import dbConnect from '@/server';
 import metrics from '@/server/model/metrics';
-import QuestModel, { Quest, SwapData, TokenData } from '@/server/model/quest';
+import QuestModel, {
+  PoolData,
+  Quest,
+  SwapData,
+  TokenData,
+} from '@/server/model/quest';
 import QuestProfileModel from '@/server/model/quest-profile';
 import { getExactDayTimestamp, getFirstWeekDayTimestamp } from '@/utils';
 
@@ -133,8 +138,8 @@ export const findAddLiquidityBySymbols = async (
 
   return addLiquidityQuests.find(
     ({ data }) =>
-      (data as SwapData).coinIn.symbol === symbolIn &&
-      (data as SwapData).coinOut.symbol === symbolOut
+      (data as PoolData).coinA.symbol === symbolIn &&
+      (data as PoolData).coinB.symbol === symbolOut
   );
 };
 
