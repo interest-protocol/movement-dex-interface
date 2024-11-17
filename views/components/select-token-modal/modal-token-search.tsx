@@ -2,7 +2,11 @@ import { Box } from '@interest-protocol/ui-kit';
 import { FC, useEffect, useState } from 'react';
 
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
-import { getCoinMetadata } from '@/utils';
+import {
+  AssetMetadata,
+  TokenStandard,
+} from '@/lib/coins-manager/coins-manager.types';
+import { getCoinMetadata, parseToMetadata } from '@/utils';
 
 import FetchingToken from './fetching-token';
 import NotFound from './not-found';
@@ -16,7 +20,7 @@ const ModalTokenSearch: FC<ModalTokenSearchProps> = ({
   const client = useAptosClient();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [tokenMetadata, setTokenMetadata] = useState<any>(null);
+  const [tokenMetadata, setTokenMetadata] = useState<AssetMetadata>();
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -29,7 +33,7 @@ const ModalTokenSearch: FC<ModalTokenSearchProps> = ({
       try {
         const data = await getCoinMetadata(search, client);
 
-        setTokenMetadata(data);
+        setTokenMetadata(parseToMetadata(data));
       } catch (err) {
         setError(true);
       } finally {
@@ -47,10 +51,11 @@ const ModalTokenSearch: FC<ModalTokenSearchProps> = ({
     <Box p="m">
       <TokenModalItem
         key={search}
-        isFA={false}
         selected={false}
         symbol={tokenMetadata.symbol}
+        iconUri={tokenMetadata.iconUri}
         onClick={() => handleSelectToken(tokenMetadata)}
+        isFA={tokenMetadata.standard === TokenStandard.FA}
       />
     </Box>
   );
