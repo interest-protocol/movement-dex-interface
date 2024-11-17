@@ -29,14 +29,15 @@ const BalanceCard: FC = () => {
   );
 
   useEffect(() => {
-    fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
-      method: 'POST',
-      body: JSON.stringify({ coins: [PRICE_TYPE[symbol]] }),
-      headers: { 'Content-Type': 'application/json', accept: '*/*' },
-    })
-      .then((response) => response.json())
-      .then((data) => setUSDPrice(data[0].price))
-      .catch(() => null);
+    if (PRICE_TYPE[symbol])
+      fetch('https://rates-api-production.up.railway.app/api/fetch-quote', {
+        method: 'POST',
+        body: JSON.stringify({ coins: [PRICE_TYPE[symbol]] }),
+        headers: { 'Content-Type': 'application/json', accept: '*/*' },
+      })
+        .then((response) => response.json())
+        .then((data) => setUSDPrice(data[0].price))
+        .catch(() => null);
   }, []);
 
   return (

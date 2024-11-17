@@ -45,11 +45,7 @@ const HomeProfile: FC = () => {
           </Box>
         ))}
       </Box>
-      {tabItem == ProfileTabsMenuEnum.coin ? (
-        <CoinSection />
-      ) : (
-        <CoinSection isFA />
-      )}
+      <CoinSection />
     </>
   );
 };
