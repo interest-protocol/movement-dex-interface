@@ -1,39 +1,32 @@
-import {
-  COIN_TYPES,
-  FA_ADDRESSES,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
-import { values } from 'ramda';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
+import { TOKENS } from '@/constants/coin-fa';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { CoinMetadata, FAMetadata } from '@/utils/coin/coin.types';
 
-import { CoinCardProps } from '../../user-info.types';
 import NoCoin from '../no-coin';
 import CoinCard from './coin-card';
 import Collapse from './coin-card/collapse';
 
-const UnverifiedCoinList: FC<Pick<CoinCardProps, 'isFA'>> = ({ isFA }) => {
+const UnverifiedCoinList: FC = () => {
   const { coins } = useCoins();
 
   const unverifiedCoins = coins.filter(
-    ({ type, symbol, standard }) =>
-      isFA &&
+    ({ type, symbol }) =>
       symbol !== 'sr-LpFa' &&
-      (standard === TokenStandard.FA) === isFA &&
-      !values((isFA ? FA_ADDRESSES : COIN_TYPES)[Network.Porto]).some(
-        (token) => token.toString() === type
+      !TOKENS.some(
+        (token) =>
+          (
+            (token as CoinMetadata).type || (token as FAMetadata).address
+          ).toString() === type
       )
   );
 
   return (
     <Collapse title={`${unverifiedCoins.length} unverified`}>
       {unverifiedCoins.length ? (
-        unverifiedCoins.map((coin) => (
-          <CoinCard isFA={isFA} key={v4()} token={coin} />
-        ))
+        unverifiedCoins.map((coin) => <CoinCard key={v4()} token={coin} />)
       ) : (
         <NoCoin />
       )}

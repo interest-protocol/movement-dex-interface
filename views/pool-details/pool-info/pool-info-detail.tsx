@@ -10,10 +10,13 @@ import Accordion from './components/accordion';
 import { PoolDetailAccordionItemStandardProps } from './components/accordion/accordion.types';
 import ItemStandard from './components/accordion/item-standard';
 import { POOL_INFORMATION, POOL_STATISTICS } from './pool-info.data';
+import PoolInfoLoading from './pool-info-loading';
 
 const PoolDetail = () => {
   const { query } = useRouter();
-  const { pool, config } = usePoolDetails();
+  const { pool, config, loading } = usePoolDetails();
+
+  if (loading) return <PoolInfoLoading />;
 
   const infoData = [(query.address as string) ?? 'N/A', 'SR-AMM', 'Volatile'];
 
@@ -38,7 +41,7 @@ const PoolDetail = () => {
           <ItemStandard
             key={v4()}
             label={label}
-            loading={false}
+            loading={loading}
             popupInfo={popupInfo}
             content={infoData[index]}
             isCopyClipBoard={isCopyClipBoard}
@@ -52,7 +55,7 @@ const PoolDetail = () => {
           <ItemStandard
             key={v4()}
             label={label}
-            loading={false}
+            loading={loading}
             popupInfo={popupInfo}
             content={statsData[index]}
             isCopyClipBoard={isCopyClipBoard}

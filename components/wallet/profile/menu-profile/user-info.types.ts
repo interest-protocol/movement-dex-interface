@@ -17,7 +17,6 @@ export interface MenuCurrencyProps {
 
 export enum ProfileTabsMenuEnum {
   coin,
-  nfa,
 }
 
 export interface ProfileTabItemProps {
@@ -26,7 +25,6 @@ export interface ProfileTabItemProps {
 }
 
 export interface CoinCardProps {
-  isFA: boolean;
   token: AssetMetadata;
 }
 

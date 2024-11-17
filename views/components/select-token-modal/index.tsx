@@ -27,7 +27,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
   const form = useForm<SearchTokenForm>({
     defaultValues: {
       search: '',
-      filter: isOutput ? TokenOrigin.FA : TokenOrigin.Coin,
+      filter: TokenOrigin.Strict,
     },
   });
 
@@ -80,11 +80,7 @@ const SelectTokenModal: FC<SelectTokenModalProps> = ({
               }
             />
           </Box>
-          <SelectTokenFilter
-            control={form.control}
-            setValue={form.setValue}
-            isOutput={isOutput}
-          />
+          <SelectTokenFilter control={form.control} setValue={form.setValue} />
         </Box>
         <Box
           flex="1"
