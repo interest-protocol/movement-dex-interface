@@ -87,6 +87,7 @@ const SwapManager: FC = () => {
               setHasNoMarket(false);
               setValue('to.value', receivedAmountOut);
               setValue('to.valueBN', BigNumber(amountOut!.toString()));
+              setValue('focus', false);
             }
           })
           .catch((e) => {
@@ -112,6 +113,7 @@ const SwapManager: FC = () => {
               setHasNoMarket(false);
               setValue('from.value', receivedAmountIn);
               setValue('from.valueBN', BigNumber(amountIn!.toString()));
+              setValue('focus', false);
             }
           })
           .catch((e) => {

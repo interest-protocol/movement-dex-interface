@@ -107,8 +107,4 @@ export const PROFILE_TAB: ReadonlyArray<ProfileTabItemProps> = [
     name: 'coin',
     value: ProfileTabsMenuEnum.coin,
   },
-  {
-    name: 'fa',
-    value: ProfileTabsMenuEnum.nfa,
-  },
 ];

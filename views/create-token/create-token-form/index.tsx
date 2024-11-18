@@ -8,7 +8,6 @@ import { ICreateTokenForm } from '../create-token.types';
 import CreateTokenFormButton from './create-token-form-button';
 import CreateTokenFormPool from './create-token-form-pool';
 import CreateTokenFormPreviewImage from './create-token-form-preview-image';
-import CreateTokenFormToggle from './create-token-form-toggle';
 import CreateTokenFormImage from './create-token-form-upload-image';
 
 const CreateTokenForm: FC = () => {
@@ -149,7 +148,6 @@ const CreateTokenForm: FC = () => {
         <Typography variant="headline" size="small">
           Coin features
         </Typography>
-        <CreateTokenFormToggle />
         <CreateTokenFormPool />
         <CreateTokenFormButton />
       </Box>

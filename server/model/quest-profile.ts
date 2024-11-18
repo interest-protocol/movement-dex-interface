@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const modelName = 'MovementQuestProfilePorto';
+const modelName = 'InterestDEXQuestProfilePorto';
 
 export interface QuestProfile {
   address: string;

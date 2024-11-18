@@ -15,15 +15,13 @@ export interface SelectTokenModalProps {
   onSelect: (metadata: AssetMetadata) => void;
 }
 
-export interface SelectTokenFilterProps
-  extends Pick<SelectTokenModalProps, 'isOutput'> {
+export interface SelectTokenFilterProps {
   control: Control<SearchTokenForm>;
   setValue: UseFormSetValue<SearchTokenForm>;
 }
 
 export enum TokenOrigin {
-  Coin,
-  FA,
+  Strict,
   Wallet,
 }
 
