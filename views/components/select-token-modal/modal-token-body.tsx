@@ -24,8 +24,10 @@ const ModalTokenBody: FC<ModalTokenBodyProps> = ({
 
   const isSearchAddres = search.startsWith('0x');
 
-  const filteredTokens = tokens.filter((token) =>
-    token.symbol.toLowerCase().includes(search?.toLowerCase() || '')
+  const filteredTokens = tokens.filter(
+    (token) =>
+      token.symbol.toLowerCase().includes(search?.toLowerCase() || '') ||
+      token.name.toLowerCase().includes(search?.toLowerCase() || '')
   );
 
   if (!isSearchAddres)
