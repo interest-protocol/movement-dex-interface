@@ -14,6 +14,7 @@ import invariant from 'tiny-invariant';
 
 import { RateDownSVG, RateUpSVG, WrapSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
@@ -27,7 +28,7 @@ import { logWrapCoin } from './coin-card.utils';
 
 const dex = new InterestDex();
 
-const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
+const CoinCard: FC<CoinCardProps> = ({ token }) => {
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { coinsMap, mutate } = useCoins();
@@ -158,7 +159,7 @@ const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
             </Box>
           )}
         </Box>
-        {!isFA && (
+        {COIN_TYPE_TO_FA[token.type] && (
           <TooltipWrapper
             bg="lowContainer"
             tooltipPosition="top"

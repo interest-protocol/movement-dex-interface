@@ -70,6 +70,7 @@ const SwapManager: FC = () => {
                 )
               )
             );
+            setValue('focus', false);
           })
           .catch((e) => {
             console.warn(e);
@@ -83,6 +84,7 @@ const SwapManager: FC = () => {
           .then(({ amountIn }) => {
             setValue('path', path);
             setValue('from.valueBN', BigNumber(amountIn!.toString()));
+            setValue('focus', false);
             setValue(
               'from.value',
               String(
