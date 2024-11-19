@@ -58,6 +58,7 @@ const SwapButton = () => {
   const handleSwap = async () => {
     try {
       setLoading(true);
+      setValue('error', '');
 
       if (!account) return;
 
@@ -113,6 +114,10 @@ const SwapButton = () => {
       );
     } catch (e) {
       console.warn(e);
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
       throw e;
     } finally {
       mutate();
@@ -126,9 +131,10 @@ const SwapButton = () => {
         title: 'Swapping...',
         message: 'We are swapping, and you will let you know when it is done',
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Swap Failure',
         message:
+          (error as Error).message ||
           'Your swap failed, please try to increment your slippage and try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

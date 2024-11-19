@@ -27,6 +27,8 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
     try {
       invariant(account, 'You must be connected to proceed');
 
+      setValue('error', '');
+
       const lpCoin = getValues('lpCoin');
 
       const data = dex.removeLiquidity({
@@ -64,7 +66,10 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
-      console.warn('>> handle withdraw issue. More info: ', { e });
+      console.warn({ e });
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
 
       throw e;
     }
@@ -93,9 +98,10 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
           onClick: gotoExplorer,
         },
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Withdraw Failure',
         message:
+          (error as Error).message ||
           'Your withdrawing failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

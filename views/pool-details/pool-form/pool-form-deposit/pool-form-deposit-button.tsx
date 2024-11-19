@@ -23,7 +23,7 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const handleDeposit = async () => {
     try {
       invariant(account, 'You must be connected to proceed');
-
+      setValue('error', '');
       const [token0, token1] = getValues('tokenList');
 
       const data = dex.addLiquidity({
@@ -71,7 +71,11 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
-      console.warn('>> handle deposit fn error. More info: ', { e });
+      console.warn({ e });
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
       throw e;
     }
   };
@@ -91,15 +95,17 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
       success: () => ({
         title: 'Deposit Successfully',
         message:
+          getValues('error') ||
           'Your deposit was successfully, and you can check it on the Explorer',
         primaryButton: {
           label: 'See on Explorer',
           onClick: gotoExplorer,
         },
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Deposit Failure',
         message:
+          (error as Error).message ||
           'Your deposit failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
