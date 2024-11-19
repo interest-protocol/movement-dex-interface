@@ -48,10 +48,13 @@ const SwapManager: FC = () => {
       from.standard === TokenStandard.COIN
         ? COIN_TYPE_TO_FA[from.type]
         : from.type
-    ).toString();
+    )?.toString();
+
     const tokenOut = (
       to.standard === TokenStandard.COIN ? COIN_TYPE_TO_FA[to.type] : to.type
-    ).toString();
+    )?.toString();
+
+    if (!tokenIn || !tokenOut) return;
 
     const path = getPath(tokenIn, tokenOut).map((address) =>
       address.toString()
