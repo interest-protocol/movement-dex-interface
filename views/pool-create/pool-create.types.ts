@@ -17,7 +17,7 @@ export enum CreatePoolStep {
 
 export interface CreatePoolForm {
   dex: string;
-  error?: string;
+  error: string;
   isStable: boolean;
   step: CreatePoolStep;
   explorerLink: string;

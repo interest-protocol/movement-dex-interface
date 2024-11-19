@@ -28,7 +28,7 @@ const PoolSummaryButton: FC = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { account, signTransaction } = useAptosWallet();
-  const { getValues, resetField } = useFormContext<CreatePoolForm>();
+  const { setValue, getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -39,6 +39,7 @@ const PoolSummaryButton: FC = () => {
   const onCreatePool = async () => {
     try {
       const { tokens } = getValues();
+      setValue('error', '');
 
       invariant(account, 'You must be connected');
 
@@ -162,6 +163,12 @@ const PoolSummaryButton: FC = () => {
     } catch (error) {
       console.warn({ error });
 
+      if ((error as any).data.error_code === 'mempool_is_full')
+        setValue(
+          'error',
+          'Something went wrong on your transaction submission, try again please'
+        );
+
       throw error;
     }
   };
@@ -187,6 +194,7 @@ const PoolSummaryButton: FC = () => {
       error: () => ({
         title: 'Pool creation failed',
         message:
+          getValues('error') ||
           'Your pool was not created, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
