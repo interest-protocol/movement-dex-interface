@@ -98,10 +98,7 @@ const SwapButton = () => {
       console.warn(e);
 
       if ((error as any).data.error_code === 'mempool_is_full')
-        setValue(
-          'error',
-          'Something went wrong on your transaction submission, try again please'
-        );
+        setValue('error', 'The mempool is full, try again in a few seconds.');
 
       throw e;
     } finally {
