@@ -17,6 +17,7 @@ const PoolPreviewWrapper: FC<PropsWithChildren<PoolPreviewWrapperProps>> = ({
     display="flex"
     bg="container"
     height="41rem"
+    overflowY="auto"
     minWidth="22rem"
     maxHeight="90vh"
     maxWidth="27rem"
