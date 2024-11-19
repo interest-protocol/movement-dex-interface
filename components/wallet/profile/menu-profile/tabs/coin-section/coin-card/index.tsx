@@ -83,7 +83,9 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
 
       toast.success(`${symbol} wrapped successfully!`);
     } catch (e) {
-      toast.error((e as Error).message);
+      if ((e as any).data.error_code === 'mempool_is_full')
+        toast.error('Something went wrong, try again please');
+      else toast.error((e as Error).message);
     } finally {
       mutate();
       toast.dismiss(id);

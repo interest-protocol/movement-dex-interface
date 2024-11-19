@@ -12,6 +12,7 @@ export interface ICreateTokenPool {
 
 export interface ICreateTokenForm {
   name: string;
+  error: string;
   symbol: string;
   supply: number;
   decimals: number;

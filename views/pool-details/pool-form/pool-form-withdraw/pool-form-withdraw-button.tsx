@@ -27,6 +27,8 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
     try {
       invariant(account, 'You must be connected to proceed');
 
+      setValue('error', '');
+
       const lpCoin = getValues('lpCoin');
 
       const data = dex.removeLiquidity({
@@ -66,6 +68,12 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
     } catch (e) {
       console.warn('>> handle withdraw issue. More info: ', { e });
 
+      if ((error as any).data.error_code === 'mempool_is_full')
+        setValue(
+          'error',
+          'Something went wrong on your transaction submission, try again please'
+        );
+
       throw e;
     }
   };
@@ -96,6 +104,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
       error: () => ({
         title: 'Withdraw Failure',
         message:
+          getValues('error') ||
           'Your withdrawing failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

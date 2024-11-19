@@ -22,7 +22,8 @@ const CreateTokenFormButton = () => {
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
   const { account, signTransaction } = useAptosWallet();
-  const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
+  const { control, setValue, reset, getValues } =
+    useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
 
@@ -44,7 +45,7 @@ const CreateTokenFormButton = () => {
   const handleCreateToken = async () => {
     try {
       invariant(ableToMerge, 'Button must be enabled');
-
+      setValue('error', '');
       setLoading(true);
 
       const {
@@ -154,6 +155,12 @@ const CreateTokenFormButton = () => {
       );
     } catch (e) {
       console.warn({ e });
+      if ((e as any).data.error_code === 'mempool_is_full')
+        setValue(
+          'error',
+          'Something went wrong on your transaction submission, try again please'
+        );
+
       throw e;
     } finally {
       reset();
@@ -171,6 +178,7 @@ const CreateTokenFormButton = () => {
       error: () => ({
         title: 'Creation Failure',
         message:
+          getValues('error') ||
           'Your token creation failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
