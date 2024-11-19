@@ -71,10 +71,10 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
-      console.warn('>> handle deposit fn error. More info: ', { e });
+      console.warn({ e });
 
-      if ((error as any).data.error_code === 'mempool_is_full')
-        setValue('error', 'The mempool is full, try again in a few seconds.');
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
 
       throw e;
     }
@@ -102,9 +102,10 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
           onClick: gotoExplorer,
         },
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Deposit Failure',
         message:
+          (error as Error).message ||
           'Your deposit failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

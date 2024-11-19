@@ -22,8 +22,7 @@ const CreateTokenFormButton = () => {
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
   const { account, signTransaction } = useAptosWallet();
-  const { control, setValue, reset, getValues } =
-    useFormContext<ICreateTokenForm>();
+  const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
 
@@ -155,8 +154,9 @@ const CreateTokenFormButton = () => {
       );
     } catch (e) {
       console.warn({ e });
-      if ((e as any).data.error_code === 'mempool_is_full')
-        setValue('error', 'The mempool is full, try again in a few seconds.');
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
 
       throw e;
     } finally {
@@ -172,10 +172,10 @@ const CreateTokenFormButton = () => {
         message:
           'We are creating the token, and you will let you know when it is done',
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Creation Failure',
         message:
-          getValues('error') ||
+          (error as Error).message ||
           'Your token creation failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
