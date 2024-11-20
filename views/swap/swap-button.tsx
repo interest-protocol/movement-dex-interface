@@ -82,6 +82,8 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
+      const startTime = Date.now();
+
       const tx = await client.transaction.build.simple({
         data,
         sender: account.address,
@@ -100,8 +102,6 @@ const SwapButton = () => {
         transaction: tx,
         senderAuthenticator,
       });
-
-      const startTime = Date.now();
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
