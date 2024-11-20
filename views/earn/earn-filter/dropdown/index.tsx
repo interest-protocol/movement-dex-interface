@@ -6,8 +6,7 @@ import { v4 } from 'uuid';
 import { ArrowDownSVG, ArrowUpSVG } from '@/components/svg';
 import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 
-import { FilterItemProps } from '../../earn.types';
-import { FormFilterValue } from '../../pool-card/pool-card.types';
+import { FilterItemProps, FormFilterValue } from '../../earn.types';
 import { DropdownProps } from './dropdown.types';
 
 const Dropdown: FC<DropdownProps> = ({ label, type, filterData, disabled }) => {
