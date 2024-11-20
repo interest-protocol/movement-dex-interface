@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
+import { useReadLocalStorage } from 'usehooks-ts';
 
+import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { TOKENS } from '@/constants/coin-fa';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
@@ -20,9 +22,15 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   isOutput,
   handleSelectToken,
 }) => {
+  const isHideLPToken = useReadLocalStorage<boolean>(
+    `${LOCAL_STORAGE_VERSION}-movement-dex-hide-lp-token`
+  );
+
   const { coins, loading } = useCoins();
   const validCoins = coins.filter(
-    ({ standard }) => !isOutput || standard === TokenStandard.FA
+    ({ standard, symbol }) =>
+      (!isOutput || standard === TokenStandard.FA) &&
+      (isHideLPToken ? !symbol.includes('sr-LpFa') : true)
   );
 
   const filterSelected = useWatch({ control, name: 'filter' });
