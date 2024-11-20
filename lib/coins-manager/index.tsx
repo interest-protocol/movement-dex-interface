@@ -2,11 +2,6 @@ import {
   AccountAddress,
   GetFungibleAssetMetadataResponse,
 } from '@aptos-labs/ts-sdk';
-import {
-  COIN_TYPES,
-  FA_ADDRESSES,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
 import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
@@ -77,21 +72,18 @@ const CoinsManager: FC = () => {
                 token_standard === TokenStandard.COIN ? 'MOVE' : 'faMOVE'
               ).toString();
 
-              const type = (
-                token_standard === TokenStandard.COIN
-                  ? COIN_TYPES[Network.Porto].APT
-                  : FA_ADDRESSES[Network.Porto].APT
-              ).toString();
-
               return {
                 ...acc,
-                [type]: {
-                  type,
+                [asset_type]: {
                   name,
                   symbol,
                   decimals,
+                  type: asset_type,
                   balance: BigNumber(amount.toString()),
-                  standard: token_standard as TokenStandard,
+                  standard:
+                    token_standard === 'v1'
+                      ? TokenStandard.COIN
+                      : TokenStandard.FA,
                   ...(!!projectUri && { projectUri }),
                   ...(!!iconUri && { iconUri: iconUri }),
                 },
