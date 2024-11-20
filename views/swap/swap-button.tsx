@@ -82,8 +82,6 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      const startTime = Date.now();
-
       const tx = await client.transaction.build.simple({
         data,
         sender: account.address,
@@ -98,10 +96,14 @@ const SwapButton = () => {
 
       const senderAuthenticator = signTransactionResponse.args;
 
+      const startTime = Date.now();
+
       const txResult = await client.transaction.submit.simple({
         transaction: tx,
         senderAuthenticator,
       });
+
+      const endTime = Date.now() - startTime;
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -109,8 +111,6 @@ const SwapButton = () => {
       });
 
       logSwap(account!.address, from, to, network, txResult.hash);
-
-      const endTime = Date.now() - startTime;
 
       setValue('executionTime', String(endTime));
 
