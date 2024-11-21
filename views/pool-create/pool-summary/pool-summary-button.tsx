@@ -2,9 +2,9 @@ import {
   InputGenerateTransactionPayloadData,
   MoveValue,
 } from '@aptos-labs/ts-sdk';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button } from '@interest-protocol/ui-kit';
-import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -27,7 +27,7 @@ const PoolSummaryButton: FC = () => {
   const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useAptosWallet();
+  const { account, signTransaction } = useWallet();
   const { setValue, getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
@@ -121,14 +121,7 @@ const PoolSummaryButton: FC = () => {
         sender: account.address,
       });
 
-      const signTransactionResponse = await signTransaction(tx);
-
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
-
-      const senderAuthenticator = signTransactionResponse.args;
+      const senderAuthenticator = await signTransaction(tx);
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,
