@@ -6,6 +6,7 @@ import { NetworkProvider } from './network';
 import { WalletProvider } from './wallet';
 
 export const AptosProvider: FC<PropsWithChildren<AptosProviderProps>> = ({
+  wallets,
   children,
   networks,
   defaultNetwork,
@@ -16,7 +17,7 @@ export const AptosProvider: FC<PropsWithChildren<AptosProviderProps>> = ({
     onChangeNetwork={onChangeNetwork}
   >
     <AptosClientProvider networks={networks}>
-      <WalletProvider>{children}</WalletProvider>
+      <WalletProvider wallets={wallets}>{children}</WalletProvider>
     </AptosClientProvider>
   </NetworkProvider>
 );
