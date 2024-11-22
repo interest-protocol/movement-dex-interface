@@ -1,27 +1,10 @@
 import { Button, Typography } from '@interest-protocol/ui-kit';
+import { AptosConnectButton } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 
-import { useModal } from '@/hooks/use-modal';
-
-import ConnectWalletModal from './connect-wallet-modal';
-
-const ConnectWalletButton: FC = () => {
-  const { setModal, handleClose } = useModal();
-
-  const handleOpenModal = () =>
-    setModal(<ConnectWalletModal handleClose={handleClose} />, {
-      isOpen: true,
-      custom: true,
-      onClose: handleClose,
-    });
-
-  return (
-    <Button
-      px={['s', 'l']}
-      variant="filled"
-      borderRadius="xs"
-      onClick={handleOpenModal}
-    >
+const ConnectWalletButton: FC = () => (
+  <AptosConnectButton style={{ width: 'auto' }}>
+    <Button px={['s', 'l']} variant="filled" borderRadius="xs">
       Connect
       <Typography
         as="span"
@@ -33,7 +16,7 @@ const ConnectWalletButton: FC = () => {
         Wallet
       </Typography>
     </Button>
-  );
-};
+  </AptosConnectButton>
+);
 
 export default ConnectWalletButton;
