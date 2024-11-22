@@ -1,18 +1,17 @@
-import { useWallet, WalletName } from '@aptos-labs/wallet-adapter-react';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
 import { ArrowLeftSVG, TimesSVG } from '@/components/svg';
 
-import { WALLETS } from './connect-wallet.data';
 import { ConnectWalletModalProps } from './connect-wallet.types';
 
 const ConnectWalletModal: FC<ConnectWalletModalProps> = ({ handleClose }) => {
-  const { connect } = useWallet();
+  const { allAvailableWallets, select } = useAptosWallet();
 
-  const handleConnect = (walletName: WalletName) => {
-    connect(walletName);
+  const handleConnect = async (name: string) => {
+    await select(name);
     handleClose();
   };
 
@@ -46,20 +45,20 @@ const ConnectWalletModal: FC<ConnectWalletModalProps> = ({ handleClose }) => {
           <TimesSVG maxWidth="1rem" maxHeight="1rem" width="100%" />
         </Button>
       </Box>
-      <Box display="flex" flexDirection="column">
-        {WALLETS.map(({ wallet, name, img }) => (
+      <Box display="flex" flexDirection="column" gap="s">
+        {allAvailableWallets.map(({ label, name, iconUrl }) => (
           <Button
             px="s"
             key={v4()}
             variant="tonal"
             color="onSurface"
             borderRadius="xs"
-            onClick={() => handleConnect(wallet)}
+            onClick={() => handleConnect(name)}
           >
             <Box as="span" display="flex" alignItems="center" gap="s">
-              <img src={img} alt={name} width="40" />
+              <img src={iconUrl} alt={label} width="40" />
               <Typography as="span" size="large" variant="label">
-                {name}
+                {label}
               </Typography>
             </Box>
             <Box>

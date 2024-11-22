@@ -19,6 +19,7 @@
     "@interest-protocol/ui-kit": "0.3.3-beta",
     "@martianwallet/aptos-wallet-adapter": "^0.0.5",
     "@nightlylabs/aptos-wallet-adapter-plugin": "^0.2.12",
+    "@razorlabs/wallet-kit": "^0.5.0",
     "@stylin.js/elements": "^1.0.2",
     "@stylin.js/react": "^1.1.1",
     "@types/ramda": "^0.30.2",

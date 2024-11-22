@@ -1,22 +1,6 @@
-import { AptosWalletAdapterProvider } from '@aptos-labs/wallet-adapter-react';
+import { AptosWalletProvider } from '@razorlabs/wallet-kit';
 import { type FC, type PropsWithChildren } from 'react';
 
-import { useAptosClientConfig } from '../aptos-client/aptos-client.hooks';
-import { WalletProviderProps } from './wallet.types';
-
-export const WalletProvider: FC<PropsWithChildren<WalletProviderProps>> = ({
-  wallets,
-  children,
-}) => {
-  const aptosClientConfig = useAptosClientConfig();
-
-  return (
-    <AptosWalletAdapterProvider
-      autoConnect
-      plugins={wallets}
-      dappConfig={aptosClientConfig}
-    >
-      {children}
-    </AptosWalletAdapterProvider>
-  );
-};
+export const WalletProvider: FC<PropsWithChildren> = ({ children }) => (
+  <AptosWalletProvider autoConnect>{children}</AptosWalletProvider>
+);

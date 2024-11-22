@@ -1,4 +1,3 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { InterestDex } from '@interest-protocol/aptos-move-dex';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import {
@@ -7,6 +6,7 @@ import {
   TooltipWrapper,
   Typography,
 } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 import toast from 'react-hot-toast';
@@ -32,7 +32,7 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { coinsMap, mutate } = useCoins();
-  const { account, signTransaction } = useWallet();
+  const { account, signTransaction } = useAptosWallet();
 
   const symbol = token.symbol;
   const decimals = token.decimals;
@@ -60,7 +60,11 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
         sender: account.address,
       });
 
-      const senderAuthenticator = await signTransaction(tx);
+      const signedTransaction = await signTransaction(tx);
+
+      invariant(signedTransaction.status === 'Approved', 'Rejected by User');
+
+      const senderAuthenticator = signedTransaction.args;
 
       const txResult = await client.transaction.submit.simple({
         transaction: tx,
