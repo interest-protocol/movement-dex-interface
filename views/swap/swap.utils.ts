@@ -47,7 +47,9 @@ const getFaOptions = (fa: AccountAddress) =>
   }, [] as ReadonlyArray<AccountAddress>);
 
 export const getPath = (typeIn: string, typeOut: string) => {
-  const [faIn, faOut] = [typeIn, typeOut].map(AccountAddress.from);
+  const [faIn, faOut] = [typeIn, typeOut].map((type) =>
+    AccountAddress.from(type)
+  );
 
   const faInOptions = getFaOptions(faIn);
 
