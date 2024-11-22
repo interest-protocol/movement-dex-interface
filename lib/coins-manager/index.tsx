@@ -2,7 +2,7 @@ import {
   AccountAddress,
   GetFungibleAssetMetadataResponse,
 } from '@aptos-labs/ts-sdk';
-import { useAptosWallet } from '@razorlabs/wallet-kit';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import BigNumber from 'bignumber.js';
 import { values } from 'ramda';
 import { type FC, useEffect, useId } from 'react';
@@ -20,7 +20,7 @@ import { Asset, TokenStandard } from './coins-manager.types';
 const CoinsManager: FC = () => {
   const id = useId();
   const client = useAptosClient();
-  const { account: currentAccount } = useAptosWallet();
+  const { account: currentAccount } = useWallet();
 
   const { setError, setLoading, setCoins, setMutate } = useCoins();
 
