@@ -26,7 +26,7 @@ const SwapButton = () => {
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { signTransaction, account } = useAptosWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
@@ -48,7 +48,7 @@ const SwapButton = () => {
 
       const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
-      const data =
+      const payload =
         from.standard === TokenStandard.COIN
           ? dex.swapPathCoinIn({
               amountIn,
@@ -64,35 +64,22 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
+      const txResult = await signAndSubmitTransaction({
+        payload,
       });
 
-      const signTransactionResponse = await signTransaction(tx);
-
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
-
-      const senderAuthenticator = signTransactionResponse.args;
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
-      logSwap(account!.address, from, to, network, txResult.hash);
+      logSwap(account!.address, from, to, network, txResult.args.hash);
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
       );
     } catch (e) {
       console.warn(e);
