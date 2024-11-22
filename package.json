@@ -17,8 +17,6 @@
     "@interest-protocol/aptos-move-dex": "1.0.0-alpha.6",
     "@interest-protocol/aptos-sr-amm": "^1.1.0",
     "@interest-protocol/ui-kit": "0.3.3-beta",
-    "@martianwallet/aptos-wallet-adapter": "^0.0.5",
-    "@nightlylabs/aptos-wallet-adapter-plugin": "^0.2.12",
     "@razorlabs/wallet-kit": "^0.5.0",
     "@stylin.js/elements": "^1.0.2",
     "@stylin.js/react": "^1.1.1",
