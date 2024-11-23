@@ -99,7 +99,7 @@ const CreateTokenFormButton = () => {
 
       const endTime = Date.now() - startTime;
 
-      setValue('executionTime', endTime);
+      setValue('executionTime', String(endTime));
 
       invariant(txResult.status === 'Approved', 'Rejected by User');
 
