@@ -5,9 +5,8 @@ import { FC, useEffect, useState } from 'react';
 
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { PRICE_TYPE } from '@/constants/prices';
-import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { formatDollars, ZERO_BIG_NUMBER } from '@/utils';
+import { formatDollars } from '@/utils';
 
 const BalanceCard: FC = () => {
   const { coinsMap } = useCoins();
@@ -19,14 +18,17 @@ const BalanceCard: FC = () => {
   const decimals = defaultCoin.decimals;
   const symbol = defaultCoin.symbol;
 
-  const balance = FixedPointMath.toNumber(
-    coinsMap[type]?.balance.isZero()
-      ? coinsMap[faType]?.balance.isZero()
-        ? ZERO_BIG_NUMBER
-        : coinsMap[faType]?.balance
-      : coinsMap[type]?.balance,
-    decimals
-  );
+  console.log({ type, coin: coinsMap[type], coinsMap });
+
+  const balance = 0;
+  // FixedPointMath.toNumber(
+  //   coinsMap[type]?.balance.isZero()
+  //     ? coinsMap[faType]?.balance.isZero()
+  //       ? ZERO_BIG_NUMBER
+  //       : coinsMap[faType]?.balance
+  //     : coinsMap[type]?.balance,
+  //   decimals
+  // );
 
   useEffect(() => {
     if (PRICE_TYPE[symbol])
