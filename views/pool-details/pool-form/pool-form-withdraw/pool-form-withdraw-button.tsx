@@ -19,7 +19,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
   const { handleClose: closeModal } = useModal();
-  const { account, signTransaction } = useAptosWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
 
   const error = useWatch({ control, name: 'error' });
 
@@ -31,36 +31,24 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
 
       const lpCoin = getValues('lpCoin');
 
-      const data = dex.removeLiquidity({
+      const payload = dex.removeLiquidity({
         lpFa: lpCoin.type,
         recipient: account.address,
         amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const signedTransaction = await signTransaction(tx);
-
-      invariant(signedTransaction.status === 'Approved', 'Rejected by User');
-
-      const senderAuthenticator = signedTransaction.args;
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
       );
     } catch (e) {
       console.warn({ e });

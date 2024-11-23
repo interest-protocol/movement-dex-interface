@@ -18,7 +18,7 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
-  const { account, signTransaction } = useAptosWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
@@ -26,7 +26,7 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
       setValue('error', '');
       const [token0, token1] = getValues('tokenList');
 
-      const data = dex.addLiquidity({
+      const payload = dex.addLiquidity({
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
@@ -34,24 +34,17 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const signedTransaction = await signTransaction(tx);
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
-      invariant(signedTransaction.status === 'Approved', 'Rejected by User');
-
-      const senderAuthenticator = signedTransaction.args;
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
+      await client.waitForTransaction({
+        transactionHash: txResult.args.hash,
+        options: { checkSuccess: true },
       });
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
@@ -60,12 +53,12 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         getValues('tokenList.0'),
         getValues('tokenList.1'),
         Network.Porto,
-        txResult.hash
+        txResult.args.hash
       );
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
       );
     } catch (e) {
       console.warn({ e });

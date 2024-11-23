@@ -21,7 +21,7 @@ const CreateTokenFormButton = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { account, signTransaction } = useAptosWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
   const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
@@ -62,7 +62,7 @@ const CreateTokenFormButton = () => {
         'You must fill the required fields'
       );
 
-      const data = values.pool?.active
+      const payload = values.pool?.active
         ? dex.deployMemeFA({
             name,
             symbol,
@@ -92,31 +92,19 @@ const CreateTokenFormButton = () => {
             ),
           });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const signedTransaction = await signTransaction(tx);
-
-      invariant(signedTransaction.status === 'Approved', 'Rejected by User');
-
-      const senderAuthenticator = signedTransaction.args;
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
       if (pool?.active) {
         client
           .getTransactionByHash({
-            transactionHash: txResult.hash,
+            transactionHash: txResult.args.hash,
           })
           .then((txn) => {
             const poolId = (txn as UserTransactionResponse).events.find(
@@ -142,12 +130,12 @@ const CreateTokenFormButton = () => {
         symbol,
         !!pool?.active,
         Network.Porto,
-        txResult.hash
+        txResult.args.hash
       );
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
       );
     } catch (e) {
       console.warn({ e });

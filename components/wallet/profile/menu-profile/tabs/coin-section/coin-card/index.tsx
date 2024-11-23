@@ -32,7 +32,7 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { coinsMap, mutate } = useCoins();
-  const { account, signTransaction } = useAptosWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
 
   const symbol = token.symbol;
   const decimals = token.decimals;
@@ -49,34 +49,23 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
     try {
       invariant(account, 'You should have this coin in your wallet');
       invariant(coin, 'You should have this coin in your wallet');
-      const data = dex.wrapCoin({
+
+      const payload = dex.wrapCoin({
         coinType: token.type,
         amount: BigInt(coin.balance.toString()),
         recipient: account.address,
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const signedTransaction = await signTransaction(tx);
-
-      invariant(signedTransaction.status === 'Approved', 'Rejected by User');
-
-      const senderAuthenticator = signedTransaction.args;
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
-      logWrapCoin(account.address, symbol, network, txResult.hash);
+      logWrapCoin(account.address, symbol, network, txResult.args.hash);
 
       toast.success(`${symbol} wrapped successfully!`);
     } catch (e) {
