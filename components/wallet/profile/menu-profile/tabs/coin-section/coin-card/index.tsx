@@ -62,7 +62,9 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
         recipient: account.address,
       });
 
-      if (wallet === 'razor') {
+      console.log({ wallet });
+
+      if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
         invariant(tx.status === 'Approved', 'Rejected by User');
