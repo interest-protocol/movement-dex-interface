@@ -44,7 +44,7 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
         amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      if (wallet === 'razor') {
+      if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
         invariant(tx.status === 'Approved', 'Rejected by User');

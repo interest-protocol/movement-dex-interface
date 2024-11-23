@@ -71,7 +71,7 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      if (wallet === 'razor') {
+      if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
         invariant(tx.status === 'Approved', 'Rejected by User');

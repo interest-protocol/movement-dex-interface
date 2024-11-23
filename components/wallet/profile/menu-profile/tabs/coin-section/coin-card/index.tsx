@@ -62,8 +62,6 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
         recipient: account.address,
       });
 
-      console.log({ wallet });
-
       if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
