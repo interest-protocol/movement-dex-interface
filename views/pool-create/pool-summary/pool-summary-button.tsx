@@ -2,9 +2,9 @@ import {
   InputGenerateTransactionPayloadData,
   MoveValue,
 } from '@aptos-labs/ts-sdk';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Button } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -27,7 +27,7 @@ const PoolSummaryButton: FC = () => {
   const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
   const { setValue, getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
@@ -53,7 +53,7 @@ const PoolSummaryButton: FC = () => {
         [[], []] as [ReadonlyArray<Token>, ReadonlyArray<Token>]
       );
 
-      let data: InputGenerateTransactionPayloadData;
+      let payload: InputGenerateTransactionPayloadData;
       let pool: {
         exists: MoveValue;
         poolAddress: MoveValue;
@@ -65,7 +65,7 @@ const PoolSummaryButton: FC = () => {
           faB: COIN_TYPE_TO_FA[coins[1].type].toString(),
         });
 
-        data = dex.addLiquidityCoins({
+        payload = dex.addLiquidityCoins({
           coinA: coins[0].type,
           coinB: coins[1].type,
           recipient: account.address,
@@ -86,7 +86,7 @@ const PoolSummaryButton: FC = () => {
           faB: fas[0].type,
         });
 
-        data = dex.addLiquidityOneCoin({
+        payload = dex.addLiquidityOneCoin({
           coinA: coins[0].type,
           faB: fas[0].type,
           recipient: account.address,
@@ -107,7 +107,7 @@ const PoolSummaryButton: FC = () => {
           faB: fas[1].type,
         });
 
-        data = dex.addLiquidity({
+        payload = dex.addLiquidity({
           faA: fas[0].type,
           faB: fas[1].type,
           recipient: account.address,
@@ -116,20 +116,12 @@ const PoolSummaryButton: FC = () => {
         });
       }
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const senderAuthenticator = await signTransaction(tx);
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
@@ -138,7 +130,7 @@ const PoolSummaryButton: FC = () => {
         tokens[0],
         tokens[1],
         Network.Porto,
-        txResult.hash
+        txResult.args.hash
       );
 
       fetch('https://pool-indexer-production.up.railway.app/api/pool/sr-amm', {

@@ -1,7 +1,7 @@
 import { UserTransactionResponse } from '@aptos-labs/ts-sdk';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
@@ -21,7 +21,7 @@ const CreateTokenFormButton = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { account, signTransaction } = useWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
   const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
@@ -62,7 +62,7 @@ const CreateTokenFormButton = () => {
         'You must fill the required fields'
       );
 
-      const data = values.pool?.active
+      const payload = values.pool?.active
         ? dex.deployMemeFA({
             name,
             symbol,
@@ -92,27 +92,19 @@ const CreateTokenFormButton = () => {
             ),
           });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const senderAuthenticator = await signTransaction(tx);
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
       if (pool?.active) {
         client
           .getTransactionByHash({
-            transactionHash: txResult.hash,
+            transactionHash: txResult.args.hash,
           })
           .then((txn) => {
             const poolId = (txn as UserTransactionResponse).events.find(
@@ -138,12 +130,12 @@ const CreateTokenFormButton = () => {
         symbol,
         !!pool?.active,
         Network.Porto,
-        txResult.hash
+        txResult.args.hash
       );
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
       );
     } catch (e) {
       console.warn({ e });

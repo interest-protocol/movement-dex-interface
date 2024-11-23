@@ -1,14 +1,18 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { Box, Typography } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { FC } from 'react';
 
 import { UserSVG } from '@/components/svg';
 
 import { AvatarProps } from './account-info.types';
 
-const Avatar: FC<AvatarProps> = ({ withNameOrAddress, account, isLarge }) => {
-  const { account: currentAccount } = useWallet();
-  const address = account?.address ?? (currentAccount?.address || '');
+const Avatar: FC<AvatarProps> = ({
+  isLarge,
+  accountAddress,
+  withNameOrAddress,
+}) => {
+  const { account: currentAccount } = useAptosWallet();
+  const address = accountAddress ?? (currentAccount?.address || '');
 
   const SIZE = isLarge ? '2.2rem' : '1.5rem';
 

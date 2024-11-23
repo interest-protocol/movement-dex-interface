@@ -1,4 +1,3 @@
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { InterestDex } from '@interest-protocol/aptos-move-dex';
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import {
@@ -7,6 +6,7 @@ import {
   TooltipWrapper,
   Typography,
 } from '@interest-protocol/ui-kit';
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 import toast from 'react-hot-toast';
@@ -32,7 +32,7 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { coinsMap, mutate } = useCoins();
-  const { account, signTransaction } = useWallet();
+  const { account, signAndSubmitTransaction } = useAptosWallet();
 
   const symbol = token.symbol;
   const decimals = token.decimals;
@@ -49,30 +49,23 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
     try {
       invariant(account, 'You should have this coin in your wallet');
       invariant(coin, 'You should have this coin in your wallet');
-      const data = dex.wrapCoin({
+
+      const payload = dex.wrapCoin({
         coinType: token.type,
         amount: BigInt(coin.balance.toString()),
         recipient: account.address,
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      const txResult = await signAndSubmitTransaction({ payload });
 
-      const senderAuthenticator = await signTransaction(tx);
-
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+      invariant(txResult.status === 'Approved', 'Rejected by User');
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: txResult.args.hash,
         options: { checkSuccess: true },
       });
 
-      logWrapCoin(account.address, symbol, network, txResult.hash);
+      logWrapCoin(account.address, symbol, network, txResult.args.hash);
 
       toast.success(`${symbol} wrapped successfully!`);
     } catch (e) {
