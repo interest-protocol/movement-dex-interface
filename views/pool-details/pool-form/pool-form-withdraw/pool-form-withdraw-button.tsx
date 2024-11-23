@@ -19,7 +19,12 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
   const { handleClose: closeModal } = useModal();
-  const { account, signAndSubmitTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const error = useWatch({ control, name: 'error' });
 
@@ -29,6 +34,8 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
 
       setValue('error', '');
 
+      let txResult;
+
       const lpCoin = getValues('lpCoin');
 
       const payload = dex.removeLiquidity({
@@ -37,18 +44,38 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
         amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const txResult = await signAndSubmitTransaction({ payload });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      invariant(txResult.status === 'Approved', 'Rejected by User');
+        invariant(tx.status === 'Approved', 'Rejected by User');
+
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
+
+        const signedTx = await signTransaction(tx);
+
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
-        transactionHash: txResult.args.hash,
+        transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
       console.warn({ e });

@@ -18,13 +18,20 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
-  const { account, signAndSubmitTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
       invariant(account, 'You must be connected to proceed');
       setValue('error', '');
       const [token0, token1] = getValues('tokenList');
+
+      let txResult;
 
       const payload = dex.addLiquidity({
         faA: token0.type,
@@ -34,17 +41,32 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const txResult = await signAndSubmitTransaction({ payload });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      invariant(txResult.status === 'Approved', 'Rejected by User');
+        invariant(tx.status === 'Approved', 'Rejected by User');
+
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
+
+        const signedTx = await signTransaction(tx);
+
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
-        transactionHash: txResult.args.hash,
-        options: { checkSuccess: true },
-      });
-
-      await client.waitForTransaction({
-        transactionHash: txResult.args.hash,
+        transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
 
@@ -53,12 +75,12 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         getValues('tokenList.0'),
         getValues('tokenList.1'),
         Network.Porto,
-        txResult.args.hash
+        txResult.hash
       );
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
       console.warn({ e });

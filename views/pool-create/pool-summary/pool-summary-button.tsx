@@ -27,7 +27,12 @@ const PoolSummaryButton: FC = () => {
   const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signAndSubmitTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { setValue, getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
@@ -53,6 +58,7 @@ const PoolSummaryButton: FC = () => {
         [[], []] as [ReadonlyArray<Token>, ReadonlyArray<Token>]
       );
 
+      let txResult;
       let payload: InputGenerateTransactionPayloadData;
       let pool: {
         exists: MoveValue;
@@ -116,12 +122,32 @@ const PoolSummaryButton: FC = () => {
         });
       }
 
-      const txResult = await signAndSubmitTransaction({ payload });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      invariant(txResult.status === 'Approved', 'Rejected by User');
+        invariant(tx.status === 'Approved', 'Rejected by User');
+
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
+
+        const signedTx = await signTransaction(tx);
+
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
-        transactionHash: txResult.args.hash,
+        transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
 
@@ -130,7 +156,7 @@ const PoolSummaryButton: FC = () => {
         tokens[0],
         tokens[1],
         Network.Porto,
-        txResult.args.hash
+        txResult.hash
       );
 
       fetch('https://pool-indexer-production.up.railway.app/api/pool/sr-amm', {
