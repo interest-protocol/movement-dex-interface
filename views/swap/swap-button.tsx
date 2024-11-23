@@ -159,6 +159,7 @@ const SwapButton = () => {
       <Button
         py="m"
         variant="filled"
+        borderRadius="s"
         onClick={onSwap}
         disabled={disabled}
         justifyContent="center"
