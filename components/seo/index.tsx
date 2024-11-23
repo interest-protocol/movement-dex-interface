@@ -8,7 +8,6 @@ const SEO: FC<SEOProps> = ({ pageTitle }) => {
 
   return (
     <Head>
-      <meta name="theme-color" content="#282828" />
       <meta charSet="utf-8" />
       <meta name="title" content={title} />
       <meta

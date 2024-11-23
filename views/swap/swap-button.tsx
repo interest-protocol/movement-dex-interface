@@ -30,7 +30,7 @@ const SwapButton = () => {
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { signTransaction, account } = useAptosWallet();
+  const { signAndSubmitTransaction, account } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
@@ -66,7 +66,7 @@ const SwapButton = () => {
 
       const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
-      const data =
+      const payload =
         from.standard === TokenStandard.COIN
           ? dex.swapPathCoinIn({
               amountIn,
@@ -82,41 +82,28 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
-
-      const signTransactionResponse = await signTransaction(tx);
-
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
-
-      const senderAuthenticator = signTransactionResponse.args;
-
       const startTime = Date.now();
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
+      const transaction = await signAndSubmitTransaction({
+        payload,
       });
+
+      invariant(transaction.status === 'Approved', 'Rejected by User');
 
       const endTime = Date.now() - startTime;
 
       await client.waitForTransaction({
-        transactionHash: txResult.hash,
+        transactionHash: transaction.args.hash,
         options: { checkSuccess: true },
       });
 
-      logSwap(account!.address, from, to, network, txResult.hash);
+      logSwap(account!.address, from, to, network, transaction.args.hash);
 
       setValue('executionTime', String(endTime));
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${transaction.args.hash}`)
       );
     } catch (e) {
       console.warn(e);

@@ -39,4 +39,5 @@ export interface SettingOptionProps {
   label: string;
   description?: string;
   isToggleEnable: boolean;
+  onClick?: () => void;
 }

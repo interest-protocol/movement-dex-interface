@@ -6,9 +6,13 @@ import { UserSVG } from '@/components/svg';
 
 import { AvatarProps } from './account-info.types';
 
-const Avatar: FC<AvatarProps> = ({ withNameOrAddress, account, isLarge }) => {
+const Avatar: FC<AvatarProps> = ({
+  isLarge,
+  accountAddress,
+  withNameOrAddress,
+}) => {
   const { account: currentAccount } = useAptosWallet();
-  const address = account?.address ?? (currentAccount?.address || '');
+  const address = accountAddress ?? (currentAccount?.address || '');
 
   const SIZE = isLarge ? '2.2rem' : '1.5rem';
 

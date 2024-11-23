@@ -1,7 +1,5 @@
-import type { useAptosWallet } from '@razorlabs/wallet-kit';
-
 export interface AvatarProps {
   isLarge?: boolean;
+  accountAddress?: string;
   withNameOrAddress?: boolean;
-  account?: ReturnType<typeof useAptosWallet>['account'];
 }
