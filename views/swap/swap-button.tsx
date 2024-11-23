@@ -26,7 +26,12 @@ const SwapButton = () => {
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { signTransaction, account } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
@@ -40,6 +45,7 @@ const SwapButton = () => {
   const handleSwap = async () => {
     try {
       setLoading(true);
+      setValue('error', '');
 
       if (!account) return;
 
@@ -47,7 +53,9 @@ const SwapButton = () => {
 
       const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
-      const data =
+      let txResult;
+
+      const payload =
         from.standard === TokenStandard.COIN
           ? dex.swapPathCoinIn({
               amountIn,
@@ -63,24 +71,29 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -95,6 +108,10 @@ const SwapButton = () => {
       );
     } catch (e) {
       console.warn(e);
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
       throw e;
     } finally {
       mutate();
@@ -108,9 +125,10 @@ const SwapButton = () => {
         title: 'Swapping...',
         message: 'We are swapping, and you will let you know when it is done',
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Swap Failure',
         message:
+          (error as Error).message ||
           'Your swap failed, please try to increment your slippage and try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

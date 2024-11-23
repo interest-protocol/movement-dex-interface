@@ -27,8 +27,13 @@ const PoolSummaryButton: FC = () => {
   const network = Network.Porto;
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
-  const { account, signTransaction } = useAptosWallet();
-  const { getValues, resetField } = useFormContext<CreatePoolForm>();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
+  const { setValue, getValues, resetField } = useFormContext<CreatePoolForm>();
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -39,6 +44,7 @@ const PoolSummaryButton: FC = () => {
   const onCreatePool = async () => {
     try {
       const { tokens } = getValues();
+      setValue('error', '');
 
       invariant(account, 'You must be connected');
 
@@ -52,7 +58,8 @@ const PoolSummaryButton: FC = () => {
         [[], []] as [ReadonlyArray<Token>, ReadonlyArray<Token>]
       );
 
-      let data: InputGenerateTransactionPayloadData;
+      let txResult;
+      let payload: InputGenerateTransactionPayloadData;
       let pool: {
         exists: MoveValue;
         poolAddress: MoveValue;
@@ -64,7 +71,7 @@ const PoolSummaryButton: FC = () => {
           faB: COIN_TYPE_TO_FA[coins[1].type].toString(),
         });
 
-        data = dex.addLiquidityCoins({
+        payload = dex.addLiquidityCoins({
           coinA: coins[0].type,
           coinB: coins[1].type,
           recipient: account.address,
@@ -85,7 +92,7 @@ const PoolSummaryButton: FC = () => {
           faB: fas[0].type,
         });
 
-        data = dex.addLiquidityOneCoin({
+        payload = dex.addLiquidityOneCoin({
           coinA: coins[0].type,
           faB: fas[0].type,
           recipient: account.address,
@@ -106,7 +113,7 @@ const PoolSummaryButton: FC = () => {
           faB: fas[1].type,
         });
 
-        data = dex.addLiquidity({
+        payload = dex.addLiquidity({
           faA: fas[0].type,
           faB: fas[1].type,
           recipient: account.address,
@@ -115,24 +122,29 @@ const PoolSummaryButton: FC = () => {
         });
       }
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -159,10 +171,13 @@ const PoolSummaryButton: FC = () => {
       push(
         `${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress?.toString()}`
       );
-    } catch (error) {
-      console.warn({ error });
+    } catch (e) {
+      console.warn({ e });
 
-      throw error;
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
+      throw e;
     }
   };
 
@@ -184,9 +199,10 @@ const PoolSummaryButton: FC = () => {
           },
         },
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Pool creation failed',
         message:
+          (error as Error).message ||
           'Your pool was not created, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

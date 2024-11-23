@@ -1,14 +1,13 @@
-import {
-  COINS,
-  FUNGIBLE_ASSETS,
-  Network,
-} from '@interest-protocol/aptos-sr-amm';
-import { values } from 'ramda';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
+import { useReadLocalStorage } from 'usehooks-ts';
 
+import { LOCAL_STORAGE_VERSION } from '@/constants';
+import { TOKENS } from '@/constants/coin-fa';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
+import { parseToMetadata } from '@/utils';
+import { CoinMetadata, FAMetadata } from '@/utils/coin/coin.types';
 
 import FetchingToken from './fetching-token';
 import ModalTokenBody from './modal-token-body';
@@ -23,36 +22,26 @@ const SelectTokenModalBody: FC<SelectTokenModalBodyProps> = ({
   isOutput,
   handleSelectToken,
 }) => {
+  const isHideLPToken = useReadLocalStorage<boolean>(
+    `${LOCAL_STORAGE_VERSION}-movement-dex-hide-lp-token`
+  );
+
   const { coins, loading } = useCoins();
   const validCoins = coins.filter(
-    ({ standard }) => !isOutput || standard === TokenStandard.FA
+    ({ standard, symbol }) =>
+      (!isOutput || standard === TokenStandard.FA) &&
+      (isHideLPToken ? !symbol.includes('sr-LpFa') : true)
   );
 
   const filterSelected = useWatch({ control, name: 'filter' });
 
-  if (filterSelected === TokenOrigin.Coin)
+  if (filterSelected === TokenOrigin.Strict)
     return (
       <ModalTokenBody
         loading={false}
         handleSelectToken={handleSelectToken}
-        tokens={values(COINS[Network.Porto]).map((token) => ({
-          ...token,
-          standard: TokenStandard.COIN,
-        }))}
-      />
-    );
-
-  if (filterSelected === TokenOrigin.FA)
-    return (
-      <ModalTokenBody
-        loading={false}
-        handleSelectToken={handleSelectToken}
-        tokens={values(FUNGIBLE_ASSETS[Network.Porto]).map(
-          ({ address, ...token }) => ({
-            ...token,
-            type: address.toString(),
-            standard: TokenStandard.FA,
-          })
+        tokens={TOKENS.map((metadata) =>
+          parseToMetadata(metadata as CoinMetadata | FAMetadata)
         )}
       />
     );

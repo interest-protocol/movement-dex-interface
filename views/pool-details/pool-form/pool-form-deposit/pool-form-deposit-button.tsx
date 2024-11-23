@@ -18,15 +18,22 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
       invariant(account, 'You must be connected to proceed');
-
+      setValue('error', '');
       const [token0, token1] = getValues('tokenList');
 
-      const data = dex.addLiquidity({
+      let txResult;
+
+      const payload = dex.addLiquidity({
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
@@ -34,24 +41,29 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -71,7 +83,11 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
-      console.warn('>> handle deposit fn error. More info: ', { e });
+      console.warn({ e });
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
       throw e;
     }
   };
@@ -91,15 +107,17 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
       success: () => ({
         title: 'Deposit Successfully',
         message:
+          getValues('error') ||
           'Your deposit was successfully, and you can check it on the Explorer',
         primaryButton: {
           label: 'See on Explorer',
           onClick: gotoExplorer,
         },
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Deposit Failure',
         message:
+          (error as Error).message ||
           'Your deposit failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),

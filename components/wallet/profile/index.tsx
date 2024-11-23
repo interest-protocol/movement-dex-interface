@@ -1,5 +1,4 @@
 import { Box } from '@interest-protocol/ui-kit';
-import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 
@@ -12,12 +11,9 @@ const BOX_ID = 'wallet-box';
 
 const Profile: FC = () => {
   const { query } = useRouter();
-  const { account: currentAccount } = useAptosWallet();
   const [isOpenProfile, setIsOpenProfile] = useState(Boolean(query.profile));
 
   const [menuIsDropdown] = useState(isOpenProfile);
-
-  const account = currentAccount?.address || '';
 
   const closeDropdown = (event: any) => {
     if (
@@ -61,32 +57,30 @@ const Profile: FC = () => {
       right={menuIsDropdown ? ['-2rem', '-2rem', '-2rem', 'unset'] : 'unset'}
       width={menuIsDropdown ? ['110vw', '110vw', '110vw', 'unset'] : 'unset'}
       height={menuIsDropdown ? ['100vh', '100vh', '100vh', 'unset'] : 'unset'}
-      position={
-        menuIsDropdown
-          ? ['absolute', 'absolute', 'absolute', 'relative']
-          : 'relative'
-      }
       bg={
         menuIsDropdown
           ? ['container', 'container', 'container', 'unset']
           : 'unset'
       }
+      position={
+        menuIsDropdown
+          ? ['absolute', 'absolute', 'absolute', 'relative']
+          : 'relative'
+      }
     >
-      {account && (
-        <Box
-          gap="m"
-          display={[
-            menuIsDropdown ? 'none' : 'flex',
-            menuIsDropdown ? 'none' : 'flex',
-            menuIsDropdown ? 'none' : 'flex',
-            'flex',
-          ]}
-          alignItems="center"
-          onClick={isOpenProfile ? handleCloseProfile : handleOpenProfile}
-        >
-          <Avatar isLarge />
-        </Box>
-      )}
+      <Box
+        gap="m"
+        alignItems="center"
+        onClick={isOpenProfile ? handleCloseProfile : handleOpenProfile}
+        display={[
+          menuIsDropdown ? 'none' : 'flex',
+          menuIsDropdown ? 'none' : 'flex',
+          menuIsDropdown ? 'none' : 'flex',
+          'flex',
+        ]}
+      >
+        <Avatar isLarge />
+      </Box>
       <MenuProfile
         isOpen={isOpenProfile}
         handleCloseProfile={handleCloseProfile}

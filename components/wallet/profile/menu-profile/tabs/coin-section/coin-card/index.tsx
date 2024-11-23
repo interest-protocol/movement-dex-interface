@@ -14,6 +14,7 @@ import invariant from 'tiny-invariant';
 
 import { RateDownSVG, RateUpSVG, WrapSVG } from '@/components/svg';
 import TokenIcon from '@/components/token-icon';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
@@ -27,11 +28,16 @@ import { logWrapCoin } from './coin-card.utils';
 
 const dex = new InterestDex();
 
-const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
+const CoinCard: FC<CoinCardProps> = ({ token }) => {
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { coinsMap, mutate } = useCoins();
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const symbol = token.symbol;
   const decimals = token.decimals;
@@ -48,30 +54,37 @@ const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
     try {
       invariant(account, 'You should have this coin in your wallet');
       invariant(coin, 'You should have this coin in your wallet');
-      const data = dex.wrapCoin({
+
+      let txResult;
+      const payload = dex.wrapCoin({
         coinType: token.type,
         amount: BigInt(coin.balance.toString()),
         recipient: account.address,
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -82,7 +95,9 @@ const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
 
       toast.success(`${symbol} wrapped successfully!`);
     } catch (e) {
-      toast.error((e as Error).message);
+      if ((e as any).data.error_code === 'mempool_is_full')
+        toast.error('The mempool is full, try again in a few seconds.');
+      else toast.error((e as Error).message);
     } finally {
       mutate();
       toast.dismiss(id);
@@ -158,7 +173,7 @@ const CoinCard: FC<CoinCardProps> = ({ token, isFA }) => {
             </Box>
           )}
         </Box>
-        {!isFA && (
+        {COIN_TYPE_TO_FA[token.type] && (
           <TooltipWrapper
             bg="lowContainer"
             tooltipPosition="top"

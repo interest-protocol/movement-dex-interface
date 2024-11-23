@@ -21,7 +21,12 @@ const CreateTokenFormButton = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
 
   const values = useWatch({ control });
@@ -44,7 +49,7 @@ const CreateTokenFormButton = () => {
   const handleCreateToken = async () => {
     try {
       invariant(ableToMerge, 'Button must be enabled');
-
+      setValue('error', '');
       setLoading(true);
 
       const {
@@ -62,7 +67,9 @@ const CreateTokenFormButton = () => {
         'You must fill the required fields'
       );
 
-      const data = values.pool?.active
+      let txResult;
+
+      const payload = values.pool?.active
         ? dex.deployMemeFA({
             name,
             symbol,
@@ -92,24 +99,29 @@ const CreateTokenFormButton = () => {
             ),
           });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      if (wallet === 'razor') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -154,6 +166,10 @@ const CreateTokenFormButton = () => {
       );
     } catch (e) {
       console.warn({ e });
+
+      if ((e as any)?.data?.error_code === 'mempool_is_full')
+        throw new Error('The mempool is full, try again in a few seconds.');
+
       throw e;
     } finally {
       reset();
@@ -168,9 +184,10 @@ const CreateTokenFormButton = () => {
         message:
           'We are creating the token, and you will let you know when it is done',
       }),
-      error: () => ({
+      error: (error) => ({
         title: 'Creation Failure',
         message:
+          (error as Error).message ||
           'Your token creation failed, please try again or contact the support team',
         primaryButton: { label: 'Try again', onClick: handleClose },
       }),
