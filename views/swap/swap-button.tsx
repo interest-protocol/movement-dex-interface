@@ -35,8 +35,8 @@ const SwapButton = () => {
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
-  const symbolIn = useWatch({ control, name: 'from.symbol' });
-  const symbolOut = useWatch({ control, name: 'to.symbol' });
+  const valueIn = useWatch({ control, name: 'from.value' });
+  const valueOut = useWatch({ control, name: 'to.value' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -159,7 +159,7 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !(symbolIn && symbolOut);
+  const disabled = !(valueIn && valueOut);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
