@@ -31,80 +31,52 @@ const CreateTokenForm: FC = () => {
         color="onSurface"
       >
         <Typography variant="headline" size="small">
-          Coin Details
+          Coin Generator
         </Typography>
         <Box py="2xl" display="flex" flexDirection="column" gap="l">
-          <Box display="grid" gridTemplateColumns="4fr 2fr" gap="xs">
-            <Box>
-              <TextField
-                label="Name"
-                fontFamily="Proto"
-                {...register('name')}
-                placeholder="Eg. Ruco"
-                nPlaceholder={{ opacity: 0.7 }}
-                status={errors.name && 'error'}
-                supportingText={errors.name?.message}
-                fieldProps={{ borderRadius: '2xs', height: '3rem' }}
-              />
-            </Box>
-            <Box>
-              <TextField
-                label="Symbol"
-                fontFamily="Proto"
-                placeholder="Eg. Ruco"
-                {...register('symbol')}
-                nPlaceholder={{ opacity: 0.7 }}
-                status={errors.symbol && 'error'}
-                supportingText={errors.symbol?.message}
-                fieldProps={{ borderRadius: '2xs', height: '3rem' }}
-              />
-            </Box>
+          <Typography size="large" variant="body">
+            1. Coin Details
+          </Typography>
+          <Box>
+            <TextField
+              label="Name"
+              fontFamily="Proto"
+              {...register('name')}
+              placeholder="Eg. Ruco"
+              nPlaceholder={{ opacity: 0.7 }}
+              status={errors.name && 'error'}
+              supportingText={errors.name?.message}
+              fieldProps={{ borderRadius: '2xs', height: '3rem' }}
+            />
+          </Box>
+          <Box>
+            <TextField
+              label="Symbol"
+              fontFamily="Proto"
+              placeholder="Eg. Ruco"
+              {...register('symbol')}
+              nPlaceholder={{ opacity: 0.7 }}
+              status={errors.symbol && 'error'}
+              supportingText={errors.symbol?.message}
+              fieldProps={{ borderRadius: '2xs', height: '3rem' }}
+            />
           </Box>
           <Box>
             <TextField
               fontFamily="Proto"
-              label="Project URL"
-              {...register('projectUrl')}
+              label="Description"
+              {...register('description')}
               nPlaceholder={{ opacity: 0.7 }}
-              status={errors.projectUrl && 'error'}
-              placeholder="Eg. https://www.Ruco.com"
-              supportingText={errors.projectUrl?.message}
+              supportingText={errors.description?.message}
+              placeholder="Some description about the coin"
               fieldProps={{ borderRadius: '2xs', height: '3rem' }}
             />
           </Box>
-          <Box display="grid" gridTemplateColumns="3fr 6fr" gap="xs">
-            <Box>
-              <TextField
-                type="number"
-                fontFamily="Proto"
-                label="Coin Decimals"
-                {...register('decimals')}
-                nPlaceholder={{ opacity: 0.7 }}
-                fieldProps={{ borderRadius: '2xs', height: '3rem' }}
-              />
-            </Box>
-            <Box>
-              <TextField
-                fontFamily="Proto"
-                label="Total Supply"
-                nPlaceholder={{ opacity: 0.7 }}
-                status={errors.supply && 'error'}
-                placeholder="Your total coin supply"
-                supportingText={errors.supply?.message}
-                {...register('supply', {
-                  onChange: (v: ChangeEvent<HTMLInputElement>) => {
-                    setValue(
-                      'supply',
-                      Number(parseInputEventToNumberString(v))
-                    );
-                  },
-                })}
-                fieldProps={{ borderRadius: '2xs', height: '3rem' }}
-              />
-            </Box>
-          </Box>
         </Box>
-        <Box display="flex" flexDirection="column" gap="m">
+        <Box display="flex" flexDirection="column" gap="l" mb="2xl">
+          <Typography size="large" variant="body">
+            2. Add Coin Image
+          </Typography>
           <Box
             gap="m"
             display="grid"
@@ -129,8 +101,46 @@ const CreateTokenForm: FC = () => {
             </Box>
             <CreateTokenFormPreviewImage />
           </Box>
+          <Typography textAlign="center" size="small" variant="body">
+            OR
+          </Typography>
           <Box display="flex" flexDirection="column" gap="xs">
             <CreateTokenFormImage setValue={setValue} />
+          </Box>
+        </Box>
+        <Box display="flex" flexDirection="column" gap="l">
+          <Typography size="large" variant="body">
+            3. Coin Features
+          </Typography>
+          <Box>
+            <TextField
+              type="number"
+              fontFamily="Proto"
+              label="Coin Decimals"
+              {...register('decimals')}
+              supportingText="Insert the decimal precision of your token. If you don't know what to insert, use 9"
+              nPlaceholder={{ opacity: 0.7 }}
+              fieldProps={{ borderRadius: '2xs', height: '3rem' }}
+            />
+          </Box>
+          <Box>
+            <TextField
+              fontFamily="Proto"
+              label="Total Supply"
+              nPlaceholder={{ opacity: 0.7 }}
+              status={errors.supply && 'error'}
+              placeholder="Your total coin supply"
+              supportingText={
+                errors.supply?.message ||
+                'Insert the initial token supply to mint'
+              }
+              {...register('supply', {
+                onChange: (v: ChangeEvent<HTMLInputElement>) => {
+                  setValue('supply', Number(parseInputEventToNumberString(v)));
+                },
+              })}
+              fieldProps={{ borderRadius: '2xs', height: '3rem' }}
+            />
           </Box>
         </Box>
       </Box>
