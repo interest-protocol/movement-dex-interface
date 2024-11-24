@@ -26,12 +26,17 @@ const SwapButton = () => {
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { signTransaction, account } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext<SwapForm>();
 
   const error = useWatch({ control, name: 'error' });
-  const symbolIn = useWatch({ control, name: 'from.symbol' });
-  const symbolOut = useWatch({ control, name: 'to.symbol' });
+  const valueIn = useWatch({ control, name: 'from.value' });
+  const valueOut = useWatch({ control, name: 'to.value' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -48,7 +53,9 @@ const SwapButton = () => {
 
       const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
 
-      const data =
+      let txResult;
+
+      const payload =
         from.standard === TokenStandard.COIN
           ? dex.swapPathCoinIn({
               amountIn,
@@ -64,24 +71,29 @@ const SwapButton = () => {
               recipient: account.address,
             });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account.address,
-      });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -147,7 +159,7 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !(symbolIn && symbolOut);
+  const disabled = !(valueIn && valueOut);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">

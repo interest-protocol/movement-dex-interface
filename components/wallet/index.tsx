@@ -36,7 +36,7 @@ const Wallet: FC = () => {
       >
         <MovementNetwork />
       </Box>
-      {account ? <Profile /> : <ConnectWalletButton />}
+      {account?.address ? <Profile /> : <ConnectWalletButton />}
     </Box>
   );
 };

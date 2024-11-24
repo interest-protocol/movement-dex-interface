@@ -14,7 +14,7 @@ const CreateTokenPage: NextPage = () => {
     reValidateMode: 'onBlur',
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      decimals: 8,
+      decimals: 9,
       fixedSupply: true,
       pool: { active: true },
     },

@@ -33,7 +33,10 @@ const UserInfo: FC<UserInfoProps> = ({ handleSettings }) => {
         >
           <Box>
             <Box display="flex" alignItems="center" gap="l">
-              <Avatar withNameOrAddress account={currentAccount!} />
+              <Avatar
+                withNameOrAddress
+                accountAddress={currentAccount!.address}
+              />
               <Button
                 isIcon
                 p="0 !important"

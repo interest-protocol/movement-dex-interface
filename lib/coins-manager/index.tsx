@@ -72,16 +72,21 @@ const CoinsManager: FC = () => {
                 token_standard === TokenStandard.COIN ? 'MOVE' : 'faMOVE'
               ).toString();
 
+              const type =
+                token_standard === TokenStandard.COIN
+                  ? '0x1::aptos_coin::AptosCoin'
+                  : '0xa';
+
               return {
                 ...acc,
-                [asset_type]: {
+                [type]: {
+                  type,
                   name,
                   symbol,
                   decimals,
-                  type: asset_type,
                   balance: BigNumber(amount.toString()),
                   standard:
-                    token_standard === 'v1'
+                    token_standard === TokenStandard.COIN
                       ? TokenStandard.COIN
                       : TokenStandard.FA,
                   ...(!!projectUri && { projectUri }),

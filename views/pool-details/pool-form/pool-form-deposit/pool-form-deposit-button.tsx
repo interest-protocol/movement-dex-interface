@@ -18,7 +18,12 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const handleDeposit = async () => {
     try {
@@ -26,7 +31,9 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
       setValue('error', '');
       const [token0, token1] = getValues('tokenList');
 
-      const data = dex.addLiquidity({
+      let txResult;
+
+      const payload = dex.addLiquidity({
         faA: token0.type,
         faB: token1.type,
         recipient: account.address,
@@ -34,24 +41,29 @@ const PoolFormDepositButton: FC<PoolFormButtonProps> = ({ form }) => {
         amountB: BigInt(token1.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,

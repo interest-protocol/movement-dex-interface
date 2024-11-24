@@ -1,5 +1,3 @@
-import '@razorlabs/wallet-kit/style.css';
-
 import { AptosWalletProvider } from '@razorlabs/wallet-kit';
 import { type FC, type PropsWithChildren } from 'react';
 

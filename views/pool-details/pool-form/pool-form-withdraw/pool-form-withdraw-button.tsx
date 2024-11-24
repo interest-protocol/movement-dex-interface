@@ -19,7 +19,12 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
   const { dialog, handleClose } = useDialog();
   const { getValues, control, setValue } = form;
   const { handleClose: closeModal } = useModal();
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
 
   const error = useWatch({ control, name: 'error' });
 
@@ -29,32 +34,39 @@ const PoolFormWithdrawButton: FC<PoolFormButtonProps> = ({ form }) => {
 
       setValue('error', '');
 
+      let txResult;
+
       const lpCoin = getValues('lpCoin');
 
-      const data = dex.removeLiquidity({
+      const payload = dex.removeLiquidity({
         lpFa: lpCoin.type,
         recipient: account.address,
         amount: BigInt(lpCoin.valueBN.decimalPlaces(0, 1).toString()),
       });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,

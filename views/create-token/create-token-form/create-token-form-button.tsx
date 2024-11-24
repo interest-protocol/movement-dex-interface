@@ -1,11 +1,18 @@
 import { UserTransactionResponse } from '@aptos-labs/ts-sdk';
 import { Network } from '@interest-protocol/aptos-sr-amm';
-import { Box, Button } from '@interest-protocol/ui-kit';
+import {
+  Box,
+  Button,
+  Theme,
+  Typography,
+  useTheme,
+} from '@interest-protocol/ui-kit';
 import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
+import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
@@ -21,8 +28,15 @@ const CreateTokenFormButton = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { account, signTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
+
+  const { colors } = useTheme() as Theme;
 
   const values = useWatch({ control });
 
@@ -62,7 +76,9 @@ const CreateTokenFormButton = () => {
         'You must fill the required fields'
       );
 
-      const data = values.pool?.active
+      let txResult;
+
+      const payload = values.pool?.active
         ? dex.deployMemeFA({
             name,
             symbol,
@@ -92,24 +108,29 @@ const CreateTokenFormButton = () => {
             ),
           });
 
-      const tx = await client.transaction.build.simple({
-        data,
-        sender: account!.address,
-      });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      const signTransactionResponse = await signTransaction(tx);
+        invariant(tx.status === 'Approved', 'Rejected by User');
 
-      invariant(
-        signTransactionResponse.status === 'Approved',
-        'Rejected by user'
-      );
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
 
-      const senderAuthenticator = signTransactionResponse.args;
+        const signedTx = await signTransaction(tx);
 
-      const txResult = await client.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-      });
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -200,7 +221,29 @@ const CreateTokenFormButton = () => {
     });
 
   return (
-    <Box display="flex">
+    <Box display="flex" alignItems="center" flexDirection="column">
+      <Box
+        p="s"
+        mb="m"
+        gap="s"
+        color="outline"
+        bg="lowContainer"
+        borderRadius="xs"
+        border="1px solid"
+        display="inline-flex"
+        borderColor="outline"
+        width="auto"
+      >
+        <DotErrorSVG
+          width="100%"
+          maxWidth="1rem"
+          maxHeight="1rem"
+          dotColor={colors.outlineVariant}
+        />
+        <Typography variant="label" size="medium">
+          It costs 2 MOVE to create a coin
+        </Typography>
+      </Box>
       <Button
         py="m"
         flex="1"
