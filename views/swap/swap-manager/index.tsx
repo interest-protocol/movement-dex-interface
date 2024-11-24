@@ -1,21 +1,19 @@
+import { useAptosWallet } from '@razorlabs/wallet-kit';
 import BigNumber from 'bignumber.js';
+import { values } from 'ramda';
 import { FC, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useDebounce } from 'use-debounce';
 
 import { TREASURY } from '@/constants';
-import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { EXCHANGE_FEE_BPS } from '@/constants/fees';
-import { useInterestDex } from '@/hooks/use-interest-dex';
 import { FixedPointMath } from '@/lib';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 import { ZERO_BIG_NUMBER } from '@/utils';
 
-import { SwapForm } from '../swap.types';
-import { getPath } from '../swap.utils';
+import { MosaicQuoteResponse, SwapForm } from '../swap.types';
 
 const SwapManager: FC = () => {
-  const dex = useInterestDex();
+  const { account } = useAptosWallet();
   const { control, setValue, getValues } = useFormContext<SwapForm>();
 
   const origin = useWatch({ control, name: 'origin' });
@@ -35,10 +33,8 @@ const SwapManager: FC = () => {
     const to = getValues('to');
     const from = getValues('from');
 
-    console.log({ EXCHANGE_FEE_BPS });
-
     fetch(
-      `https://testnet.mosaic.ag/porto/v1/quote?srcAsset=${from.type}&dstAsset=${to.type}&amount=${from.valueBN.toFixed(0)}&feeInBps=${EXCHANGE_FEE_BPS}&feeReceiver=${TREASURY}&slippage=${getValues('settings.slippage')}`,
+      `https://testnet.mosaic.ag/porto/v1/quote?srcAsset=${from.type}&dstAsset=${to.type}&amount=${from.valueBN.toFixed(0)}&feeInBps=${EXCHANGE_FEE_BPS}&feeReceiver=${TREASURY}&slippage=${getValues('settings.slippage')}&sender=${account?.address}`,
       {
         headers: {
           'x-api-key': 'tYPtSqDun-w9Yrric2baUAckKtzZh9U0',
@@ -46,74 +42,28 @@ const SwapManager: FC = () => {
       }
     )
       .then((res) => res.json?.())
-      .then(console.log);
+      .then((data: MosaicQuoteResponse) => {
+        if (data.message !== 'successfully')
+          throw new Error('Not successfully');
 
-    const tokenIn = (
-      from.standard === TokenStandard.COIN
-        ? COIN_TYPE_TO_FA[from.type]
-        : from.type
-    ).toString();
-    const tokenOut = (
-      to.standard === TokenStandard.COIN ? COIN_TYPE_TO_FA[to.type] : to.type
-    ).toString();
+        const value = BigNumber(data.data.dstAmount);
 
-    const path = getPath(tokenIn, tokenOut).map((address) =>
-      address.toString()
-    );
-
-    const amount = BigInt(
-      FixedPointMath.toBigNumber(value, from.decimals)
-        .decimalPlaces(0, 1)
-        .toString()
-    );
-
-    origin === 'from'
-      ? dex
-          .quotePathAmountOut({
-            path,
-            amount,
-          })
-          .then(({ amountOut }) => {
-            setValue('path', path);
-            setValue('to.valueBN', BigNumber(amountOut!.toString()));
-            setValue(
-              'to.value',
-              String(
-                FixedPointMath.toNumber(
-                  BigNumber(amountOut!.toString()),
-                  to.decimals
-                )
-              )
-            );
-            setValue('focus', false);
-          })
-          .catch((e) => {
-            console.warn(e);
-            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
-          })
-      : dex
-          .quotePathAmountIn({
-            path,
-            amount,
-          })
-          .then(({ amountIn }) => {
-            setValue('path', path);
-            setValue('from.valueBN', BigNumber(amountIn!.toString()));
-            setValue('focus', false);
-            setValue(
-              'from.value',
-              String(
-                FixedPointMath.toNumber(
-                  BigNumber(amountIn!.toString()),
-                  from.decimals
-                )
-              )
-            );
-          })
-          .catch((e) => {
-            console.warn(e);
-            setValue('error', 'Failed to quote. Reduce the Swapping amount.');
-          });
+        setValue('to.valueBN', value);
+        setValue(
+          'to.value',
+          String(FixedPointMath.toNumber(value, to.decimals))
+        );
+        setValue('path', data.data.paths);
+        setValue('payload', {
+          function: data.data.tx.function,
+          typeArguments: data.data.tx.typeArguments,
+          functionArguments: values(data.data.tx.functionArguments),
+        });
+      })
+      .catch((e) => {
+        console.warn(e);
+        setValue('error', 'Failed to quote');
+      });
   }, [value]);
 
   return null;
