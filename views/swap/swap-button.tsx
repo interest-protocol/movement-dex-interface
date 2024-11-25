@@ -1,31 +1,23 @@
 import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { useAptosWallet } from '@razorlabs/wallet-kit';
-import BigNumber from 'bignumber.js';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
-import { useInterestDex } from '@/hooks/use-interest-dex';
-import { FixedPointMath } from '@/lib';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
-import { ZERO_BIG_NUMBER } from '@/utils';
 
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
-import { SwapMessagesEnum } from './swap.data';
-import { SwapForm } from './swap.types';
 import { logSwap } from './swap.utils';
 import SwapMessages from './swap-messages';
 
 const SwapButton = () => {
-  const dex = useInterestDex();
-  const { mutate, coinsMap } = useCoins();
+  const { mutate } = useCoins();
   const client = useAptosClient();
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
@@ -36,29 +28,15 @@ const SwapButton = () => {
     signTransaction,
     signAndSubmitTransaction,
   } = useAptosWallet();
-  const { getValues, setValue, control } = useFormContext<SwapForm>();
+  const { getValues, setValue, control } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
-  const from = useWatch({ control: control, name: 'from' });
-  const to = useWatch({ control: control, name: 'to' });
+  const valueIn = useWatch({ control, name: 'from.value' });
+  const valueOut = useWatch({ control, name: 'to.value' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
   };
-
-  const notEnoughBalance = FixedPointMath.toBigNumber(
-    from?.value ?? '0',
-    from?.decimals ?? 0
-  )
-    .decimalPlaces(0, BigNumber.ROUND_DOWN)
-    .gt(
-      from && coinsMap[from.type]
-        ? BigNumber(coinsMap[from.type].balance)
-        : ZERO_BIG_NUMBER
-    );
-
-  const notEnoughMoveToGas =
-    error && SwapMessagesEnum.leastOneMove.includes(error as SwapMessagesEnum);
 
   const handleSwap = async () => {
     try {
@@ -67,27 +45,8 @@ const SwapButton = () => {
 
       if (!account) return;
 
-      const { from, to, path } = getValues();
-
-      const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
-
       let txResult;
-
-      const payload =
-        from.standard === TokenStandard.COIN
-          ? dex.swapPathCoinIn({
-              amountIn,
-              coinIn: from.type,
-              path: path.slice(1),
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            })
-          : dex.swapPath({
-              path,
-              amountIn,
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            });
+      const { from, to, payload } = getValues();
 
       const startTime = Date.now();
 
@@ -187,25 +146,14 @@ const SwapButton = () => {
       }),
     });
 
-  const coinsExist = coinsMap[getValues('from.type')];
-
-  const disabled =
-    from &&
-    to &&
-    !from.isFetchingSwap &&
-    !to.isFetchingSwap &&
-    coinsExist &&
-    !loading &&
-    !notEnoughBalance &&
-    !notEnoughMoveToGas &&
-    !!Number(from.value) &&
-    !!Number(to.value);
+  const disabled = !(valueIn && valueOut);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
       {error && <SwapMessages />}
       <Button
         variant="filled"
+        borderRadius="s"
         onClick={onSwap}
         disabled={!disabled}
         justifyContent="center"

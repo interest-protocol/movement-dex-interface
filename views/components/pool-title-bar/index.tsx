@@ -2,6 +2,7 @@ import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import Skeleton from 'react-loading-skeleton';
 import { v4 } from 'uuid';
 
 import { TokenIcon } from '@/components';
@@ -11,7 +12,11 @@ import { IPoolForm } from '@/views/pools/pools.types';
 
 import { PoolTitleBarProps } from './pool-title-bar.types';
 
-const PoolTitleBar: FC<PoolTitleBarProps> = ({ onBack, centerTile }) => {
+const PoolTitleBar: FC<PoolTitleBarProps> = ({
+  onBack,
+  loading,
+  centerTile,
+}) => {
   const network = useNetwork<Network>();
   const { control } = useFormContext<IPoolForm>();
 
@@ -60,7 +65,14 @@ const PoolTitleBar: FC<PoolTitleBarProps> = ({ onBack, centerTile }) => {
         ml={centerTile ? 'auto' : ''}
         fontSize={['xl', 'xl', '3xl', '5xl']}
       >
-        {name}
+        {loading ? (
+          <Box display="flex" gap="s">
+            <Skeleton width="5rem" height="2rem" />
+            <Skeleton width="5rem" height="2rem" />
+          </Box>
+        ) : (
+          name
+        )}
       </Typography>
 
       <Box
@@ -69,9 +81,22 @@ const PoolTitleBar: FC<PoolTitleBarProps> = ({ onBack, centerTile }) => {
         alignItems="center"
         display={['none', 'none', 'flex', 'flex']}
       >
-        {tokens.map(({ symbol }) => (
-          <TokenIcon withBg key={v4()} symbol={symbol} network={network} />
-        ))}
+        {!loading ? (
+          tokens.map(({ symbol }) => (
+            <TokenIcon withBg key={v4()} symbol={symbol} network={network} />
+          ))
+        ) : (
+          <Box display="flex" gap="s">
+            <Skeleton
+              width="calc(1.5rem * 1.66)"
+              height="calc(1.5rem * 1.66)"
+            />
+            <Skeleton
+              width="calc(1.5rem * 1.66)"
+              height="calc(1.5rem * 1.66)"
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );

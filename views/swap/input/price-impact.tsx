@@ -2,10 +2,8 @@ import { Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { SwapForm } from '../swap.types';
-
 const PriceImpact: FC = () => {
-  const { control } = useFormContext<SwapForm>();
+  const { control } = useFormContext();
 
   const toValue = useWatch({ control, name: 'to.value' });
   const fromValue = useWatch({ control, name: 'from.value' });
