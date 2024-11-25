@@ -16,14 +16,13 @@ import {
 import { ZERO_BIG_NUMBER } from '@/utils';
 import SelectTokenModal from '@/views/components/select-token-modal';
 
-import { SwapForm } from '../swap.types';
 import { InputProps } from './input.types';
 
 const SelectToken: FC<InputProps> = ({ label }) => {
   const network = useNetwork<Network>();
   const { setModal, handleClose } = useModal();
 
-  const { setValue, control } = useFormContext<SwapForm>();
+  const { setValue, control } = useFormContext();
 
   const currentToken = useWatch({
     control,
