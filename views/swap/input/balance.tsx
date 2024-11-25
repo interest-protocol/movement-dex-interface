@@ -54,21 +54,20 @@ const Balance: FC<InputProps> = ({ label }) => {
     );
 
     if (isAptos(type) && !value.isPositive()) {
-      setValue('from.value', '0');
       setValue('from.valueBN', ZERO_BIG_NUMBER);
+      setValue('from.value', '0');
       return;
     }
 
     if (getValues('focus')) setValue('focus', false);
 
-    setValue('updateSlider', {});
+    setValue('slider', 100);
 
     setValue(
       `${label}.value`,
       FixedPointMath.toNumber(value, decimals).toString()
     );
     setValue(`${label}.valueBN`, value);
-    setValue('origin', label);
   };
 
   return (

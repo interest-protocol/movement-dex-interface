@@ -10,25 +10,22 @@ import { EXCHANGE_FEE_BPS } from '@/constants/fees';
 import { FixedPointMath } from '@/lib';
 import { ZERO_BIG_NUMBER } from '@/utils';
 
-import { MosaicQuoteResponse, SwapForm } from '../swap.types';
+import { MosaicQuoteResponse } from '../swap.types';
 
 const SwapManager: FC = () => {
   const { account } = useAptosWallet();
-  const { control, setValue, getValues } = useFormContext<SwapForm>();
+  const { control, setValue, getValues } = useFormContext();
 
-  const origin = useWatch({ control, name: 'origin' });
   const [value] = useDebounce(useWatch({ control, name: 'from.value' }), 800);
 
   useEffect(() => {
     setValue('error', null);
 
     if (!Number(value)) {
-      setValue(`${origin === 'from' ? 'to' : 'from'}.value`, '0');
-      setValue(`${origin === 'from' ? 'to' : 'from'}.valueBN`, ZERO_BIG_NUMBER);
+      setValue('to.value', '0');
+      setValue('to.valueBN', ZERO_BIG_NUMBER);
       return;
     }
-
-    if (!getValues(`${origin === 'from' ? 'to' : 'from'}.symbol`)) return;
 
     const to = getValues('to');
     const from = getValues('from');

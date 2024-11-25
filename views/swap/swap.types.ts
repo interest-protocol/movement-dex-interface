@@ -30,20 +30,18 @@ export type SwapPath = {
 };
 
 export interface SwapForm {
-  origin: 'from' | 'to';
   to: SwapToken;
+  focus: boolean;
+  slider: number;
   from: SwapToken;
+  loading: boolean;
+  swapping: boolean;
+  explorerLink: string;
+  error?: string | null;
+  executionTime: string;
+  settings: ISwapSettings;
   path: ReadonlyArray<ReadonlyArray<SwapPath>>;
   payload: InputGenerateTransactionPayloadData;
-  settings: ISwapSettings;
-  lock: boolean;
-  error?: string | null;
-  updateSlider: object;
-  explorerLink: string;
-  executionTime: string;
-  loading: boolean;
-  focus: boolean;
-  swapping: boolean;
 }
 
 export interface AggregatorProps {

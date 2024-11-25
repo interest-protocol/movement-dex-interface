@@ -87,8 +87,6 @@ const SelectToken: FC<InputProps> = ({ label }) => {
       setValue('to.value', '');
       setValue('to.valueBN', ZERO_BIG_NUMBER);
     }
-
-    setValue('lock', false);
   };
 
   const openModal = () =>
