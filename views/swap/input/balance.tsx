@@ -12,12 +12,11 @@ import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { isAptos, ZERO_BIG_NUMBER } from '@/utils';
 
-import { SwapForm } from '../swap.types';
 import { InputProps } from './input.types';
 
 const Balance: FC<InputProps> = ({ label }) => {
   const { coinsMap, loading } = useCoins();
-  const { control, setValue, getValues } = useFormContext<SwapForm>();
+  const { control, setValue, getValues } = useFormContext();
 
   const type = useWatch({ control, name: `${label}.type` });
   const symbol = useWatch({ control, name: `${label}.symbol` });
@@ -54,21 +53,20 @@ const Balance: FC<InputProps> = ({ label }) => {
     );
 
     if (isAptos(type) && !value.isPositive()) {
-      setValue('from.value', '0');
       setValue('from.valueBN', ZERO_BIG_NUMBER);
+      setValue('from.value', '0');
       return;
     }
 
     if (getValues('focus')) setValue('focus', false);
 
-    setValue('updateSlider', {});
+    setValue('slider', 100);
 
     setValue(
       `${label}.value`,
       FixedPointMath.toNumber(value, decimals).toString()
     );
     setValue(`${label}.valueBN`, value);
-    setValue('origin', label);
   };
 
   return (

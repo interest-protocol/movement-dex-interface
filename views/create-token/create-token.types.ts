@@ -18,6 +18,7 @@ export interface ICreateTokenForm {
   decimals: number;
   imageUrl?: string;
   projectUrl?: string;
+  description?: string;
   fixedSupply: boolean;
   explorerLink: string;
   executionTime: string;

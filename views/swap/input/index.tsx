@@ -5,7 +5,6 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString } from '@/utils';
 
-import { SwapForm } from '../swap.types';
 import Balance from './balance';
 import AmountInDollar from './dollar-value';
 import HeaderInfo from './header-info';
@@ -13,7 +12,7 @@ import { InputProps } from './input.types';
 import SelectToken from './select-token';
 
 const Input: FC<InputProps> = ({ label }) => {
-  const { register, setValue, getValues, control } = useFormContext<SwapForm>();
+  const { register, setValue, getValues, control } = useFormContext();
 
   useWatch({ control, name: 'focus' });
 
@@ -23,7 +22,7 @@ const Input: FC<InputProps> = ({ label }) => {
     <>
       <HeaderInfo label={label} />
       <Box
-        py="l"
+        pt="l"
         gap="0.5rem"
         display="flex"
         flexDirection="column"
@@ -41,28 +40,33 @@ const Input: FC<InputProps> = ({ label }) => {
               lineHeight="l"
               placeholder="0"
               color="onSurface"
-              disabled={swapping}
               fontFamily="Satoshi"
+              disabled={label === 'to' || swapping}
               fieldProps={{
                 width: '100%',
                 borderRadius: 'xs',
               }}
-              {...register(`${label}.value`, {
-                onChange: (v: ChangeEvent<HTMLInputElement>) => {
-                  setValue('updateSlider', {});
-                  setValue('origin', label);
-                  const value = parseInputEventToNumberString(v);
-                  setValue('lock', false);
-                  setValue?.(`${label}.value`, value);
-                  setValue?.(
-                    `${label}.valueBN`,
-                    FixedPointMath.toBigNumber(
-                      value,
-                      getValues(`${label}.decimals`)
-                    )
-                  );
-                },
-              })}
+              {...register(
+                `${label}.value`,
+                label === 'to'
+                  ? {}
+                  : {
+                      onChange: (v: ChangeEvent<HTMLInputElement>) => {
+                        setValue('updateSlider', {});
+                        setValue('origin', label);
+                        const value = parseInputEventToNumberString(v);
+                        setValue('lock', false);
+                        setValue?.(`${label}.value`, value);
+                        setValue?.(
+                          `${label}.valueBN`,
+                          FixedPointMath.toBigNumber(
+                            value,
+                            getValues(`${label}.decimals`)
+                          )
+                        );
+                      },
+                    }
+              )}
             />
           </Box>
           <SelectToken label={label} />

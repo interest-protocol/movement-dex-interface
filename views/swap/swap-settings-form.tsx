@@ -5,14 +5,15 @@ import { v4 } from 'uuid';
 
 import { PercentageSVG } from '@/components/svg';
 import { LOCAL_STORAGE_VERSION } from '@/constants';
+import { useModal } from '@/hooks/use-modal';
 import { parseInputEventToNumberString } from '@/utils';
 
-import { ISwapSettings } from '../../swap.types';
-import { SwapSettingsFromProps } from './swap-settings-form.types';
+import { ISwapSettings } from './swap.types';
 
 const SLIPPAGE_BUTTONS = ['0.1', '0.5', '1'];
 
-const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
+const SwapSettingsForm: FC = () => {
+  const { handleClose } = useModal();
   const { getValues, setValue } = useFormContext();
 
   const formTmpSettings = useForm<ISwapSettings>({
@@ -31,8 +32,6 @@ const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
       `${LOCAL_STORAGE_VERSION}-movement-dex-settings`,
       JSON.stringify(settings)
     );
-
-    handleManageView();
   };
 
   return (
@@ -42,8 +41,10 @@ const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
       gap="xl"
       bg="container"
       display="flex"
-      flexDirection="column"
+      maxWidth="30rem"
+      borderRadius="s"
       color="onSurface"
+      flexDirection="column"
     >
       <Box>
         <Typography variant="body" size="small" mb="0.5rem">
@@ -100,8 +101,8 @@ const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
           py="s"
           variant="tonal"
           borderRadius="xs"
+          onClick={handleClose}
           bg="rgba(0, 0, 0, 0.08)"
-          onClick={handleManageView}
         >
           Cancel
         </Button>

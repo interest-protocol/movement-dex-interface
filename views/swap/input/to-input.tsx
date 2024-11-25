@@ -2,14 +2,13 @@ import { Box, TextField } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { SwapForm } from '../swap.types';
 import Balance from './balance';
 import AmountInDollar from './dollar-value';
 import HeaderInfo from './header-info';
 import SelectToken from './select-token';
 
 const ToInput: FC = () => {
-  const { control } = useFormContext<SwapForm>();
+  const { control } = useFormContext();
 
   const value = useWatch({ control, name: 'to.value' });
 
