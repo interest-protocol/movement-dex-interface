@@ -14,7 +14,6 @@ import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
-import { SwapForm } from './swap.types';
 import { logSwap } from './swap.utils';
 
 const SwapButton = () => {
@@ -24,7 +23,7 @@ const SwapButton = () => {
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
   const { signAndSubmitTransaction, account } = useAptosWallet();
-  const { getValues, setValue, control } = useFormContext<SwapForm>();
+  const { getValues, setValue, control } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
   const symbolIn = useWatch({ control, name: 'from.symbol' });
