@@ -41,28 +41,33 @@ const Input: FC<InputProps> = ({ label }) => {
               lineHeight="l"
               placeholder="0"
               color="onSurface"
-              disabled={swapping}
               fontFamily="Satoshi"
+              disabled={label === 'to' || swapping}
               fieldProps={{
                 width: '100%',
                 borderRadius: 'xs',
               }}
-              {...register(`${label}.value`, {
-                onChange: (v: ChangeEvent<HTMLInputElement>) => {
-                  setValue('updateSlider', {});
-                  setValue('origin', label);
-                  const value = parseInputEventToNumberString(v);
-                  setValue('lock', false);
-                  setValue?.(`${label}.value`, value);
-                  setValue?.(
-                    `${label}.valueBN`,
-                    FixedPointMath.toBigNumber(
-                      value,
-                      getValues(`${label}.decimals`)
-                    )
-                  );
-                },
-              })}
+              {...register(
+                `${label}.value`,
+                label === 'to'
+                  ? {}
+                  : {
+                      onChange: (v: ChangeEvent<HTMLInputElement>) => {
+                        setValue('updateSlider', {});
+                        setValue('origin', label);
+                        const value = parseInputEventToNumberString(v);
+                        setValue('lock', false);
+                        setValue?.(`${label}.value`, value);
+                        setValue?.(
+                          `${label}.valueBN`,
+                          FixedPointMath.toBigNumber(
+                            value,
+                            getValues(`${label}.decimals`)
+                          )
+                        );
+                      },
+                    }
+              )}
             />
           </Box>
           <SelectToken label={label} />
