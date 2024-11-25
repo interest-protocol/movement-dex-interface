@@ -5,7 +5,6 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString } from '@/utils';
 
-import { SwapForm } from '../swap.types';
 import Balance from './balance';
 import AmountInDollar from './dollar-value';
 import HeaderInfo from './header-info';
@@ -13,7 +12,7 @@ import { InputProps } from './input.types';
 import SelectToken from './select-token';
 
 const Input: FC<InputProps> = ({ label }) => {
-  const { register, setValue, getValues, control } = useFormContext<SwapForm>();
+  const { register, setValue, getValues, control } = useFormContext();
 
   useWatch({ control, name: 'focus' });
 

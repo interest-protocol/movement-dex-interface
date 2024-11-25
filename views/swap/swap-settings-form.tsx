@@ -8,13 +8,13 @@ import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { useModal } from '@/hooks/use-modal';
 import { parseInputEventToNumberString } from '@/utils';
 
-import { ISwapSettings, SwapForm } from './swap.types';
+import { ISwapSettings } from './swap.types';
 
 const SLIPPAGE_BUTTONS = ['0.1', '0.5', '1'];
 
 const SwapSettingsForm: FC = () => {
   const { handleClose } = useModal();
-  const { getValues, setValue } = useFormContext<SwapForm>();
+  const { getValues, setValue } = useFormContext();
 
   const formTmpSettings = useForm<ISwapSettings>({
     defaultValues: getValues('settings'),

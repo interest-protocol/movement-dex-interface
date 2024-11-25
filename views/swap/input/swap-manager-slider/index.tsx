@@ -7,8 +7,6 @@ import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { isAptos, ZERO_BIG_NUMBER } from '@/utils';
 
-import { SwapForm } from '../../swap.types';
-
 const Slider = dynamic(
   import('@interest-protocol/ui-kit').then(({ Slider }) => Slider),
   { ssr: false }
@@ -16,9 +14,9 @@ const Slider = dynamic(
 
 const SwapFormFieldSlider: FC = () => {
   const { coinsMap } = useCoins();
-  const { control, setValue, getValues } = useFormContext<SwapForm>();
+  const { control, setValue, getValues } = useFormContext();
 
-  useWatch({ control, name: 'updateSlider' });
+  useWatch({ control, name: 'slider' });
 
   const type = useWatch({ control, name: 'from.type' });
   const swapping = useWatch({ control, name: 'swapping' });
@@ -63,10 +61,6 @@ const SwapFormFieldSlider: FC = () => {
             'from.value',
             String(FixedPointMath.toNumber(valueBN, coinsMap[type].decimals))
           );
-          setValue('origin', 'from');
-
-          if (getValues('lock')) setValue('lock', false);
-          if (getValues('focus')) setValue('focus', false);
         }}
       />
     </Box>

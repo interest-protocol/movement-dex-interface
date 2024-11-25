@@ -7,13 +7,13 @@ import { PercentageSVG } from '@/components/svg';
 import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { parseInputEventToNumberString } from '@/utils';
 
-import { ISwapSettings, SwapForm } from '../../swap.types';
+import { ISwapSettings } from '../../swap.types';
 import { SwapSettingsFromProps } from './swap-settings-form.types';
 
 const SLIPPAGE_BUTTONS = ['0.1', '0.5', '1'];
 
 const SwapSettingsForm: FC<SwapSettingsFromProps> = ({ handleManageView }) => {
-  const { getValues, setValue } = useFormContext<SwapForm>();
+  const { getValues, setValue } = useFormContext();
 
   const formTmpSettings = useForm<ISwapSettings>({
     defaultValues: getValues('settings'),

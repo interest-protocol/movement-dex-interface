@@ -5,13 +5,12 @@ import { FormProvider, useFormContext, useWatch } from 'react-hook-form';
 import { CogsSVG } from '@/components/svg';
 import { useModal } from '@/hooks/use-modal';
 
-import { SwapForm } from '../swap.types';
 import SwapSettingsForm from '../swap-settings-form';
 import { InputProps } from './input.types';
 
 const HeaderInfo: FC<InputProps> = ({ label }) => {
   const { setModal, handleClose } = useModal();
-  const form = useFormContext<SwapForm>();
+  const form = useFormContext();
 
   const symbol = useWatch({ control: form.control, name: `${label}.symbol` });
 

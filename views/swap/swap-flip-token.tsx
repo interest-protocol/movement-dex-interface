@@ -4,10 +4,8 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { SwapSVG } from '@/components/svg';
 
-import { SwapForm } from './swap.types';
-
 const SwapFlipToken: FC = () => {
-  const form = useFormContext<SwapForm>();
+  const form = useFormContext();
 
   const { setValue, control } = form;
 
