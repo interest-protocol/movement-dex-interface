@@ -1,13 +1,18 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import Skeleton from 'react-loading-skeleton';
 
 import { IPoolForm } from '@/views/pools/pools.types';
+
+import { usePoolDetails } from '../../pool-details.context';
 
 const PoolFormDepositReceive: FC = () => {
   const { control } = useFormContext<IPoolForm>();
   const value = useWatch({ control, name: 'lpCoin.value' });
   const symbol = useWatch({ control, name: 'lpCoin.symbol' });
+
+  const { loading } = usePoolDetails();
 
   return (
     <Box>
@@ -23,10 +28,10 @@ const PoolFormDepositReceive: FC = () => {
           justifyContent="space-between"
         >
           <Typography variant="body" size="large">
-            {symbol}
+            {loading ? <Skeleton width="4rem" /> : symbol}
           </Typography>
           <Typography variant="body" ml="m" size="large">
-            {value || 0}
+            {loading ? <Skeleton width="2rem" /> : value || 0}
           </Typography>
         </Box>
       </Box>

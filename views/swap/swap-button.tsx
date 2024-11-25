@@ -22,12 +22,17 @@ const SwapButton = () => {
   const network = useNetwork<Network>();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { signAndSubmitTransaction, account } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { getValues, setValue, control } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
-  const symbolIn = useWatch({ control, name: 'from.symbol' });
-  const symbolOut = useWatch({ control, name: 'to.symbol' });
+  const valueIn = useWatch({ control, name: 'from.value' });
+  const valueOut = useWatch({ control, name: 'to.value' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -40,24 +45,43 @@ const SwapButton = () => {
 
       if (!account) return;
 
+      let txResult;
       const { from, to, payload } = getValues();
 
-      const transaction = await signAndSubmitTransaction({
-        payload,
-      });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      invariant(transaction.status === 'Approved', 'Rejected by User');
+        invariant(tx.status === 'Approved', 'Rejected by User');
+
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
+
+        const signedTx = await signTransaction(tx);
+
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
-        transactionHash: transaction.args.hash,
+        transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
 
-      logSwap(account!.address, from, to, network, transaction.args.hash);
+      logSwap(account!.address, from, to, network, txResult.hash);
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${transaction.args.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
       console.warn(e);
@@ -112,7 +136,7 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !(symbolIn && symbolOut);
+  const disabled = !(valueIn && valueOut);
 
   return (
     <Box display="flex" flexDirection="column" gap="l">

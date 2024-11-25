@@ -1,11 +1,18 @@
 import { UserTransactionResponse } from '@aptos-labs/ts-sdk';
 import { Network } from '@interest-protocol/aptos-sr-amm';
-import { Box, Button } from '@interest-protocol/ui-kit';
+import {
+  Box,
+  Button,
+  Theme,
+  Typography,
+  useTheme,
+} from '@interest-protocol/ui-kit';
 import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
+import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
@@ -21,8 +28,15 @@ const CreateTokenFormButton = () => {
   const client = useAptosClient();
   const { dialog, handleClose } = useDialog();
   const [loading, setLoading] = useState(false);
-  const { account, signAndSubmitTransaction } = useAptosWallet();
+  const {
+    account,
+    name: wallet,
+    signTransaction,
+    signAndSubmitTransaction,
+  } = useAptosWallet();
   const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
+
+  const { colors } = useTheme() as Theme;
 
   const values = useWatch({ control });
 
@@ -62,6 +76,8 @@ const CreateTokenFormButton = () => {
         'You must fill the required fields'
       );
 
+      let txResult;
+
       const payload = values.pool?.active
         ? dex.deployMemeFA({
             name,
@@ -92,19 +108,39 @@ const CreateTokenFormButton = () => {
             ),
           });
 
-      const txResult = await signAndSubmitTransaction({ payload });
+      if (wallet === 'Razor Wallet') {
+        const tx = await signAndSubmitTransaction({ payload });
 
-      invariant(txResult.status === 'Approved', 'Rejected by User');
+        invariant(tx.status === 'Approved', 'Rejected by User');
+
+        txResult = tx.args;
+      } else {
+        const tx = await client.transaction.build.simple({
+          data: payload,
+          sender: account.address,
+        });
+
+        const signedTx = await signTransaction(tx);
+
+        invariant(signedTx.status === 'Approved', 'Rejected by User');
+
+        const senderAuthenticator = signedTx.args;
+
+        txResult = await client.transaction.submit.simple({
+          transaction: tx,
+          senderAuthenticator,
+        });
+      }
 
       await client.waitForTransaction({
-        transactionHash: txResult.args.hash,
+        transactionHash: txResult.hash,
         options: { checkSuccess: true },
       });
 
       if (pool?.active) {
         client
           .getTransactionByHash({
-            transactionHash: txResult.args.hash,
+            transactionHash: txResult.hash,
           })
           .then((txn) => {
             const poolId = (txn as UserTransactionResponse).events.find(
@@ -130,12 +166,12 @@ const CreateTokenFormButton = () => {
         symbol,
         !!pool?.active,
         Network.Porto,
-        txResult.args.hash
+        txResult.hash
       );
 
       setValue(
         'explorerLink',
-        EXPLORER_URL[Network.Porto](`txn/${txResult.args.hash}`)
+        EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
     } catch (e) {
       console.warn({ e });
@@ -185,7 +221,29 @@ const CreateTokenFormButton = () => {
     });
 
   return (
-    <Box display="flex">
+    <Box display="flex" alignItems="center" flexDirection="column">
+      <Box
+        p="s"
+        mb="m"
+        gap="s"
+        color="outline"
+        bg="lowContainer"
+        borderRadius="xs"
+        border="1px solid"
+        display="inline-flex"
+        borderColor="outline"
+        width="auto"
+      >
+        <DotErrorSVG
+          width="100%"
+          maxWidth="1rem"
+          maxHeight="1rem"
+          dotColor={colors.outlineVariant}
+        />
+        <Typography variant="label" size="medium">
+          It costs 2 MOVE to create a coin
+        </Typography>
+      </Box>
       <Button
         py="m"
         flex="1"
