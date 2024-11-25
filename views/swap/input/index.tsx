@@ -48,11 +48,14 @@ const Input: FC<InputProps> = ({ label }) => {
               }}
               {...register(
                 `${label}.value`,
-                label === 'from'
-                  ? {
+                label === 'to'
+                  ? {}
+                  : {
                       onChange: (v: ChangeEvent<HTMLInputElement>) => {
-                        setValue('slider', 0);
+                        setValue('updateSlider', {});
+                        setValue('origin', label);
                         const value = parseInputEventToNumberString(v);
+                        setValue('lock', false);
                         setValue?.(`${label}.value`, value);
                         setValue?.(
                           `${label}.valueBN`,
@@ -63,7 +66,6 @@ const Input: FC<InputProps> = ({ label }) => {
                         );
                       },
                     }
-                  : {}
               )}
             />
           </Box>
