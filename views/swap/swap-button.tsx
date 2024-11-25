@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
-import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
@@ -15,6 +14,7 @@ import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
 import { logSwap } from './swap.utils';
+import SwapMessages from './swap-messages';
 
 const SwapButton = () => {
   const { mutate } = useCoins();
@@ -48,6 +48,8 @@ const SwapButton = () => {
       let txResult;
       const { from, to, payload } = getValues();
 
+      const startTime = Date.now();
+
       if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
@@ -71,6 +73,10 @@ const SwapButton = () => {
           senderAuthenticator,
         });
       }
+
+      const endTime = Date.now() - startTime;
+
+      setValue('executionTime', String(endTime));
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -112,7 +118,11 @@ const SwapButton = () => {
       success: () => ({
         title: 'Swap Successful',
         message: (
-          <SuccessModal transactionTime={`${0}`}>
+          <SuccessModal
+            transactionTime={`${(
+              Number(getValues('executionTime')) / 1000
+            ).toFixed(2)}`}
+          >
             <SuccessModalTokenCard
               from={getValues('from')}
               to={getValues('to')}
@@ -140,30 +150,12 @@ const SwapButton = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
-      {error && (
-        <Box
-          p="s"
-          mx="xl"
-          gap="s"
-          display="flex"
-          borderRadius="xs"
-          border="1px solid"
-          bg="errorContainer"
-          color="onErrorContainer"
-          borderColor="onErrorContainer"
-        >
-          <DotErrorSVG width="100%" maxWidth="1rem" maxHeight="1rem" />
-          <Typography variant="label" size="medium">
-            {error}
-          </Typography>
-        </Box>
-      )}
+      {error && <SwapMessages />}
       <Button
-        py="m"
         variant="filled"
         borderRadius="s"
         onClick={onSwap}
-        disabled={disabled}
+        disabled={!disabled}
         justifyContent="center"
       >
         <Typography variant="label" size="large">
