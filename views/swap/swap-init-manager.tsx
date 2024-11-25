@@ -9,10 +9,10 @@ import { LOCAL_STORAGE_VERSION } from '@/constants';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { updateURL } from '@/utils';
 
-import { Aggregator, ISwapSettings, SwapForm } from './swap.types';
+import { Aggregator, ISwapSettings } from './swap.types';
 
 const SwapInitManager: FC = () => {
-  const form = useFormContext<SwapForm>();
+  const form = useFormContext();
   const network = useNetwork<Network>();
   const { pathname } = useRouter();
 

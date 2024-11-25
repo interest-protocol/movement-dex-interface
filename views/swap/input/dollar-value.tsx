@@ -5,12 +5,11 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { formatDollars } from '@/utils';
 
-import { SwapForm } from '../swap.types';
 import { InputProps } from './input.types';
 import PriceImpact from './price-impact';
 
 const AmountInDollar: FC<InputProps> = ({ label }) => {
-  const { control } = useFormContext<SwapForm>();
+  const { control } = useFormContext();
 
   const value = useWatch({
     control,
