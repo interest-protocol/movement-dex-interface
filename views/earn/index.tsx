@@ -44,6 +44,7 @@ const Earn: FC = () => {
             return (
               <EarnCard
                 label={label}
+                tokenName="LP token"
                 key={v4()}
                 balance={item}
                 TokenIcon={DefaultTokenSVG}

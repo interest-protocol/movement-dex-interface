@@ -12,6 +12,7 @@ const Slider = dynamic(
 const EarnCardBody: FC<EarnCardProps> = ({
   label,
   balance,
+  tokenName,
   TokenIcon,
   earnAmount,
 }) => {
@@ -61,7 +62,7 @@ const EarnCardBody: FC<EarnCardProps> = ({
             variant="body"
             textTransform="capitalize"
           >
-            LP token
+            {tokenName}
           </Typography>
         </Box>
         <Typography size="large" variant="label" textTransform="capitalize">

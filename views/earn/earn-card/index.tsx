@@ -7,6 +7,7 @@ import EarnCardBody from './card-body';
 const EarnCard: FC<EarnCardProps> = ({
   label,
   balance,
+  tokenName,
   TokenIcon,
   earnAmount,
 }) => {
@@ -45,10 +46,11 @@ const EarnCard: FC<EarnCardProps> = ({
         </Typography>
       </Box>
       <EarnCardBody
-        balance={balance}
-        earnAmount={earnAmount}
-        TokenIcon={TokenIcon}
         label={label}
+        balance={balance}
+        tokenName={tokenName}
+        TokenIcon={TokenIcon}
+        earnAmount={earnAmount}
       />
       <Box
         gap="xs"

@@ -56,6 +56,7 @@ export interface ISrEarn {
 export interface EarnCardProps {
   label: string;
   balance: number;
-  TokenIcon: FC<SVGProps>;
+  tokenName: string;
   earnAmount: number;
+  TokenIcon: FC<SVGProps>;
 }
