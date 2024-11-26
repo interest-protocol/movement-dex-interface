@@ -5,17 +5,20 @@ import {
 } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import Skeleton from 'react-loading-skeleton';
 
 import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import { isAptos, ZERO_BIG_NUMBER } from '@/utils';
 import { IPoolForm } from '@/views/pools/pools.types';
 
+import { usePoolDetails } from '../../pool-details.context';
 import { NameProps } from './pool-field.types';
 
 const Balance: FC<NameProps> = ({ name }) => {
   const { coinsMap, loading } = useCoins();
   const { setValue, control } = useFormContext<IPoolForm>();
+  const { loading: loadingPoolsDetails } = usePoolDetails();
 
   const token = useWatch({ control, name });
 
@@ -60,9 +63,14 @@ const Balance: FC<NameProps> = ({ name }) => {
       nHover={{ bg: 'unset', borderColor: 'primary' }}
       className="loading-balance"
     >
-      <Typography size="small" variant="body" fontSize="xs">
-        Balance: {FixedPointMath.toNumber(balance, token.decimals) ?? '--'}
-      </Typography>
+      {!loadingPoolsDetails ? (
+        <Typography size="small" variant="body" fontSize="xs">
+          Balance: {FixedPointMath.toNumber(balance, token.decimals) ?? '--'}
+        </Typography>
+      ) : (
+        <Skeleton width="4.5rem" />
+      )}
+
       {loading && <ProgressIndicator variant="loading" size={12} />}
     </Button>
   );

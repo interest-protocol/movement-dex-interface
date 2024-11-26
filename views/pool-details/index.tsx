@@ -8,6 +8,7 @@ import { Routes, RoutesEnum } from '@/constants';
 
 import PoolTitleBar from '../components/pool-title-bar';
 import { IPoolForm, PoolOption } from '../pools/pools.types';
+import { usePoolDetails } from './pool-details.context';
 import PoolForm from './pool-form';
 import PoolInfo from './pool-info';
 
@@ -29,9 +30,14 @@ const PoolDetails: FC = () => {
 
   const handleOptionTab = (index: PoolOption) => setPoolOptionView(index);
 
+  const { loading } = usePoolDetails();
+
   return (
     <Layout>
-      <PoolTitleBar onBack={() => push(Routes[RoutesEnum.Pools])} />
+      <PoolTitleBar
+        loading={loading}
+        onBack={() => push(Routes[RoutesEnum.Pools])}
+      />
       <Box
         gap="xs"
         mx="auto"

@@ -5,22 +5,18 @@ import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
-import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
-import { useInterestDex } from '@/hooks/use-interest-dex';
 import { useAptosClient } from '@/lib/aptos-provider/aptos-client/aptos-client.hooks';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
-import { TokenStandard } from '@/lib/coins-manager/coins-manager.types';
 
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
-import { SwapForm } from './swap.types';
 import { logSwap } from './swap.utils';
+import SwapMessages from './swap-messages';
 
 const SwapButton = () => {
-  const dex = useInterestDex();
   const { mutate } = useCoins();
   const client = useAptosClient();
   const network = useNetwork<Network>();
@@ -32,11 +28,11 @@ const SwapButton = () => {
     signTransaction,
     signAndSubmitTransaction,
   } = useAptosWallet();
-  const { getValues, setValue, control } = useFormContext<SwapForm>();
+  const { getValues, setValue, control } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
-  const symbolIn = useWatch({ control, name: 'from.symbol' });
-  const symbolOut = useWatch({ control, name: 'to.symbol' });
+  const valueIn = useWatch({ control, name: 'from.value' });
+  const valueOut = useWatch({ control, name: 'to.value' });
 
   const gotoExplorer = () => {
     window.open(getValues('explorerLink'), '_blank', 'noopener,noreferrer');
@@ -49,27 +45,10 @@ const SwapButton = () => {
 
       if (!account) return;
 
-      const { from, to, path } = getValues();
-
-      const amountIn = BigInt(from.valueBN.decimalPlaces(0, 1).toString());
-
       let txResult;
+      const { from, to, payload } = getValues();
 
-      const payload =
-        from.standard === TokenStandard.COIN
-          ? dex.swapPathCoinIn({
-              amountIn,
-              coinIn: from.type,
-              path: path.slice(1),
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            })
-          : dex.swapPath({
-              path,
-              amountIn,
-              minAmountOut: BigInt(0),
-              recipient: account.address,
-            });
+      const startTime = Date.now();
 
       if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
@@ -94,6 +73,10 @@ const SwapButton = () => {
           senderAuthenticator,
         });
       }
+
+      const endTime = Date.now() - startTime;
+
+      setValue('executionTime', String(endTime));
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -135,7 +118,11 @@ const SwapButton = () => {
       success: () => ({
         title: 'Swap Successful',
         message: (
-          <SuccessModal transactionTime={`${0}`}>
+          <SuccessModal
+            transactionTime={`${(
+              Number(getValues('executionTime')) / 1000
+            ).toFixed(2)}`}
+          >
             <SuccessModalTokenCard
               from={getValues('from')}
               to={getValues('to')}
@@ -159,31 +146,14 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !(symbolIn && symbolOut);
+  const disabled = !!error || !(Number(valueIn) && Number(valueOut));
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
-      {error && (
-        <Box
-          p="s"
-          mx="xl"
-          gap="s"
-          display="flex"
-          borderRadius="xs"
-          border="1px solid"
-          bg="errorContainer"
-          color="onErrorContainer"
-          borderColor="onErrorContainer"
-        >
-          <DotErrorSVG width="100%" maxWidth="1rem" maxHeight="1rem" />
-          <Typography variant="label" size="medium">
-            {error}
-          </Typography>
-        </Box>
-      )}
+      {error && <SwapMessages />}
       <Button
-        py="m"
         variant="filled"
+        borderRadius="s"
         onClick={onSwap}
         disabled={disabled}
         justifyContent="center"
