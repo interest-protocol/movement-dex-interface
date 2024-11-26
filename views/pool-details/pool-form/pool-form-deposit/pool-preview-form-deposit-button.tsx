@@ -15,9 +15,12 @@ const PoolPreviewFormDepositButton: FC = () => {
 
   const error = useWatch({ control, name: 'error' });
 
+  const firsTokenValue = useWatch({ control, name: 'tokenList.0.value' });
+  const secondTokenValue = useWatch({ control, name: 'tokenList.1.value' });
+
   const addDeposit = async () => {
     !error &&
-      (await setModal(
+      setModal(
         <Motion
           animate={{ scale: 1 }}
           initial={{ scale: 0.85 }}
@@ -35,8 +38,10 @@ const PoolPreviewFormDepositButton: FC = () => {
           opaque: false,
           allowClose: true,
         }
-      ));
+      );
   };
+
+  const disabled = !!error || !firsTokenValue || !secondTokenValue;
 
   return (
     <Button
@@ -46,7 +51,7 @@ const PoolPreviewFormDepositButton: FC = () => {
       variant="filled"
       width="max-content"
       onClick={addDeposit}
-      disabled={!!error}
+      disabled={disabled}
     >
       Deposit
     </Button>
