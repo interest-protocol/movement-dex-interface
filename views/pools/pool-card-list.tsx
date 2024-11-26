@@ -35,8 +35,6 @@ const Pools: FC = () => {
 
   const tokenList = getValues('tokenList');
 
-  console.log('filters', filterProps);
-
   const { data, isLoading: arePoolsLoading } = usePools(
     page,
     isFindingPool

@@ -4,8 +4,6 @@ import { ISrPool } from '@/interface';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 
 export const usePools = (page: number = 1, findQuery = {}) => {
-  console.log('query', findQuery);
-
   const network = useNetwork();
 
   return useSWR(
