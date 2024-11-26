@@ -34,11 +34,17 @@ const CreateTokenFormButton = () => {
     signTransaction,
     signAndSubmitTransaction,
   } = useAptosWallet();
-  const { control, setValue, reset } = useFormContext<ICreateTokenForm>();
+  const { control, setValue, getValues, reset } =
+    useFormContext<ICreateTokenForm>();
 
   const { colors } = useTheme() as Theme;
 
   const values = useWatch({ control });
+
+  const onCloseModal = (tryAgain?: boolean) => {
+    handleClose();
+    if (!tryAgain) reset();
+  };
 
   const gotoExplorer = () =>
     window.open(values.explorerLink, '_blank', 'noopener,noreferrer');
@@ -108,6 +114,8 @@ const CreateTokenFormButton = () => {
             ),
           });
 
+      const startTime = Date.now();
+
       if (wallet === 'Razor Wallet') {
         const tx = await signAndSubmitTransaction({ payload });
 
@@ -131,6 +139,10 @@ const CreateTokenFormButton = () => {
           senderAuthenticator,
         });
       }
+
+      const endTime = Date.now() - startTime;
+
+      setValue('executionTime', String(endTime));
 
       await client.waitForTransaction({
         transactionHash: txResult.hash,
@@ -181,7 +193,6 @@ const CreateTokenFormButton = () => {
 
       throw e;
     } finally {
-      reset();
       setLoading(false);
     }
   };
@@ -198,11 +209,20 @@ const CreateTokenFormButton = () => {
         message:
           (error as Error).message ||
           'Your token creation failed, please try again or contact the support team',
-        primaryButton: { label: 'Try again', onClick: handleClose },
+        primaryButton: {
+          label: 'Try again',
+          onClick: () => onCloseModal(true),
+        },
       }),
       success: () => ({
         title: 'Token Created!',
-        message: <SuccessModal transactionTime={`${0}`}></SuccessModal>,
+        message: (
+          <SuccessModal
+            transactionTime={`${(
+              Number(getValues('executionTime')) / 1000
+            ).toFixed(2)}`}
+          />
+        ),
         primaryButton: {
           label: 'See on Explorer',
           onClick: gotoExplorer,
@@ -212,7 +232,7 @@ const CreateTokenFormButton = () => {
             mr="s"
             color="onSurface"
             variant="outline"
-            onClick={handleClose}
+            onClick={() => onCloseModal}
           >
             got it
           </Button>
