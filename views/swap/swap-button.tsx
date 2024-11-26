@@ -136,7 +136,7 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !(valueIn && valueOut);
+  const disabled = !!error || !valueIn || !valueOut;
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
