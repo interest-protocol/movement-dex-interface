@@ -26,7 +26,7 @@ const PoolTitleBar: FC<PoolTitleBarProps> = ({
   });
 
   const name = tokens.reduce(
-    (acc, token) => `${acc ? `${acc}•` : ''}${token?.symbol ?? ''}`,
+    (acc, token) => `${acc ? `${acc} • ` : ''}${token?.symbol ?? ''}`,
     ''
   );
 
@@ -71,7 +71,9 @@ const PoolTitleBar: FC<PoolTitleBarProps> = ({
             <Skeleton width="5rem" height="2rem" />
           </Box>
         ) : (
-          name
+          <Box as="span" fontFamily="Satoshi">
+            {name}
+          </Box>
         )}
       </Typography>
 
