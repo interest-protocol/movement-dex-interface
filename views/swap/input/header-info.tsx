@@ -34,8 +34,8 @@ const HeaderInfo: FC<InputProps> = ({ label }) => {
         <Typography
           as="span"
           size="small"
-          variant="label"
           fontSize="s"
+          variant="body"
           display={['inline-block', 'none']}
         >
           : {symbol}
