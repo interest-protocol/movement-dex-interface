@@ -5,6 +5,7 @@ import Layout from '@/components/layout';
 
 import Input from './input';
 import SwapFormFieldSlider from './input/swap-manager-slider';
+import ToInput from './input/to-input';
 import SwapButton from './swap-button';
 import SwapFlipToken from './swap-flip-token';
 import SwapManager from './swap-manager';
@@ -64,7 +65,7 @@ const Swap: FC = () => (
           </Box>
         </Box>
         <Box borderRadius="xs" bg="container" my="l">
-          <Input label="to" />
+          <ToInput />
         </Box>
         <SwapMessages />
         <SwapManager />
