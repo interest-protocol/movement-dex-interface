@@ -8,6 +8,7 @@ import SwapFormFieldSlider from './input/swap-manager-slider';
 import SwapButton from './swap-button';
 import SwapFlipToken from './swap-flip-token';
 import SwapManager from './swap-manager';
+import SwapMessages from './swap-messages';
 
 const Swap: FC = () => (
   <Layout>
@@ -65,6 +66,7 @@ const Swap: FC = () => (
         <Box borderRadius="xs" bg="container" my="l">
           <Input label="to" />
         </Box>
+        <SwapMessages />
         <SwapManager />
       </Box>
       <SwapButton />
