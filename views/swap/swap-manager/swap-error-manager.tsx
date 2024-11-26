@@ -46,22 +46,22 @@ export const SwapErrorManager: FC<SwapMessagesProps> = ({ hasNoMarket }) => {
     if (swapping) return;
 
     if (hasNoMarket) {
-      setValue('error', SwapMessagesEnum.noMarket);
+      setValue('error', String(SwapMessagesEnum.noMarket));
       return;
     }
 
     if (from?.type == to?.type) {
-      setValue('error', SwapMessagesEnum.sameCoin);
+      setValue('error', String(SwapMessagesEnum.sameCoin));
       return;
     }
 
     if (hasAtLeastOneMove) {
-      setValue('error', SwapMessagesEnum.leastOneMove);
+      setValue('error', String(SwapMessagesEnum.leastOneMove));
       return;
     }
 
     if (isGreaterThanBalance) {
-      setValue('error', SwapMessagesEnum.notEnoughToken);
+      setValue('error', String(SwapMessagesEnum.notEnoughToken));
       return;
     }
 
