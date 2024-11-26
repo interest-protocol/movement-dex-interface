@@ -35,6 +35,8 @@ const Pools: FC = () => {
 
   const tokenList = getValues('tokenList');
 
+  console.log('filters', filterProps);
+
   const { data, isLoading: arePoolsLoading } = usePools(
     page,
     isFindingPool
@@ -44,17 +46,18 @@ const Pools: FC = () => {
             { metadataY: { $in: tokenList?.map(({ type }) => type) } },
           ],
         }
-      : !filterProps?.some(
+      : !filterProps.length ||
+          filterProps?.some(
             (filterProp) =>
               filterProp.type === FilterTypeEnum.CATEGORY &&
               filterProp.value === FormFilterValue.all
           )
-        ? {
+        ? {}
+        : {
             poolAddress: {
               $in: POOL_DATA.map(({ poolAddress }) => poolAddress),
             },
           }
-        : {}
   );
 
   useEffect(() => {
