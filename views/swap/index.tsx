@@ -5,15 +5,15 @@ import Layout from '@/components/layout';
 
 import Input from './input';
 import SwapFormFieldSlider from './input/swap-manager-slider';
+import ToInput from './input/to-input';
 import SwapButton from './swap-button';
 import SwapFlipToken from './swap-flip-token';
-import SwapHeader from './swap-header';
 import SwapManager from './swap-manager';
-import SwapSettings from './swap-settings';
 
 const Swap: FC = () => (
   <Layout>
     <Box
+      gap="l"
       mx="auto"
       mt="3.5rem"
       display="flex"
@@ -24,10 +24,9 @@ const Swap: FC = () => (
       px={['2xs', 'xl', 'xl', '7xl']}
       width={['100%', '100%', '100%', '39.75rem']}
     >
-      <Box bg="container" borderRadius="s" p="xl">
-        <SwapHeader />
+      <Box bg="container" borderRadius="s" px="xl">
         <Box display="flex" flexDirection="column" gap="5xl">
-          <Box py="5xl">
+          <Box py="l">
             <Input label="from" />
             <Box px="s">
               <SwapFormFieldSlider />
@@ -64,15 +63,12 @@ const Swap: FC = () => (
             </Box>
           </Box>
         </Box>
-        <Box py="xl" borderRadius="xs" bg="container" my="m">
-          <Input label="to" />
+        <Box borderRadius="xs" bg="container" my="l">
+          <ToInput />
         </Box>
         <SwapManager />
-        <SwapButton />
       </Box>
-      <Box my="xs" bg="container" borderRadius="s">
-        <SwapSettings />
-      </Box>
+      <SwapButton />
     </Box>
   </Layout>
 );
