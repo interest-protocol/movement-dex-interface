@@ -24,7 +24,7 @@ const AmountInDollar: FC<InputProps> = ({ label }) => {
   if (!(usdPrice && value)) return '--';
 
   return (
-    <Box display="flex" gap="s" alignItems="center">
+    <Box display="flex" gap="s" alignItems="center" flexWrap="wrap">
       <Typography
         size="small"
         fontSize="s"
