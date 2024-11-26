@@ -29,7 +29,7 @@ const CardWrapper: FC<PropsWithChildren<CardWrapperProps>> = ({
           flexDirection="column"
           justifyContent="center"
         >
-          <Typography size="large" variant="label" lineHeight="1.5rem">
+          <Typography size="small" variant="body" lineHeight="1.5rem">
             {symbol}
           </Typography>
           <Typography

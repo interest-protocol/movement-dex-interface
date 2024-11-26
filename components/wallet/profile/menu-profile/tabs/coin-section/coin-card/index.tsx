@@ -136,7 +136,10 @@ const CoinCard: FC<CoinCardProps> = ({ token }) => {
           justifyContent="flex-start"
         >
           <Typography size="large" variant="label" lineHeight="1.5rem">
-            {balance} {symbol}
+            {balance}
+            <Box fontSize="Satoshi" as="span">
+              {symbol}
+            </Box>
           </Typography>
           {!!coin?.usdPrice24Change && (
             <Box

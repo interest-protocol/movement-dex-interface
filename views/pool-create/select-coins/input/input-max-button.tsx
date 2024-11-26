@@ -42,9 +42,9 @@ const InputMaxButton: FC<InputProps> = ({ index }) => {
       px="xs"
       py="2xs"
       fontSize="xs"
+      color="onSurface"
       variant="outline"
       borderRadius="2xs"
-      color="onSurface"
       disabled={!symbol}
       onClick={handleMax}
     >
