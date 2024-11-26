@@ -1,4 +1,4 @@
-import { BTCSVG, DefaultTokenSVG, USDCSVG } from '@/components/svg';
+import { BTCSVG, DefaultTokenSVG, ETHSVG, USDCSVG } from '@/components/svg';
 
 export const EARN_CARD_DATA = [
   {
@@ -28,5 +28,12 @@ export const EARN_CARD_DATA = [
     balance: 30000,
     TokenIcon: BTCSVG,
     earnAmount: 2.089,
+  },
+  {
+    label: 'unstaked',
+    tokenName: 'EHT',
+    balance: 30,
+    TokenIcon: ETHSVG,
+    earnAmount: 567,
   },
 ];

@@ -5,7 +5,7 @@ import { SEO } from '@/components';
 import PoolCreate from '@/views/pool-create';
 import { CreatePoolForm } from '@/views/pool-create/pool-create.types';
 
-const PoolCreatePage: NextPage = () => {
+const EarnCreatePage: NextPage = () => {
   const form = useForm<CreatePoolForm>({
     defaultValues: {
       step: 0,
@@ -40,4 +40,4 @@ const PoolCreatePage: NextPage = () => {
   );
 };
 
-export default PoolCreatePage;
+export default EarnCreatePage;

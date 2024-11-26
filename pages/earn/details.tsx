@@ -16,7 +16,7 @@ import PoolDetails from '@/views/pool-details';
 import { PoolDetailsProvider } from '@/views/pool-details/pool-details.context';
 import { IPoolForm } from '@/views/pools/pools.types';
 
-const PoolDetailsPage: NextPage<PoolPageProps> = ({ address }) => {
+const EarnDetailsPage: NextPage<PoolPageProps> = ({ address }) => {
   const form = useForm<IPoolForm>({
     defaultValues: {
       tokenList: [
@@ -43,7 +43,7 @@ const PoolDetailsPage: NextPage<PoolPageProps> = ({ address }) => {
 
   return (
     <FormProvider {...form}>
-      <SEO pageTitle="Pool Details" />
+      <SEO pageTitle="Earn Details" />
       <PoolDetailsProvider address={address}>
         <PoolDetails />
       </PoolDetailsProvider>
@@ -51,4 +51,4 @@ const PoolDetailsPage: NextPage<PoolPageProps> = ({ address }) => {
   );
 };
 
-export default withAddressGuard(Routes[RoutesEnum.Pools])(PoolDetailsPage);
+export default withAddressGuard(Routes[RoutesEnum.Earn])(EarnDetailsPage);
