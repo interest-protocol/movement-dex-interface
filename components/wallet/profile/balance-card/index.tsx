@@ -51,7 +51,10 @@ const BalanceCard: FC = () => {
       justifyContent="flex-start"
     >
       <Typography size="small" variant="display">
-        {balance} {symbol}
+        {balance}{' '}
+        <Box fontSize="Satoshi" as="span">
+          {symbol}
+        </Box>
       </Typography>
       <Typography size="small" opacity="0.7" variant="label" color="onSurface">
         {formatDollars(
