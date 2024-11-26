@@ -26,7 +26,7 @@ const PoolTitleBar: FC<PoolTitleBarProps> = ({
   });
 
   const name = tokens.reduce(
-    (acc, token) => `${acc ? `${acc}•` : ''}${token?.symbol ?? ''}`,
+    (acc, token) => `${acc ? `${acc} • ` : ''}${token?.symbol ?? ''}`,
     ''
   );
 
