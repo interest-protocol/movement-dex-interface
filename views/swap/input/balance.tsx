@@ -48,6 +48,8 @@ const Balance: FC<InputProps> = ({ label }) => {
   const balance = coinsMap[type]?.balance ?? ZERO_BIG_NUMBER;
 
   const handleMax = () => {
+    if (label === 'to') return;
+
     const value = balance.minus(
       FixedPointMath.toBigNumber(isAptos(type) ? 1 : 0)
     );
@@ -72,6 +74,43 @@ const Balance: FC<InputProps> = ({ label }) => {
     setValue(`${label}.valueBN`, value);
   };
 
+  if (label === 'to')
+    return (
+      <Box display="flex" gap="xs">
+        <Box display={['none', 'block']} width="1rem" height="1rem">
+          <SubtractBox
+            maxHeight="100%"
+            maxWidth="100%"
+            width="100%"
+            height="100%"
+          />
+        </Box>
+        <Typography
+          size="small"
+          fontSize="s"
+          variant="body"
+          whiteSpace="nowrap"
+        >
+          {symbol
+            ? `${FixedPointMath.toNumber(balance, decimals).toString()} ${symbol}`
+            : '0'}
+        </Typography>
+        {loading && (
+          <Box
+            mx="xs"
+            mt="-1.7rem"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box position="absolute" justifySelf="flex-end">
+              <ProgressIndicator variant="loading" size={12} />
+            </Box>
+          </Box>
+        )}
+      </Box>
+    );
+
   return (
     <Button
       p="2xs"
@@ -83,7 +122,7 @@ const Balance: FC<InputProps> = ({ label }) => {
       borderColor="transparent"
       nHover={{ bg: 'unset', borderColor: 'primary' }}
     >
-      <Box width="1rem" height="1rem">
+      <Box display={['none', 'block']} width="1rem" height="1rem">
         <SubtractBox
           maxHeight="100%"
           maxWidth="100%"
@@ -91,7 +130,7 @@ const Balance: FC<InputProps> = ({ label }) => {
           height="100%"
         />
       </Box>
-      <Typography size="small" variant="body" fontSize="s">
+      <Typography size="small" variant="body" fontSize="s" whiteSpace="nowrap">
         {symbol
           ? `${FixedPointMath.toNumber(balance, decimals).toString()} ${symbol}`
           : '0'}
