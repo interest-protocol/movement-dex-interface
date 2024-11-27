@@ -15,6 +15,11 @@ const PoolPreviewFormWithdrawButton: FC = () => {
 
   const error = useWatch({ control, name: 'error' });
 
+  const [fieldValue, secondValue] = useWatch({
+    control,
+    name: ['tokenList.0.value', 'tokenList.1.value'],
+  });
+
   const removeLiquidity = () =>
     !error &&
     setModal(
@@ -36,6 +41,10 @@ const PoolPreviewFormWithdrawButton: FC = () => {
       }
     );
 
+  const disabled =
+    !!error ||
+    [fieldValue, secondValue].some((value) => value === '0' || !value);
+
   return (
     <Button
       py="s"
@@ -44,7 +53,7 @@ const PoolPreviewFormWithdrawButton: FC = () => {
       variant="filled"
       width="max-content"
       onClick={removeLiquidity}
-      disabled={!!error}
+      disabled={disabled}
     >
       Withdraw
     </Button>
