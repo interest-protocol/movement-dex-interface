@@ -18,9 +18,6 @@ const Input: FC<InputProps> = ({ label }) => {
 
   const swapping = useWatch({ control, name: 'swapping' });
 
-  const fromValue = useWatch({ control, name: 'from.value' });
-  const toValue = useWatch({ control, name: 'to.value' });
-
   return (
     <>
       <HeaderInfo label={label} />
@@ -49,7 +46,6 @@ const Input: FC<InputProps> = ({ label }) => {
                 width: '100%',
                 borderRadius: 'xs',
               }}
-              value={label === 'from' ? fromValue : toValue}
               {...register(
                 `${label}.value`,
                 label === 'to'
