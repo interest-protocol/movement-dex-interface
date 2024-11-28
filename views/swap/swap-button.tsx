@@ -27,7 +27,7 @@ const SwapButton = () => {
     signTransaction,
     signAndSubmitTransaction,
   } = useAptosWallet();
-  const { getValues, setValue, control } = useFormContext();
+  const { getValues, setValue, control, reset } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
   const valueIn = useWatch({ control, name: 'from.value' });
@@ -88,6 +88,8 @@ const SwapButton = () => {
         'explorerLink',
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
+
+      reset();
     } catch (e) {
       console.warn(e);
 
