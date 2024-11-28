@@ -61,7 +61,7 @@ const SwapFormFieldSlider: FC = () => {
             'from.value',
             String(FixedPointMath.toNumber(valueBN, coinsMap[type].decimals))
           );
-          setValue('focus', true);
+          setValue('focus', false);
         }}
       />
     </Box>

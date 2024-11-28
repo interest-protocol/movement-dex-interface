@@ -14,7 +14,6 @@ import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 import SuccessModal from '../components/success-modal';
 import SuccessModalTokenCard from '../components/success-modal/success-modal-token-card';
 import { logSwap } from './swap.utils';
-import SwapMessages from './swap-messages';
 
 const SwapButton = () => {
   const { mutate } = useCoins();
@@ -28,7 +27,7 @@ const SwapButton = () => {
     signTransaction,
     signAndSubmitTransaction,
   } = useAptosWallet();
-  const { getValues, setValue, control } = useFormContext();
+  const { getValues, setValue, control, reset } = useFormContext();
 
   const error = useWatch({ control, name: 'error' });
   const valueIn = useWatch({ control, name: 'from.value' });
@@ -89,6 +88,8 @@ const SwapButton = () => {
         'explorerLink',
         EXPLORER_URL[Network.Porto](`txn/${txResult.hash}`)
       );
+
+      reset();
     } catch (e) {
       console.warn(e);
 
@@ -146,16 +147,16 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled = !!error || !(Number(valueIn) && Number(valueOut));
+  const disabled =
+    Boolean(Number(valueIn)) && Boolean(Number(valueOut)) && !error;
 
   return (
     <Box display="flex" flexDirection="column" gap="l">
-      {error && <SwapMessages />}
       <Button
         variant="filled"
         borderRadius="s"
         onClick={onSwap}
-        disabled={disabled}
+        disabled={!disabled}
         justifyContent="center"
       >
         <Typography variant="label" size="large">

@@ -44,17 +44,18 @@ const Pools: FC = () => {
             { metadataY: { $in: tokenList?.map(({ type }) => type) } },
           ],
         }
-      : !filterProps?.some(
+      : !filterProps.length ||
+          filterProps?.some(
             (filterProp) =>
               filterProp.type === FilterTypeEnum.CATEGORY &&
               filterProp.value === FormFilterValue.all
           )
-        ? {
+        ? {}
+        : {
             poolAddress: {
               $in: POOL_DATA.map(({ poolAddress }) => poolAddress),
             },
           }
-        : {}
   );
 
   useEffect(() => {
