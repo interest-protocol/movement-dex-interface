@@ -39,7 +39,6 @@ const CreateTokenForm: FC = () => {
           <Box>
             <TextField
               label="Name"
-              fontFamily="Proto"
               {...register('name')}
               placeholder="Eg. Ruco"
               nPlaceholder={{ opacity: 0.7 }}
@@ -51,7 +50,6 @@ const CreateTokenForm: FC = () => {
           <Box>
             <TextField
               label="Symbol"
-              fontFamily="Proto"
               placeholder="Eg. Ruco"
               {...register('symbol')}
               nPlaceholder={{ opacity: 0.7 }}
@@ -62,7 +60,6 @@ const CreateTokenForm: FC = () => {
           </Box>
           <Box>
             <TextField
-              fontFamily="Proto"
               label="Project URL"
               {...register('projectUrl')}
               nPlaceholder={{ opacity: 0.7 }}
@@ -80,7 +77,6 @@ const CreateTokenForm: FC = () => {
           <Box>
             <TextField
               type="link"
-              fontFamily="Proto"
               label="Coin Image URL"
               {...register('imageUrl')}
               nPlaceholder={{ opacity: 0.7 }}
@@ -107,7 +103,6 @@ const CreateTokenForm: FC = () => {
           <Box>
             <TextField
               type="number"
-              fontFamily="Proto"
               label="Coin Decimals"
               {...register('decimals')}
               supportingText="Insert the decimal precision of your token. If you don't know what to insert, use 9"
@@ -117,7 +112,6 @@ const CreateTokenForm: FC = () => {
           </Box>
           <Box>
             <TextField
-              fontFamily="Proto"
               label="Total Supply"
               nPlaceholder={{ opacity: 0.7 }}
               status={errors.supply && 'error'}
