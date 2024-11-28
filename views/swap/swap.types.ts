@@ -81,3 +81,7 @@ export interface MosaicQuoteResponse {
   };
   requestId: string;
 }
+
+export interface SwapMessagesProps {
+  hasNoMarket: boolean;
+}
