@@ -14,19 +14,20 @@ const EarnCard: FC<EarnCardProps> = ({
   return (
     <Box
       px="xl"
-      pb="xl"
       pt={0}
-      flex="1"
-      height="100%"
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
+      pb="xl"
       bg={
         label === 'staked' || label === 'unstaked'
           ? 'lowestContainer'
           : '#003EA8'
       }
-      borderRadius="xs"
+      flex="1"
+      gap="xs"
+      height="100%"
+      display="flex"
+      borderRadius="2xs"
+      flexDirection="column"
+      justifyContent="space-between"
     >
       <Box
         py="xl"
