@@ -1,11 +1,11 @@
-import { BTCSVG, DefaultTokenSVG, ETHSVG, USDCSVG } from '@/components/svg';
+import { BTCSVG, ETHSVG, MOVESVG, USDCSVG } from '@/components/svg';
 
 export const EARN_CARD_DATA = [
   {
     label: 'staked',
     tokenName: ' MOVE token',
     balance: 10,
-    TokenIcon: DefaultTokenSVG,
+    TokenIcon: MOVESVG,
     earnAmount: 12.0089,
   },
   {

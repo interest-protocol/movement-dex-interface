@@ -5,6 +5,7 @@ const EarnCardWrapper: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Box
       gap="xs"
+      bg="container"
       display="grid"
       borderRadius="xs"
       p={['s', 's', 's', 'l']}
