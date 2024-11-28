@@ -4,12 +4,11 @@ import { FC, PropsWithChildren } from 'react';
 const EarnCardWrapper: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Box
-      px="s"
-      gap="xl"
-      display="flex"
-      flexWrap="wrap"
-      alignItems="flex-start"
-      justifyContent="flex-start"
+      gap="xs"
+      display="grid"
+      borderRadius="xs"
+      p={['s', 's', 's', 'l']}
+      gridTemplateColumns={['1fr', '1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr 1fr']}
     >
       {children}
     </Box>

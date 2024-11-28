@@ -21,9 +21,13 @@ const EarnCard: FC<EarnCardProps> = ({
           ? 'lowestContainer'
           : '#003EA8'
       }
-      width="23.368rem"
-      height="20.5rem"
+      flex="1"
+      gap="xs"
+      height="100%"
+      display="flex"
       borderRadius="2xs"
+      flexDirection="column"
+      justifyContent="space-between"
     >
       <Box
         py="xl"

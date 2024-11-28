@@ -60,12 +60,18 @@ const EarnCardBody: FC<EarnCardProps> = ({
             mr="m"
             size="large"
             variant="body"
+            color="onSurface"
             textTransform="capitalize"
           >
             {tokenName}
           </Typography>
         </Box>
-        <Typography size="large" variant="label" textTransform="capitalize">
+        <Typography
+          size="large"
+          variant="label"
+          color="outline"
+          textTransform="capitalize"
+        >
           {earnAmount}
         </Typography>
       </Box>
