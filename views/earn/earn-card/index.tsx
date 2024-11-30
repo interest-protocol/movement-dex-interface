@@ -66,7 +66,7 @@ const EarnCard: FC<EarnCardProps> = ({
         {(label === 'staked' || label === 'unstaked') && (
           <Button
             onClick={() => {}}
-            color="primary"
+            color="onSurface"
             variant="outline"
             borderRadius="2xs"
             borderStyle="1px solid"
@@ -75,7 +75,12 @@ const EarnCard: FC<EarnCardProps> = ({
             Reset
           </Button>
         )}
-        <Button onClick={() => {}} borderRadius="2xs" variant="filled">
+        <Button
+          onClick={() => {}}
+          borderRadius="2xs"
+          variant="filled"
+          bg="onSurface"
+        >
           {label === 'staked'
             ? 'Add'
             : label === 'unstaked'
