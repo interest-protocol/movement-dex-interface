@@ -34,10 +34,12 @@ const SwapBackground: FC = () => {
         fetch(
           `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
         )
-          .then((res) => res.json?.())
-          .then((value) =>
-            formatDollars(FixedPointMath.toNumber(value, coin.decimals))
-          )
+          .then((res) => res.json?.() ?? res.text?.())
+          .then((value) => {
+            console.log(value);
+
+            return formatDollars(FixedPointMath.toNumber(value, coin.decimals));
+          })
           .catch(() => '--')
       )
     ).then((prices) =>
