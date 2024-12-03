@@ -43,13 +43,11 @@ const SwapBackground: FC = () => {
           )
           .catch(() => '--')
       )
-    ).then((prices) => {
-      console.log({ prices });
-
+    ).then((prices) =>
       setExposedCoins(
         COINS_EXPOSED.map((coin, index) => ({ ...coin, usd: prices[index] }))
-      );
-    });
+      )
+    );
   }, []);
 
   const onSelect = async (metadata: AssetMetadata) => {
