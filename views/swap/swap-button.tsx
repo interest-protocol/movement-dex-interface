@@ -147,17 +147,18 @@ const SwapButton = () => {
       }),
     });
 
-  const disabled =
-    Boolean(Number(valueIn)) && Boolean(Number(valueOut)) && !error;
+  const disabled = !Number(valueIn) || !Number(valueOut) || !!error;
 
   return (
-    <Box display="flex" flexDirection="column" gap="l">
+    <Box display="flex" flexDirection="column" mt="xs">
       <Button
+        height="2rem"
         variant="filled"
         borderRadius="s"
         onClick={onSwap}
-        disabled={!disabled}
+        disabled={disabled}
         justifyContent="center"
+        nDisabled={{ bg: 'highContainer' }}
       >
         <Typography variant="label" size="large">
           {loading ? 'Swapping...' : 'Confirm Swap'}

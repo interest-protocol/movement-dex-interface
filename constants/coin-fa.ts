@@ -19,17 +19,24 @@ export const COIN_TYPE_TO_FA = {
   [PORTO_COINS.WETH]: PORTO_FAS.WETH,
 };
 
+export const RUCO = {
+  address: AccountAddress.from(
+    '0xf0949330b384afdfce50661211adec99aaafb70f2c5ddee993fec4b60947b31e'
+  ),
+  decimals: 9,
+  iconUri: 'https://i.ibb.co/GndJSFF/Me-Dsci-6-400x400.jpg',
+  name: 'Rushi & Coops',
+  projectUri: '',
+  symbol: 'RUCO',
+};
+
 export const TOKENS = [
   ...values(COINS[Network.Porto]),
   ...values(FUNGIBLE_ASSETS[Network.Porto]),
-  {
-    address: AccountAddress.from(
-      '0xf0949330b384afdfce50661211adec99aaafb70f2c5ddee993fec4b60947b31e'
-    ),
-    decimals: 9,
-    iconUri: 'https://i.ibb.co/GndJSFF/Me-Dsci-6-400x400.jpg',
-    name: 'Rushi & Coops',
-    projectUri: '',
-    symbol: 'RUCO',
-  },
+  RUCO,
+];
+
+export const COINS_EXPOSED = [
+  RUCO,
+  FUNGIBLE_ASSETS[Network.Porto][FA_ADDRESSES[Network.Porto].NETH.toString()],
 ];
