@@ -1,4 +1,5 @@
 import { Box, Motion, Typography } from '@interest-protocol/ui-kit';
+import BigNumber from 'bignumber.js';
 import { FC, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { v4 } from 'uuid';
@@ -35,18 +36,20 @@ const SwapBackground: FC = () => {
           `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
         )
           .then((res) => res.json?.() ?? res.text?.())
-          .then((value) => {
-            console.log(value);
-
-            return formatDollars(FixedPointMath.toNumber(value, coin.decimals));
-          })
+          .then((value) =>
+            formatDollars(
+              FixedPointMath.toNumber(BigNumber(value), coin.decimals)
+            )
+          )
           .catch(() => '--')
       )
-    ).then((prices) =>
+    ).then((prices) => {
+      console.log({ prices });
+
       setExposedCoins(
         COINS_EXPOSED.map((coin, index) => ({ ...coin, usd: prices[index] }))
-      )
-    );
+      );
+    });
   }, []);
 
   const onSelect = async (metadata: AssetMetadata) => {
