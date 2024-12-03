@@ -26,7 +26,7 @@ const POSITIONS = [
 
 const SwapBackground: FC = () => {
   const { setValue, getValues } = useFormContext();
-  const [exposedCoins, setExposedCoins] = useState<any>([]);
+  const [exposedCoins, setExposedCoins] = useState<any[]>([]);
 
   useEffect(() => {
     Promise.all(
