@@ -6,7 +6,11 @@ import Footer from './footer';
 import Header from './header';
 import { LayoutProps } from './layout.types';
 
-const Layout: FC<PropsWithChildren<LayoutProps>> = ({ title, children }) => (
+const Layout: FC<PropsWithChildren<LayoutProps>> = ({
+  title,
+  children,
+  background,
+}) => (
   <ErrorBoundary>
     <Box
       flex="1"
@@ -19,6 +23,7 @@ const Layout: FC<PropsWithChildren<LayoutProps>> = ({ title, children }) => (
       flexDirection="column"
     >
       <Header />
+      {background}
       <Box
         flex="1"
         width="100%"

@@ -15,10 +15,10 @@ const Footer: FC = () => (
     zIndex={0}
     as="footer"
     width="100%"
-    display={['flex', 'flex', 'flex', 'grid']}
     alignItems="center"
     flexDirection="column"
     justifyContent="space-between"
+    display={['flex', 'flex', 'flex', 'grid']}
     gridTemplateColumns={['1fr', '1fr', '1fr', '1fr auto 1fr']}
   >
     <Link
@@ -31,14 +31,18 @@ const Footer: FC = () => (
         width="2.5rem"
         height="2.5rem"
         color="onSurface"
-        nHover={{
-          color: 'primary',
-        }}
+        position="relative"
+        nHover={{ color: 'primary' }}
       >
         <IPXSVG maxHeight="100%" maxWidth="100%" width="100%" />
       </Box>
     </Link>
-    <Box display="flex" flexDirection="column-reverse" gap="m">
+    <Box
+      gap="m"
+      display="flex"
+      position="relative"
+      flexDirection="column-reverse"
+    >
       <Box textAlign="center" pb="m">
         <Typography
           size="medium"
