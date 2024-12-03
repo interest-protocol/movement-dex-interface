@@ -32,18 +32,11 @@ const SwapBackground: FC = () => {
     Promise.all(
       COINS_EXPOSED.map((coin) =>
         fetch(
-          `https://testnet.mosaic.ag/porto/v1/quote?srcAsset=${coin.address.toString()}&dstAsset=0x1e74c3312b1a7a08eb7cf61310787597ea6609d6d99ce86c0e48399144ea4ce9&amount=${FixedPointMath.toBigNumber(1, coin.decimals).toString()}`,
-          {
-            headers: {
-              'x-api-key': 'tYPtSqDun-w9Yrric2baUAckKtzZh9U0',
-            },
-          }
+          `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
         )
           .then((res) => res.json?.())
-          .then((response) =>
-            formatDollars(
-              FixedPointMath.toNumber(response.data.dstAmount, coin.decimals)
-            )
+          .then((value) =>
+            formatDollars(FixedPointMath.toNumber(value, coin.decimals))
           )
           .catch(() => '--')
       )
@@ -96,7 +89,7 @@ const SwapBackground: FC = () => {
   };
 
   return (
-    <Box position="absolute" flex="1" mt="5rem">
+    <Box position="absolute" flex="1">
       {exposedCoins.map((token) => (
         <Motion
           gap="l"

@@ -36,9 +36,7 @@ const Swap: FC = () => (
           flexDirection="column"
         >
           <Input label="from" />
-          <Box px="s">
-            <SwapFormFieldSlider />
-          </Box>
+          <SwapFormFieldSlider />
         </Box>
         <Box
           my="-1.4rem"
