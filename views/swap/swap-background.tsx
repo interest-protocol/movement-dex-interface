@@ -32,7 +32,7 @@ const SwapBackground: FC = () => {
     Promise.all(
       COINS_EXPOSED.map((coin) =>
         fetch(
-          `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
+          `https://testnet.mosaic.ag/porto/v1/quote?srcAsset=${coin.address.toString()}&dstAsset=0x1e74c3312b1a7a08eb7cf61310787597ea6609d6d99ce86c0e48399144ea4ce9&amount=${FixedPointMath.toBigNumber(1, coin.decimals).toString()}`
         )
           .then((res) => res.json?.())
           .then((value) =>
