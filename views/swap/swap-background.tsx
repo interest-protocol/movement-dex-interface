@@ -153,12 +153,7 @@ const SwapBackground: FC = () => {
             >
               {token.symbol}
             </Typography>
-            <Typography
-              size="large"
-              variant="body"
-              fontWeight="bold"
-              color="onSurface"
-            >
+            <Typography size="large" variant="label" color="onSurface">
               {token.usd}
             </Typography>
           </Motion>
