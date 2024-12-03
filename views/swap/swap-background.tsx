@@ -10,7 +10,7 @@ import {
   AssetMetadata,
   TokenStandard,
 } from '@/lib/coins-manager/coins-manager.types';
-import { parseToMetadata, ZERO_BIG_NUMBER } from '@/utils';
+import { formatDollars, parseToMetadata, ZERO_BIG_NUMBER } from '@/utils';
 import { MetadataSources } from '@/utils/coin/coin.types';
 
 const label = 'to';
@@ -35,7 +35,10 @@ const SwapBackground: FC = () => {
           `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
         )
           .then((res) => res.json?.())
-          .then((value) => FixedPointMath.toNumber(value, coin.decimals))
+          .then((value) =>
+            formatDollars(FixedPointMath.toNumber(value, coin.decimals))
+          )
+          .catch(() => '--')
       )
     ).then((prices) =>
       setExposedCoins(
