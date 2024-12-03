@@ -35,8 +35,10 @@ const SwapBackground: FC = () => {
           `/api/v1/usd-price?type=${coin.address.toString()}&decimals=${coin.decimals}`
         )
           .then((res) => res.json?.())
-          .then((value) =>
-            formatDollars(FixedPointMath.toNumber(value, coin.decimals))
+          .then((response) =>
+            formatDollars(
+              FixedPointMath.toNumber(response.data.dstAmount, coin.decimals)
+            )
           )
           .catch(() => '--')
       )
@@ -89,7 +91,7 @@ const SwapBackground: FC = () => {
   };
 
   return (
-    <Box position="absolute" flex="1">
+    <Box position="absolute" flex="1" mt="5rem">
       {exposedCoins.map((token) => (
         <Motion
           gap="l"
