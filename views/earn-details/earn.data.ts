@@ -1,5 +1,5 @@
+import { FilterTypeEnum } from '../components/farm-filter/farm.types';
 import { FormFilterValue } from '../components/info-card/info-card.types';
-import { FilterTypeEnum } from './earn.types';
 
 export const LINES = [
   {
