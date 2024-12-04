@@ -63,6 +63,7 @@ export const Dialog: FC<DialogProps> = ({
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
+        overflowWrap="anywhere"
         pt="xl"
         gap="m"
       >

@@ -27,11 +27,11 @@ const SwapSettingsForm: FC = () => {
     const settings = formTmpSettings.getValues();
 
     setValue('settings', settings);
-
     localStorage.setItem(
       `${LOCAL_STORAGE_VERSION}-movement-dex-settings`,
       JSON.stringify(settings)
     );
+    handleClose();
   };
 
   return (

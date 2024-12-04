@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { v4 } from 'uuid';
 
 import { Routes, RoutesEnum } from '@/constants';
+import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { usePools } from '@/hooks/use-pools';
 import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
@@ -43,21 +44,34 @@ const Pools: FC = () => {
     isFindingPool
       ? {
           $and: [
-            { metadataX: { $in: tokenList?.map(({ type }) => type) } },
-            { metadataY: { $in: tokenList?.map(({ type }) => type) } },
+            {
+              metadataX: {
+                $in: tokenList?.map(({ type }) =>
+                  (COIN_TYPE_TO_FA[type] || type).toString()
+                ),
+              },
+            },
+            {
+              metadataY: {
+                $in: tokenList?.map(({ type }) =>
+                  (COIN_TYPE_TO_FA[type] || type).toString()
+                ),
+              },
+            },
           ],
         }
-      : !filterProps?.some(
+      : !filterProps.length ||
+          filterProps?.some(
             (filterProp) =>
               filterProp.type === FilterTypeEnum.CATEGORY &&
               filterProp.value === FormFilterValue.all
           )
-        ? {
+        ? {}
+        : {
             poolAddress: {
               $in: POOL_DATA.map(({ poolAddress }) => poolAddress),
             },
           }
-        : {}
   );
 
   useEffect(() => {

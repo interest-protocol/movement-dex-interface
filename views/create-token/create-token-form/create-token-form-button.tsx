@@ -1,18 +1,11 @@
 import { UserTransactionResponse } from '@aptos-labs/ts-sdk';
 import { Network } from '@interest-protocol/aptos-sr-amm';
-import {
-  Box,
-  Button,
-  Theme,
-  Typography,
-  useTheme,
-} from '@interest-protocol/ui-kit';
+import { Box, Button } from '@interest-protocol/ui-kit';
 import { useAptosWallet } from '@razorlabs/wallet-kit';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import invariant from 'tiny-invariant';
 
-import { DotErrorSVG } from '@/components/svg';
 import { EXPLORER_URL } from '@/constants';
 import { useDialog } from '@/hooks';
 import { useInterestDex } from '@/hooks/use-interest-dex';
@@ -37,13 +30,11 @@ const CreateTokenFormButton = () => {
   const { control, setValue, getValues, reset } =
     useFormContext<ICreateTokenForm>();
 
-  const { colors } = useTheme() as Theme;
-
   const values = useWatch({ control });
 
-  const onCloseModal = (tryAgain?: boolean) => {
+  const onCloseModal = (resetForm?: boolean) => {
+    if (resetForm) reset();
     handleClose();
-    if (!tryAgain) reset();
   };
 
   const gotoExplorer = () =>
@@ -211,7 +202,7 @@ const CreateTokenFormButton = () => {
           'Your token creation failed, please try again or contact the support team',
         primaryButton: {
           label: 'Try again',
-          onClick: () => onCloseModal(true),
+          onClick: () => onCloseModal(false),
         },
       }),
       success: () => ({
@@ -232,7 +223,7 @@ const CreateTokenFormButton = () => {
             mr="s"
             color="onSurface"
             variant="outline"
-            onClick={() => onCloseModal}
+            onClick={() => onCloseModal(true)}
           >
             got it
           </Button>
@@ -241,29 +232,7 @@ const CreateTokenFormButton = () => {
     });
 
   return (
-    <Box display="flex" alignItems="center" flexDirection="column">
-      <Box
-        p="s"
-        mb="m"
-        gap="s"
-        color="outline"
-        bg="lowContainer"
-        borderRadius="xs"
-        border="1px solid"
-        display="inline-flex"
-        borderColor="outline"
-        width="auto"
-      >
-        <DotErrorSVG
-          width="100%"
-          maxWidth="1rem"
-          maxHeight="1rem"
-          dotColor={colors.outlineVariant}
-        />
-        <Typography variant="label" size="medium">
-          It costs 2 MOVE to create a coin
-        </Typography>
-      </Box>
+    <Box display="flex" alignItems="center">
       <Button
         py="m"
         flex="1"
