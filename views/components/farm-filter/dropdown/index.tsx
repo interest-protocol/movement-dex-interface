@@ -8,14 +8,16 @@ import { v4 } from 'uuid';
 import { ArrowDownSVG, ArrowUpSVG } from '@/components/svg';
 import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 import { updateURL } from '@/utils';
+import { FormFilterValue } from '@/views/components/info-card/info-card.types';
+import { IEarnForm } from '@/views/earn/earn.types';
+import { IPoolForm } from '@/views/pools/pools.types';
 
-import { FormFilterValue } from '../../pool-card/pool-card.types';
-import { FilterItemProps, IPoolForm } from '../../pools.types';
+import { FilterItemProps } from '../farm.types';
 import { DropdownProps } from './dropdown.types';
 
 const Dropdown: FC<DropdownProps> = ({ label, type, filterData, disabled }) => {
   const boxId = useId();
-  const { control } = useFormContext<IPoolForm>();
+  const { control } = useFormContext<IEarnForm | IPoolForm>();
   const fields = useWatch({ control, name: 'filterList' });
   const { replace } = useFieldArray({
     control,

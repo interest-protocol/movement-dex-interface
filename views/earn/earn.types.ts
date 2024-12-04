@@ -1,18 +1,13 @@
+import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 
 import { SVGProps } from '@/components/svg/svg.types';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
+import { FilterItemProps } from '../components/farm-filter/farm.types';
+
 export enum FilterTypeEnum {
   CATEGORY = 'category',
-}
-
-export enum FormFilterValue {
-  'official' = 'official',
-  'all' = 'all',
-  'volatile' = 'volatile',
-  'stable' = 'stable',
-  'farm' = 'farm',
 }
 
 export enum EarnTabEnum {
@@ -22,10 +17,6 @@ export enum EarnTabEnum {
 
 export interface EarncCardTokenInfoProps {
   coins: ReadonlyArray<AssetMetadata>;
-}
-export interface FilterItemProps {
-  type: FilterTypeEnum;
-  value: FormFilterValue;
 }
 
 export enum EarnLabelEnum {
@@ -60,3 +51,17 @@ export interface EarnCardProps {
   earnAmount: number;
   TokenIcon: FC<SVGProps>;
 }
+
+export interface IEarnForm {
+  token: EarnToken;
+  lpCoin: EarnToken;
+  filterList: ReadonlyArray<FilterItemProps>;
+}
+
+export interface EarnTokenWithMetadata extends AssetMetadata {
+  value: string;
+  locked: boolean;
+  valueBN: BigNumber;
+}
+
+export type EarnToken = EarnTokenWithMetadata;

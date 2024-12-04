@@ -17,6 +17,10 @@ export interface PoolPageProps {
   address: string;
 }
 
+export interface EarnPageProps {
+  address: string;
+}
+
 export enum PoolTypeEnum {
   CLAMM = 'CLAMM',
   srAMM = 'SR-AMM',

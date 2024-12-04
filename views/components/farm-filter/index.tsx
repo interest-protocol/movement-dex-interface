@@ -5,9 +5,10 @@ import { v4 } from 'uuid';
 import { FilterSVG } from '@/components/svg';
 
 import Dropdown from './dropdown';
-import { FILTERS_DATA } from './earn-filter.data';
+import { FarmFilterProps } from './farm.types';
+import FilterSelectedItem from './filter-selected-item';
 
-const EarnFilter: FC = () => (
+const FarmFilter: FC<FarmFilterProps> = ({ filterData }) => (
   <Box
     mx="m"
     display="flex"
@@ -35,7 +36,7 @@ const EarnFilter: FC = () => (
       >
         <FilterSVG maxWidth="2rem" maxHeight="2rem" width="100%" />
       </Box>
-      {FILTERS_DATA.map((filter) => (
+      {filterData.map((filter) => (
         <Dropdown
           key={v4()}
           type={filter.type}
@@ -44,7 +45,8 @@ const EarnFilter: FC = () => (
         />
       ))}
     </Box>
+    <FilterSelectedItem />
   </Box>
 );
 
-export default EarnFilter;
+export default FarmFilter;

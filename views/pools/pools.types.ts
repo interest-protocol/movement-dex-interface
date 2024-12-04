@@ -3,8 +3,17 @@ import BigNumber from 'bignumber.js';
 import { ISrPool } from '@/interface';
 import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
+import { FilterItemProps } from '../components/farm-filter/farm.types';
 import { ISwapSettings } from '../swap/swap.types';
-import { FormFilterValue } from './pool-card/pool-card.types';
+
+export enum FormFilterValue {
+  'official' = 'official',
+  'all' = 'all',
+  'stable' = 'stable',
+  'volatile' = 'volatile',
+  'clamm' = 'clamm',
+  'amm' = 'amm',
+}
 
 export enum FilterTypeEnum {
   ALGORITHM = 'algorithm',
@@ -52,9 +61,4 @@ export interface IPoolForm {
   tokenList: ReadonlyArray<PoolToken>;
   filterList: ReadonlyArray<FilterItemProps>;
   pool: ISrPool;
-}
-
-export interface FilterItemProps {
-  type: FilterTypeEnum;
-  value: FormFilterValue;
 }

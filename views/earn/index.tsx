@@ -1,13 +1,17 @@
-import { Box, Typography } from '@interest-protocol/ui-kit';
-import Link from 'next/link';
+import { Box } from '@interest-protocol/ui-kit';
 import { FC, useState } from 'react';
 import { v4 } from 'uuid';
 
 import Layout from '@/components/layout';
 import { Routes, RoutesEnum } from '@/constants';
+import { TOKENS } from '@/constants/coin-fa';
+import { AssetMetadata } from '@/lib/coins-manager/coins-manager.types';
 
+import FarmFilter from '../components/farm-filter';
+import InfoCard from '../components/info-card';
+import { FormFilterValue } from '../components/info-card/info-card.types';
+import { FILTERS_DATA, LINES } from './earn.data';
 import { EarnTabEnum } from './earn.types';
-import EarnFilter from './earn-filter';
 import Header from './header';
 
 const Earn: FC = () => {
@@ -30,42 +34,33 @@ const Earn: FC = () => {
         flexDirection="column"
         py={['s', 's', 's', '2xl']}
       >
-        <EarnFilter />
-        <Typography variant="title" size="large" p="m">
-          {tab == EarnTabEnum.Earn ? 'Earn' : 'My Position'}
-        </Typography>
+        <FarmFilter filterData={FILTERS_DATA} />
         <Box
-          px="s"
-          gap="xl"
-          display="flex"
-          flexWrap="wrap"
-          alignItems="flex-start"
-          justifyContent="flex-start"
+          gap="xs"
+          borderRadius="xs"
+          p={['s', 's', 's', 'l']}
+          display={'grid'}
+          gridTemplateColumns={[
+            '1fr',
+            '1fr',
+            '1fr 1fr',
+            '1fr 1fr',
+            '1fr 1fr 1fr',
+          ]}
         >
-          {[1, 2, 3, 4].map((item) => {
+          {[1, 2, 3].map((index) => {
             return (
-              <Link
+              <InfoCard
                 key={v4()}
-                href={`${Routes[RoutesEnum.EarnDetails]}/${item}`}
-              >
-                <Box
-                  p="m"
-                  height="20.5rem"
-                  width="23.368rem"
-                  borderRadius="2xs"
-                  bg="lowestContainer"
-                  border="0.063rem solid"
-                  borderColor="outlineVariant"
-                  nHover={{
-                    cursor: 'pointer',
-                    borderColor: '#76767A',
-                    boxShadow: '0px 24px 46px -10px rgba(13, 16, 23, 0.16)',
-                    '.arrow-wrapper': { opacity: 1 },
-                  }}
-                >
-                  Ean card
-                </Box>
-              </Link>
+                lines={LINES}
+                tags={['FARM', FormFilterValue['volatile']]}
+                listCoins={[
+                  TOKENS[0] as AssetMetadata,
+                  TOKENS[1] as AssetMetadata,
+                ]}
+                link={`${Routes[RoutesEnum.EarnDetails]}?address=${index}`}
+                infoData={['0.3%', `N/A`, `N/A`, `N/A`]}
+              />
             );
           })}
         </Box>

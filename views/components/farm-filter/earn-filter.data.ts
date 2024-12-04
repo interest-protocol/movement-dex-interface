@@ -1,4 +1,6 @@
-import { FilterTypeEnum, FormFilterValue } from '../earn.types';
+import { FormFilterValue } from '@/views/components/info-card/info-card.types';
+
+import { FilterTypeEnum } from './farm.types';
 
 export const CATEGORY = [
   {
