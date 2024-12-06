@@ -93,70 +93,82 @@ const SwapBackground: FC = () => {
 
   return (
     <Box position="absolute" flex="1" mt="5rem">
-      {exposedCoins.map((token) => (
-        <Motion
-          gap="l"
-          key={v4()}
-          display="flex"
-          cursor="pointer"
-          initial="initial"
-          whileHover="hover"
-          alignItems="center"
-          position="absolute"
-          onClick={() => onSelect(parseToMetadata(token as MetadataSources))}
-          top={`calc(${POSITIONS[~~(POSITIONS.length * Math.random())][0]}vh + ${Math.random() * 10 * (Math.random() > 0.5 ? 1 : -1)}rem)`}
-          left={`calc(${POSITIONS[~~(POSITIONS.length * Math.random())][1]}vw + ${Math.random() * 10 * (Math.random() > 0.5 ? 1 : -1)}rem)`}
-        >
+      {exposedCoins.map((token) => {
+        const size = Math.random() + 0.5;
+        return (
           <Motion
-            overflow="hidden"
-            borderRadius="50%"
-            filter="blur(10px)"
-            width={['3rem', '7rem']}
-            height={['3rem', '7rem']}
-            animate={{ y: [-10, 10] }}
-            variants={{
-              initial: { y: 0 },
-              hover: {
-                y: [0],
-                filter: 'blur(0px)',
-                transition: { duration: 0.3 },
-              },
-            }}
+            gap="l"
+            key={v4()}
+            display="flex"
+            cursor="pointer"
+            initial="initial"
+            whileHover="hover"
+            position="absolute"
+            animate={{ y: [-5, 5] }}
             transition={{
               duration: 2,
               repeat: Infinity,
               ease: 'easeInOut',
               repeatType: 'mirror',
             }}
+            onClick={() => onSelect(parseToMetadata(token as MetadataSources))}
+            top={`calc(${POSITIONS[~~(POSITIONS.length * Math.random())][0]}vh + ${Math.random() * 10 * (Math.random() > 0.5 ? 1 : -1)}rem)`}
+            left={`calc(${POSITIONS[~~(POSITIONS.length * Math.random())][1]}vw + ${Math.random() * 10 * (Math.random() > 0.5 ? 1 : -1)}rem)`}
           >
-            <img
-              width="100%"
-              height="100%"
-              style={{ objectFit: 'cover' }}
-              alt="this person does not exist"
-              src={token.iconUri ?? 'https://thispersondoesnotexist.com'}
-            />
-          </Motion>
-          <Motion
-            variants={{
-              hover: { scale: 1 },
-              initial: { scale: 0 },
-            }}
-          >
-            <Typography
-              size="large"
-              variant="body"
-              fontWeight="bold"
-              color="onSurface"
+            <Motion
+              scale="1"
+              filter="blur(10px)"
+              variants={{
+                initial: { y: 0 },
+                hover: {
+                  scale: [1, 1.25],
+                  filter: 'blur(0px)',
+                  transition: { duration: 0.3 },
+                },
+              }}
             >
-              {token.symbol}
-            </Typography>
-            <Typography size="large" variant="label" color="onSurface">
-              {token.usd}
-            </Typography>
+              <Motion
+                overflow="hidden"
+                borderRadius="50%"
+                width={`calc(3rem * ${size})`}
+                height={`calc(3rem * ${size})`}
+                animate={{ rotate: ['-15deg', '15deg'] }}
+                transition={{
+                  duration: 10,
+                  repeat: Infinity,
+                  repeatType: 'mirror',
+                }}
+              >
+                <img
+                  width="100%"
+                  height="100%"
+                  style={{ objectFit: 'cover' }}
+                  alt="this person does not exist"
+                  src={token.iconUri ?? 'https://thispersondoesnotexist.com'}
+                />
+              </Motion>
+            </Motion>
+            <Motion
+              variants={{
+                hover: { scale: 1 },
+                initial: { scale: 0 },
+              }}
+            >
+              <Typography
+                size="large"
+                variant="body"
+                color="primary"
+                fontWeight="bold"
+              >
+                {token.symbol}
+              </Typography>
+              <Typography size="small" variant="label" color="onSurface">
+                {token.usd}
+              </Typography>
+            </Motion>
           </Motion>
-        </Motion>
-      ))}
+        );
+      })}
     </Box>
   );
 };
