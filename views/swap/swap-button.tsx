@@ -158,7 +158,7 @@ const SwapButton = () => {
         onClick={onSwap}
         disabled={disabled}
         justifyContent="center"
-        nDisabled={{ bg: 'highContainer' }}
+        nDisabled={{ bg: 'highestContainer' }}
       >
         <Typography variant="label" size="large">
           {loading ? 'Swapping...' : 'Confirm Swap'}
