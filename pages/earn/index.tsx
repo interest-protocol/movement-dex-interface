@@ -4,11 +4,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { SEO } from '@/components';
 import { FilterTypeEnum } from '@/views/components/farm-filter/farm.types';
 import { FormFilterValue } from '@/views/components/info-card/info-card.types';
-import Pools from '@/views/pools';
-import { IPoolForm } from '@/views/pools/pools.types';
+import Earn from '@/views/earn';
+import { IEarnForm } from '@/views/earn/earn.types';
 
-const PoolsPage: NextPage = () => {
-  const form = useForm<IPoolForm>({
+const EarnPage: NextPage = () => {
+  const form = useForm<IEarnForm>({
     defaultValues: {
       filterList: [
         { type: FilterTypeEnum.CATEGORY, value: FormFilterValue.official },
@@ -18,10 +18,10 @@ const PoolsPage: NextPage = () => {
 
   return (
     <FormProvider {...form}>
-      <SEO pageTitle="Pools" />
-      <Pools />
+      <SEO pageTitle="Earn" />
+      <Earn />
     </FormProvider>
   );
 };
 
-export default PoolsPage;
+export default EarnPage;

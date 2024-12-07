@@ -1,17 +1,20 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
+import BigNumber from 'bignumber.js';
 import { inc } from 'ramda';
 import { FC, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { v4 } from 'uuid';
 
+import { Routes, RoutesEnum } from '@/constants';
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
 import { usePools } from '@/hooks/use-pools';
+import { FixedPointMath } from '@/lib';
 import { useCoins } from '@/lib/coins-manager/coins-manager.hooks';
 
-import { POOL_DATA } from './pool.data';
-import PoolCard from './pool-card';
-import { FormFilterValue } from './pool-card/pool-card.types';
-import PoolCardSkeleton from './pool-card/pool-card-skeleton';
+import InfoCard from '../components/info-card';
+import { FormFilterValue } from '../components/info-card/info-card.types';
+import InfoCardSkeleton from '../components/info-card/info-card-skeleton';
+import { LINES, POOL_DATA } from './pool.data';
 import {
   FilterTypeEnum,
   IPoolForm,
@@ -167,7 +170,7 @@ const PoolCardListContent: FC<PoolCardListContentProps> = ({
           '1fr 1fr 1fr',
         ]}
       >
-        <PoolCardSkeleton />
+        <InfoCardSkeleton isPool />
       </Box>
     );
 
@@ -196,9 +199,21 @@ const PoolCardListContent: FC<PoolCardListContentProps> = ({
         ]}
       >
         {pools?.flatMap((poolPage) =>
-          poolPage.map((pool) => <PoolCard key={v4()} pool={pool} />)
+          poolPage.map((pool) => (
+            <InfoCard
+              key={v4()}
+              lines={LINES}
+              tags={['SR-AMM', FormFilterValue['volatile']]}
+              listCoins={pool ? [pool.metadata.x, pool.metadata.y] : []}
+              link={`${Routes[RoutesEnum.PoolDetails]}?address=${pool.poolAddress}`}
+              infoData={[
+                '0.3%',
+                `${FixedPointMath.toNumber(BigNumber(String(pool.bidLiquidity)), pool.metadata.pool.decimals)}`,
+              ]}
+            />
+          ))
         )}
-        {arePoolsLoading && <PoolCardSkeleton />}
+        {arePoolsLoading && <InfoCardSkeleton isPool />}
       </Box>
       {hasMore && (
         <Box mx="m" display="flex" justifyContent="center" onClick={next}>

@@ -3,9 +3,9 @@ import { FC } from 'react';
 
 import { ExclamationCircleSVG, QuestionCircleSVG } from '@/components/svg';
 
-import { PoolCardTradeProps } from './pool-card.types';
+import { InfoCardTradeProps } from './info-card.types';
 
-const PoolCardTrade: FC<PoolCardTradeProps> = ({
+const InfoCardTrade: FC<InfoCardTradeProps> = ({
   index,
   amount,
   isInfo,
@@ -56,4 +56,4 @@ const PoolCardTrade: FC<PoolCardTradeProps> = ({
   </Box>
 );
 
-export default PoolCardTrade;
+export default InfoCardTrade;
