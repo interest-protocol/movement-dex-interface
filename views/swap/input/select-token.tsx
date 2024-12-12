@@ -45,6 +45,7 @@ const SelectToken: FC<InputProps> = ({ label }) => {
   });
 
   const onSelect = async (metadata: AssetMetadata) => {
+    console.log('metadata', metadata);
     if (
       (metadata.standard == TokenStandard.FA
         ? metadata.type

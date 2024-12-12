@@ -1,12 +1,15 @@
+import { Network } from '@interest-protocol/aptos-sr-amm';
 import { Box, Motion, Typography } from '@interest-protocol/ui-kit';
 import BigNumber from 'bignumber.js';
 import { FC, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { v4 } from 'uuid';
 
+import { TokenIcon } from '@/components';
 import { COIN_TYPE_TO_FA, COINS_EXPOSED } from '@/constants/coin-fa';
 import { PRICE_TYPE } from '@/constants/prices';
 import { FixedPointMath } from '@/lib';
+import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 import {
   AssetMetadata,
   TokenStandard,
@@ -28,6 +31,7 @@ const POSITIONS = [
 const SwapBackground: FC = () => {
   const { setValue, getValues } = useFormContext();
   const [exposedCoins, setExposedCoins] = useState<any[]>([]);
+  const network = useNetwork<Network>();
 
   useEffect(() => {
     Promise.all(
@@ -128,7 +132,6 @@ const SwapBackground: FC = () => {
               }}
             >
               <Motion
-                overflow="hidden"
                 borderRadius="50%"
                 width={`calc(3rem * ${size})`}
                 height={`calc(3rem * ${size})`}
@@ -139,12 +142,11 @@ const SwapBackground: FC = () => {
                   repeatType: 'mirror',
                 }}
               >
-                <img
-                  width="100%"
-                  height="100%"
-                  style={{ objectFit: 'cover' }}
-                  alt="this person does not exist"
-                  src={token.iconUri ?? 'https://thispersondoesnotexist.com'}
+                <TokenIcon
+                  withBg
+                  network={network}
+                  url={token.iconUri}
+                  symbol={token.symbol}
                 />
               </Motion>
             </Motion>
