@@ -98,7 +98,8 @@ const SwapBackground: FC = () => {
   return (
     <Box position="absolute" flex="1" mt="5rem">
       {exposedCoins.map((token) => {
-        const size = Math.random() + 0.5;
+        const size = Math.random() * 0.5 + 0.75;
+
         return (
           <Motion
             gap="l"
