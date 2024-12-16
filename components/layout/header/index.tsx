@@ -1,7 +1,7 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { v4 } from 'uuid';
 
 import { InterestSVG } from '@/components/svg';
@@ -13,8 +13,11 @@ import { SIDEBAR_ITEMS } from '../sidebar/sidebar.data';
 import LogoWrapper from './logo-wrapper';
 
 const Header: FC = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined'
+      ? !window.matchMedia('(min-width: 64em)').matches
+      : false
+  );
 
   const { asPath, push } = useRouter();
 
@@ -32,10 +35,6 @@ const Header: FC = () => {
 
   useEventListener('resize', handleSetDesktop, true);
 
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
   return (
     <Box
       display="flex"
@@ -44,7 +43,9 @@ const Header: FC = () => {
       px={isMobile ? 'm' : '2xl'}
       justifyContent="space-between"
     >
-      {isMobile ? (
+      {!isMobile ? (
+        <LogoWrapper />
+      ) : (
         <Box>
           <Link href={Routes[RoutesEnum.Swap]}>
             <Box
@@ -59,10 +60,8 @@ const Header: FC = () => {
             </Box>
           </Link>
         </Box>
-      ) : (
-        <LogoWrapper />
       )}
-      {!isMobile && hydrated && (
+      {!isMobile && (
         <Box gap="m" display="flex" alignItems="center" justifyContent="center">
           {SIDEBAR_ITEMS.map(({ name, path }) => (
             <Box
