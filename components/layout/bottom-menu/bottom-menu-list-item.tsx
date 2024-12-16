@@ -33,13 +33,13 @@ const SwapBottomMenuListItem: FC<SwapBottomMenuListItemProps> = ({
         justifyContent="center"
         onClick={() => goToPath(path)}
         transition="all 350ms ease-in-out"
-        bg={asPath === path ? 'onPrimary' : ''}
+        bg={asPath === path ? 'primary' : ''}
         nHover={{ bg: asPath !== path ? 'outline' : '' }}
       >
         <Typography
           size="large"
           variant="label"
-          color="white"
+          color={asPath === path ? 'onPrimary' : 'white'}
           width="max-content"
           nHover={{
             opacity: 0.7,
