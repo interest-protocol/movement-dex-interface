@@ -1,4 +1,5 @@
 import { Box } from '@interest-protocol/ui-kit';
+import { useRouter } from 'next/router';
 import { useFormContext } from 'react-hook-form';
 
 import { COIN_TYPE_TO_FA } from '@/constants/coin-fa';
@@ -19,6 +20,8 @@ const label = 'to';
 const SwapBottomMenu = () => {
   const { setValue, getValues } = useFormContext();
   const { exposedCoins } = useExposedCoins();
+
+  const { asPath } = useRouter();
 
   const onSelect = async (metadata: AssetMetadata) => {
     const [currentToken, opposite] = getValues([label, 'from']);
@@ -73,29 +76,31 @@ const SwapBottomMenu = () => {
       flexDirection="column"
       display={['flex', 'flex', 'flex', 'none', 'none']}
     >
-      <Box
-        p="s"
-        gap="l"
-        width="100%"
-        display="flex"
-        overflowX="scroll"
-        alignItems="center"
-        scrollbarWidth="none"
-        scrollSnapType="x mandatory"
-      >
-        {exposedCoins.map((token, index) => (
-          <Box key={index}>
-            <SwapBottomMenuItem
-              usdPrice={token.usd}
-              symbol={token.symbol}
-              iconUri={token.iconUri}
-              onClick={() =>
-                onSelect(parseToMetadata(token as MetadataSources))
-              }
-            />
-          </Box>
-        ))}
-      </Box>
+      {asPath === '/' && (
+        <Box
+          p="s"
+          gap="l"
+          width="100%"
+          display="flex"
+          overflowX="scroll"
+          alignItems="center"
+          scrollbarWidth="none"
+          scrollSnapType="x mandatory"
+        >
+          {exposedCoins.map((token, index) => (
+            <Box key={index}>
+              <SwapBottomMenuItem
+                usdPrice={token.usd}
+                symbol={token.symbol}
+                iconUri={token.iconUri}
+                onClick={() =>
+                  onSelect(parseToMetadata(token as MetadataSources))
+                }
+              />
+            </Box>
+          ))}
+        </Box>
+      )}
       <SwapButtonMenuList />
     </Box>
   );
