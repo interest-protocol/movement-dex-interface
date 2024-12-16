@@ -12,8 +12,8 @@ import {
 import { parseToMetadata, ZERO_BIG_NUMBER } from '@/utils';
 import { MetadataSources } from '@/utils/coin/coin.types';
 
-import SwapBottomMenuItem from './swap-bottom-menu-item';
-import SwapButtonMenuList from './swap-bottom-menu-list';
+import SwapBottomMenuItem from './bottom-menu-item';
+import SwapButtonMenuList from './bottom-menu-list';
 
 const label = 'to';
 

@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { TokenIcon } from '@/components';
 import { useNetwork } from '@/lib/aptos-provider/network/network.hooks';
 
-import { SwapBottomMenuItemProps } from './swap-bottom-menu.types';
+import { SwapBottomMenuItemProps } from './bottom-menu.types';
 
 const SwapBottomMenuItem: FC<SwapBottomMenuItemProps> = ({
   symbol,

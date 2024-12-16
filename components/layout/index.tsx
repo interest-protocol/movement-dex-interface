@@ -1,7 +1,7 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC, PropsWithChildren } from 'react';
 
-import SwapBottomMenu from '@/views/swap/swap-bottom-menu';
+import SwapBottomMenu from '@/components/layout/bottom-menu';
 
 import ErrorBoundary from '../error-boundary';
 import Footer from './footer';

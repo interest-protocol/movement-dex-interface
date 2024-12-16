@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { v4 } from 'uuid';
 
-import { SwapBottomMenuListItemProps } from './swap-bottom-menu.types';
+import { SwapBottomMenuListItemProps } from './bottom-menu.types';
 
 const SwapBottomMenuListItem: FC<SwapBottomMenuListItemProps> = ({
   name,
@@ -31,10 +31,10 @@ const SwapBottomMenuListItem: FC<SwapBottomMenuListItemProps> = ({
         alignItems="center"
         alignContent="center"
         justifyContent="center"
-        nHover={{ color: 'primary' }}
         onClick={() => goToPath(path)}
         transition="all 350ms ease-in-out"
         bg={asPath === path ? 'onPrimary' : ''}
+        nHover={{ bg: asPath !== path ? 'outline' : '' }}
       >
         <Typography
           size="large"

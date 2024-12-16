@@ -1,7 +1,7 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import { InterestSVG } from '@/components/svg';
@@ -14,6 +14,8 @@ import LogoWrapper from './logo-wrapper';
 
 const Header: FC = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
   const { asPath, push } = useRouter();
 
   const goToPath = (path: any) => {
@@ -29,6 +31,11 @@ const Header: FC = () => {
   }, []);
 
   useEventListener('resize', handleSetDesktop, true);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   return (
     <Box
       display="flex"
@@ -55,7 +62,7 @@ const Header: FC = () => {
       ) : (
         <LogoWrapper />
       )}
-      {!isMobile && (
+      {!isMobile && hydrated && (
         <Box gap="m" display="flex" alignItems="center" justifyContent="center">
           {SIDEBAR_ITEMS.map(({ name, path }) => (
             <Box
@@ -71,8 +78,8 @@ const Header: FC = () => {
               nHover={{ color: 'primary' }}
               onClick={() => goToPath(path)}
               transition="all 350ms ease-in-out"
-              color={asPath === path ? 'primary' : 'onSurface'}
               opacity={asPath === path ? '1' : '.6'}
+              color={asPath === path ? 'primary' : 'onSurface'}
             >
               <Typography
                 size="large"

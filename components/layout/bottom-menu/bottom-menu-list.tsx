@@ -2,7 +2,7 @@ import { Box } from '@interest-protocol/ui-kit';
 
 import { SIDEBAR_ITEMS } from '@/components/layout/sidebar/sidebar.data';
 
-import SwapBottomMenuListItem from './swap-bottom-menu-list-item';
+import SwapBottomMenuListItem from './bottom-menu-list-item';
 
 const SwapButtonMenuList = () => {
   return (
